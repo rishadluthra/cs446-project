@@ -5,3 +5,4 @@ Note: times are represented in number of hours
 | 2024/01/27 |        |       |         |       | 0.5   |       | Drafting project proposal |
 | 2024/01/27 | 0.25   |       |         |       |       |       | Creating git repo, timesheet, initial setup |
 | 2024/01/28 | 0.5    |       |         |       |       |       | Drafting human values section |
+| 2024/01/29 | 0.5    |0.5    | 0.5     | 0.5   | 0.5   | 0.5   | Project proposal meeting |
