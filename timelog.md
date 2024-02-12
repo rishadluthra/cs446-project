@@ -10,3 +10,4 @@ Note: times are represented in number of hours
 | 2024/01/29 |        |       |         | 0.25  |       |       | Introduction pt2 slides |
 | 2024/01/29 | 0.25   |       |         |       |       |       | Human values slides |
 | 2024/02/07 | 0.5    | 0.5   | 0.5     |  0.5  |  0.5  | 0.5   | Project demo discussion |
+| 2024/02/11 |        |       |         |  0.5  |       |       | Deliverable 2 Buddy proposal |
