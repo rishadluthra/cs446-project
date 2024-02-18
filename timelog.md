@@ -13,3 +13,4 @@ Note: times are represented in number of hours
 | 2024/02/10 |        |       |         |       | 0.5   |       | Deliverable 2 work        |
 | 2024/02/11 |        |       |         |  0.5  |       |       | Deliverable 2 Buddy proposal |
 | 2024/02/12 |        |       |         |       | 0.5   |       | Deliverable 2 work        |
+| 2024/02/18 |        |       |         |       | 0.5   |       | Getting Android Studio project set up |
