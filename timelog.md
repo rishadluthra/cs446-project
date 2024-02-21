@@ -17,3 +17,4 @@ Note: times are represented in number of hours
 | 2024/02/18 |        |       |         |       | 0.5   |       | Getting Android Studio project set up |
 | 2024/02/19 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  |       | Group meeting to plan out D3 |
 | 2024/02/20 |        |       |         |       | 1     |       | Basic setup on navigation |
+| 2024/02/21 |        |       |         |       | 1.5   |       | Setup on ModalNavigationDrawer |
