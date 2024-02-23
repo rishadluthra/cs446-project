@@ -2,7 +2,6 @@ package com.example.beacon
 
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,8 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.toLowerCase
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +39,8 @@ enum class BeaconScreens(val title: String) {
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)) {
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+              viewModel: BeaconViewModel = viewModel()) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = BeaconScreens.valueOf(
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
