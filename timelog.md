@@ -19,3 +19,4 @@ Note: times are represented in number of hours
 | 2024/02/20 |        |       |         |       | 1     |       | Basic setup on navigation |
 | 2024/02/21 |        |       |         |       | 1.5   |       | Setup on ModalNavigationDrawer |
 | 2024/02/23 |        |       |         |       | 0.5   |       | Basic ViewModel setup |
+| 2024/02/23 |        |       |         | 2     |       | 2     | Backend nestjs dicusssion and setup |
