@@ -1,0 +1,14 @@
+dist
+Dockerfile
+nest-cli.json
+node_modules
+tsconfig.build.json
+tsconfig.json
+.docker-compose.yaml
+.dockerignore
+.DS_Store
+.eslintrc.js
+.git
+.gitignore
+.prettierrc
+*.md
