@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { BeaconsModule } from './beacons/beacons.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -15,6 +17,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: ['dist/**/*.entity.js'],
       synchronize: true,
     }),
+    BeaconsModule,
   ],
 })
 export class AppModule {}
