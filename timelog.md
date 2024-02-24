@@ -6,9 +6,11 @@ Note: times are represented in number of hours
 | 2024/01/27 | 0.25   |       |         |       |       |       | Creating git repo, timesheet, initial setup |
 | 2024/01/28 | 0.5    |       |         |       |       |       | Drafting human values section |
 | 2024/01/28 |        |       |         | 0.5   |       |       | Writing Introduction part 2 |
+| 2024/01/28 |        |       |         |       |       | 0.5   | Deliverable 1 - functional properties & user scenarios |
 | 2024/01/29 | 0.5    |0.5    | 0.5     | 0.5   | 0.5   | 0.5   | Project proposal meeting |
 | 2024/01/29 |        |       |         | 0.25  |       |       | Introduction pt2 slides |
 | 2024/01/29 | 0.25   |       |         |       |       |       | Human values slides |
+| 2024/01/29 |        |       |         |       |       | 0.25  | Prepare functional properties & user scenarios slides |
 | 2024/02/07 | 0.5    | 0.5   | 0.5     |  0.5  | 0.5   | 0.5   | Project demo discussion |
 | 2024/02/10 |        |       |         |       | 0.5   |       | Deliverable 2 work        |
 | 2024/02/11 |        |       |         |  0.5  |       |       | Deliverable 2 Buddy proposal |
