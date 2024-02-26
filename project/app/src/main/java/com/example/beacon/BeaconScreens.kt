@@ -30,10 +30,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 
-enum class BeaconScreens(val title: String) {
+enum class BeaconScreens(val title: String, val display: Boolean) {
     //define your screens in here as an enum
-    Dashboard(title = "Dashboard"),
-    Beacons(title = "Beacons")
+    Dashboard(title = "Dashboard", display = true),
+    Beacons(title = "Beacons", display = true),
+    Resolution(title = "Resolution", display = false)
 }
 
 
@@ -54,13 +55,15 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
                         items(BeaconScreens.entries) {
                             item ->
-                                Button(onClick={
-                                    coroutineScope.launch{drawerState.close()}
-                                    if (currentScreen != item) {
-                                        navController.navigate(item.name)
-                                    }
+                                if (item.display) {
+                                    Button(onClick = {
+                                        coroutineScope.launch { drawerState.close() }
+                                        if (currentScreen != item) {
+                                            navController.navigate(item.name)
+                                        }
                                     }) {
-                                    Text(text = item.title.lowercase())
+                                        Text(text = item.title.lowercase())
+                                    }
                                 }
                         }
                     }
@@ -77,10 +80,13 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         ) {
             //add in each screen and its associated object here
             composable(route = BeaconScreens.Dashboard.name) {
-                DashboardScreen(modifier = Modifier.fillMaxHeight())
+                DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
             composable(route = BeaconScreens.Beacons.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight())
+            }
+            composable(route = BeaconScreens.Resolution.name) {
+                ResolutionScreen(modifier = Modifier.fillMaxHeight())
             }
         }
     }
