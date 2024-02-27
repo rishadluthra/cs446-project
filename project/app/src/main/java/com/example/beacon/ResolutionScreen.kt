@@ -31,8 +31,8 @@ fun ResolutionScreen(modifier: Modifier, beacon: BeaconInfo) {
         }
         TextField(value = review, onValueChange = { review = it }, label = {Text("leave a review")})
         Button(onClick = {
-            viewModel.resolveBeacon(beacon)
-            navController.navigate(BeaconScreens.Dashboard.name)
+            /*viewModel.resolveBeacon(beacon)
+            navController.navigate(BeaconScreens.Dashboard.name)*/
         }){
             Text(text = "confirm resolution")
         }

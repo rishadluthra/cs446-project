@@ -85,9 +85,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             composable(route = BeaconScreens.Beacons.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight())
             }
-            composable(route = BeaconScreens.Resolution.name) {
+            /*composable(route = BeaconScreens.Resolution.name) {
                 ResolutionScreen(modifier = Modifier.fillMaxHeight())
-            }
+            }*/
         }
     }
 }

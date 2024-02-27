@@ -8,33 +8,35 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
-    val ourBeacons = viewModel.getOurBeacons()
+    val uiState by viewModel.uiState.collectAsState()
+    val ourBeacons = uiState.ourBeacons
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
         Row(horizontalArrangement = Arrangement.Center) {
             Text(text = "Dashboard")
         }
         LazyColumn(){
-            items(ourBeacons.entries) {
-                item ->
-                    Surface(){
-                        Column(){
-                            Text(text = item.title)
-                            Column() {
-                                //tags go here
-                            }
-                            Text(text = item.description)
-                            Button(onClick ={
-                                navController.navigate(BeaconScreens.Resolution.name)
-                            }) {
-                                Text(text = "resolve")
-                            }
+            items(ourBeacons.size) { i ->
+                Surface(){
+                    Column(){
+                        Text(text = ourBeacons.get(i).title)
+                        Column() {
+                            //tags go here
+                        }
+                        Text(text = ourBeacons.get(i).description)
+                        Button(onClick ={
+                            navController.navigate(BeaconScreens.Resolution.name)
+                        }) {
+                            Text(text = "resolve")
                         }
                     }
+                }
             }
         } // this will hold the user's active beacons, if any
         Column(){} // this will hold notifications from messages to/from other users, if any
