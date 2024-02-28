@@ -8,7 +8,7 @@ services:
       target: development
     command: npm run start:dev
     depends_on:
-      - postgres
+      - mongodb
     env_file:
       - .env
     ports:
@@ -16,15 +16,15 @@ services:
     volumes:
       - .:/usr/src/app
 
-  postgres:
+  mongodb:
     env_file:
       - .env
-    image: postgres
+    image: mongo
     ports:
-      - 5432:5432
+      - 27017:27017
     restart: always
     volumes:
-      - postgres_data_container:/var/lib/postgresql/data
+      - mongodb_data_container:/data/db
 
 volumes:
-  postgres_data_container:
+  mongodb_data_container:
