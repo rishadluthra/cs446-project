@@ -1,19 +1,16 @@
+import * as toJson from '@meanie/mongoose-to-json';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      entities: ['dist/**/*.entity.js'],
-      synchronize: true,
+    MongooseModule.forRoot(process.env.DATABASE_URL, {
+      connectionFactory: (connection) => {
+        connection.plugin(toJson);
+        return connection;
+      },
     }),
   ],
 })
