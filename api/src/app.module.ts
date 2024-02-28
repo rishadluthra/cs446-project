@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { BeaconsModule } from './beacons/beacons.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -12,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         return connection;
       },
     }),
+    BeaconsModule,
   ],
 })
 export class AppModule {}
