@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 
 data class UiState(
    var name: String? = null,
-    var ourBeacons: List<BeaconInfo> = emptyList()
+    var beacons: List<BeaconInfo> = emptyList()
 //fill in needed parameters here
 )
 
@@ -49,7 +49,7 @@ class BeaconViewModel : ViewModel() {
     init {
         thread {
             _uiState.update {
-                currentState -> currentState.copy(ourBeacons = sanitizeBeacons(testData))
+                currentState -> currentState.copy(beacons = sanitizeBeacons(testData))
                 //initialize parameters here
 
 

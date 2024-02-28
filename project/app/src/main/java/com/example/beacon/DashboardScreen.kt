@@ -11,29 +11,42 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+
+fun onlyOurBeacons(data: List<BeaconInfo>, name: String?): MutableList<BeaconInfo>? {
+    var retList : MutableList<BeaconInfo>? = null
+    for (item in data) {
+        if (item.name.equals(name)) {
+            retList?.add(item)
+        }
+    }
+    return retList
+}
 
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
     val uiState by viewModel.uiState.collectAsState()
-    val ourBeacons = uiState.ourBeacons
+    val ourBeacons = onlyOurBeacons(uiState.beacons, uiState.name)
     Column(modifier = modifier, verticalArrangement = Arrangement.SpaceBetween) {
         Row(horizontalArrangement = Arrangement.Center) {
             Text(text = "Dashboard")
         }
         LazyColumn(){
-            items(ourBeacons.size) { i ->
-                Surface(){
-                    Column(){
-                        Text(text = ourBeacons.get(i).title)
+            if (ourBeacons != null) {
+                items(ourBeacons.size) { i ->
+                    Surface() {
                         Column() {
-                            //tags go here
-                        }
-                        Text(text = ourBeacons.get(i).description)
-                        Button(onClick ={
-                            navController.navigate(BeaconScreens.Resolution.name)
-                        }) {
-                            Text(text = "resolve")
+                            Text(text = ourBeacons.get(i).title)
+                            Column() {
+                                //tags go here
+                            }
+                            Text(text = ourBeacons.get(i).description)
+                            Button(onClick = {
+                                navController.navigate(BeaconScreens.Resolution.name)
+                            }) {
+                                Text(text = "resolve")
+                            }
                         }
                     }
                 }
