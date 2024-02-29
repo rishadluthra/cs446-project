@@ -26,3 +26,4 @@ Note: times are represented in number of hours
 | 2024/02/26 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion and progress update |
 | 2024/02/27 |        |       |         |       | 1.5   |       | Deliverable 3 - Pulling beacon data from ViewModel to Dashboard screen |
 | 2024/02/28 |        |       |         |       | 2.5   |       | Deliverable 3 - Unsuccessfully attempted to get broken emulator working |
+| 2024/02/29 |        |       |         |       | 2.5   |       | Deliverable 3 - Set up API query to pull beacons |
