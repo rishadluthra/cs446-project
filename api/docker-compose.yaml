@@ -3,29 +3,28 @@ version: '3'
 services:
   api:
     build:
-      dockerfile: Dockerfile
       context: .
+      dockerfile: Dockerfile
       target: development
     command: npm run start:dev
     depends_on:
-      - postgres
+      - mongodb
     env_file:
       - .env
     ports:
       - ${PORT}:${PORT}
     volumes:
       - .:/usr/src/app
-      - /usr/src/app/node_modules
 
-  postgres:
+  mongodb:
     env_file:
       - .env
-    image: postgres
+    image: mongo
     ports:
-      - 5432:5432
+      - 27017:27017
     restart: always
     volumes:
-      - postgres_data_container:/var/lib/postgresql/data
+      - mongodb_data_container:/data/db
 
 volumes:
-  postgres_data_container:
+  mongodb_data_container:
