@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,7 +38,7 @@ enum class BeaconScreens(val title: String) {
 }
 
 
-@Composable
+@Composable @Preview
 fun BeaconApp(navController: NavHostController = rememberNavController(),
               drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
               viewModel: BeaconViewModel = viewModel()) {
