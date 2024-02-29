@@ -1,4 +1,21 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+
+class LocationDto {
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  latitude: number;
+
+  @Transform(({ value }) => Number(value))
+  @IsNumber()
+  longitude: number;
+}
 
 export class CreateBeaconDto {
   @IsNotEmpty()
@@ -9,11 +26,8 @@ export class CreateBeaconDto {
   @IsString()
   description: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  latitude: number;
-
-  @IsNotEmpty()
-  @IsNumber()
-  longitude: number;
+  @IsObject()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location: LocationDto;
 }

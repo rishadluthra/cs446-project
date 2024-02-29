@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 
+import { Beacon, BeaconSchema } from './beacon.schema';
 import { BeaconsController } from './beacons.controller';
 import { BeaconsService } from './beacons.service';
-import { Beacon } from './entities/beacon.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Beacon])],
+  imports: [
+    MongooseModule.forFeature([{ name: Beacon.name, schema: BeaconSchema }]),
+  ],
   controllers: [BeaconsController],
   providers: [BeaconsService],
 })
