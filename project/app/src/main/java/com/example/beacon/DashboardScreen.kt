@@ -49,7 +49,13 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                 }
             }
         } // this will hold the user's active beacons, if any
-        Column {} // this will hold notifications from messages to/from other users, if any
-        Column {} // this will hold active beacons to which the user has responded, if any
+        Column {
+            Text(text="notifications")
+            Text(text="you don't have any notifications")
+        } // this will hold notifications from messages to/from other users, if any
+        Column {
+            Text(text="beacons you've messaged")
+            Text(text="you haven't replied to any beacons")
+        } // this will hold active beacons to which the user has responded, if any
     }
 }
