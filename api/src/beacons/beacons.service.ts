@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Beacon, BeaconDocument } from './beacon.schema';
-import { CreateBeaconDto, FindBeaconsDto } from './dto';
+import { CreateBeaconDto, FindBeaconsDto, FindMyBeaconsDto } from './dto';
 
 @Injectable()
 export class BeaconsService {
@@ -40,5 +40,9 @@ export class BeaconsService {
         },
       })
       .exec();
+  }
+
+  async findByCreatorId({ creatorId }: FindMyBeaconsDto): Promise<Beacon[]> {
+    return this.beaconModel.find({ creatorId });
   }
 }

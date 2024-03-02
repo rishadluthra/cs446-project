@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 
 import { Beacon } from './beacon.schema';
 import { BeaconsService } from './beacons.service';
-import { CreateBeaconDto, FindBeaconsDto } from './dto';
+import { CreateBeaconDto, FindBeaconsDto, FindMyBeaconsDto } from './dto';
 
 @Controller('beacons')
 export class BeaconsController {
@@ -16,5 +16,12 @@ export class BeaconsController {
   @Get()
   find(@Query() findBeaconInput: FindBeaconsDto): Promise<Beacon[]> {
     return this.beaconsService.find(findBeaconInput);
+  }
+
+  @Get('/my_beacons')
+  find_my_beacons(
+    @Query() findMyBeaconInput: FindMyBeaconsDto,
+  ): Promise<Beacon[]> {
+    return this.beaconsService.findByCreatorId(findMyBeaconInput);
   }
 }
