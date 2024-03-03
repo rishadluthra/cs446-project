@@ -24,12 +24,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.beacon.ui.theme.Black
 import com.example.beacon.ui.theme.PrimaryYellow
 import com.example.beacon.ui.theme.White
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable @Preview
+//TODO: Add this parameters to the screen - modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController
 fun DropABeaconScreen() {
     val titleState = remember { mutableStateOf("") }
     val tagsState = remember { mutableStateOf("") }
+    val pincodeState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
 
     Scaffold(
@@ -56,6 +63,11 @@ fun DropABeaconScreen() {
                 modifier = Modifier.fillMaxWidth()
             )
             TextFieldWithLabel(
+                label = "enter the postal code for the beacon",
+                state = pincodeState,
+                modifier = Modifier.fillMaxWidth()
+            )
+            TextFieldWithLabel(
                 label = "enter description of your beacon",
                 state = descriptionState,
                 modifier = Modifier
@@ -65,7 +77,16 @@ fun DropABeaconScreen() {
             )
             Button(
                 onClick = {
-                    // Handle the drop action
+                    val newBeaconJsonObject = buildJsonObject {
+                        put("title", titleState.value)
+                        //put("tags", tagsState.value)
+                        put("postalCode", pincodeState.value)
+                        put("description", descriptionState.value)
+                    }
+                    
+                    val newBeaconJsonString = Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+
+                    print(newBeaconJsonString)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White),
                 modifier = Modifier
