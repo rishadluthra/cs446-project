@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { BeaconsModule } from './beacons/beacons.module';
 
-import { BeaconsModule } from './beacons/beacons.module';
+//import { BeaconsModule } from './beacons/beacons.module';
 
 @Module({
   imports: [
