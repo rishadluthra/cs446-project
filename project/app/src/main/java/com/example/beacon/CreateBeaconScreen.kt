@@ -28,12 +28,17 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import kotlinx.serialization.json.putJsonObject
+import kotlinx.coroutines.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
 
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable @Preview
+@Composable
 //TODO: Add this parameters to the screen - modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController
-fun DropABeaconScreen() {
+fun DropABeaconScreen(viewModel: BeaconViewModel) {
     val titleState = remember { mutableStateOf("") }
     val tagsState = remember { mutableStateOf("") }
     val pincodeState = remember { mutableStateOf("") }
@@ -77,16 +82,7 @@ fun DropABeaconScreen() {
             )
             Button(
                 onClick = {
-                    val newBeaconJsonObject = buildJsonObject {
-                        put("title", titleState.value)
-                        //put("tags", tagsState.value)
-                        put("postalCode", pincodeState.value)
-                        put("description", descriptionState.value)
-                    }
-                    
-                    val newBeaconJsonString = Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-
-                    print(newBeaconJsonString)
+                    viewModel.sendBeacon(titleState.value, descriptionState.value, pincodeState.value)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White),
                 modifier = Modifier
@@ -132,3 +128,5 @@ fun CustomAppBar(title: String) {
         },
     )
 }
+
+
