@@ -36,6 +36,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
+import java.io.IOException
+import java.lang.Exception
 import kotlin.concurrent.thread
 
 data class UiState(
@@ -72,13 +74,15 @@ class BeaconViewModel : ViewModel() {
 }
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
+    try {
+        val request = okhttp3.Request.Builder()
+            .url("http://10.0.2.2:4000/beacons/my_beacons?creatorId=rishad").build()
+        val response = OkHttpClient().newCall(request).execute()
 
-
-
-    val temp = "65e63b8613e503741104bf50"
-    val request = okhttp3.Request.Builder().url("http://10.0.2.2:4000/beacons/my_beacons?creatorId=rishad").build()
-    val response = OkHttpClient().newCall(request).execute()
-
-    val json = response.body!!.string()
-    return Json.decodeFromString<Array<BeaconInfo>>(json)
+        val json = response.body!!.string()
+        return Json.decodeFromString<Array<BeaconInfo>>(json)
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return emptyArray()
 }
