@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.beacon.ui.theme.Black
 import com.example.beacon.ui.theme.PrimaryYellow
 import com.example.beacon.ui.theme.White
@@ -38,14 +39,14 @@ import org.json.JSONObject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //TODO: Add this parameters to the screen - modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController
-fun DropABeaconScreen(viewModel: BeaconViewModel) {
+fun DropABeaconScreen(viewModel: BeaconViewModel, navController: NavController) {
     val titleState = remember { mutableStateOf("") }
     val tagsState = remember { mutableStateOf("") }
     val pincodeState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { CustomAppBar("drop a beacon") },
+        topBar = { CustomAppBar("drop a beacon", navController) },
         containerColor = PrimaryYellow
 
     ) { innerPadding ->
@@ -111,7 +112,7 @@ fun TextFieldWithLabel(label: String, state: MutableState<String>, modifier: Mod
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomAppBar(title: String) {
+fun CustomAppBar(title: String, navController: NavController) {
     TopAppBar(
         title = { Text(text = title, color = Color.Black, fontSize = 18.sp) },
         colors = TopAppBarDefaults.topAppBarColors(
