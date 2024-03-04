@@ -34,7 +34,8 @@ enum class BeaconScreens(val title: String, val display: Boolean) {
     //define your screens in here as an enum
     Dashboard(title = "Dashboard", display = true),
     Beacons(title = "Beacons", display = true),
-    Resolution(title = "Resolution", display = false)
+    Resolution(title = "Resolution", display = false),
+    CreateBeacon(title = "CreateBeacon", display = true)
 }
 
 
@@ -83,6 +84,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                 DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
             composable(route = BeaconScreens.Beacons.name) {
+                BeaconsScreen(modifier = Modifier.fillMaxHeight())
+            }
+            composable(route = BeaconScreens.CreateBeacon.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight())
             }
             /*composable(route = BeaconScreens.Resolution.name) {
