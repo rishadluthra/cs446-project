@@ -31,5 +31,7 @@ Note: times are represented in number of hours
 | 2024/03/03 |        |       |         |       |       |   2   | Deliverable 3 - Backend work for demo |
 | 2024/03/03 |  1.5   |   5   |         |       |       |       | Deliverable 3 - Work on create beacon page |
 | 2024/03/03 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion |
-| 2024/03/03 |  1.25  |       |         |  1    |       |       | Deliverable 3 - Bug fixing app crash |
+| 2024/03/03 |  1.25  |       |         |       |  1    |       | Deliverable 3 - Bug fixing app crash |
 | 2024/03/04 |  1.5   | 1.5   | 1.5     |  1.5  |1.5    | 1.5   | Deliverable 3 - group meeting |
+| 2024/03/03 |  2     | 2     |         |       | 2     |       | Deliverable 3 - Bug fixing viewmodel |
+| 2024/03/03 |  1     | 1     |         |       |       |       | Deliverable 3 - completing sign in page and drop beacon page without api |
