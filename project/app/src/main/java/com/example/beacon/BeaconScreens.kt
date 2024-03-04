@@ -35,14 +35,15 @@ enum class BeaconScreens(val title: String) {
     //define your screens in here as an enum
     Dashboard(title = "Dashboard"),
     Beacons(title = "Beacons"),
-    SignIn(title = "SignIn")
+    SignIn(title = "Sign In"),
+    DropBeacon(title = "Drop Beacon")
 }
 
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)){//,
-//              viewModel: BeaconViewModel = viewModel()) {
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+) {
 
     val viewModel: BeaconViewModel = viewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -64,7 +65,8 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                                         navController.navigate(item.name)
                                     }
                                     }) {
-                                    Text(text = item.title.lowercase())
+//                                    Text(text = item.title.lowercase())
+                                    Text(text = item.title)
                                 }
                         }
                     }
@@ -88,6 +90,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             }
             composable(route = BeaconScreens.SignIn.name) {
                 SignInScreen(modifier = Modifier.fillMaxHeight(), navController = navController)
+            }
+            composable(route = BeaconScreens.DropBeacon.name) {
+                DropBeaconScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
         }
     }
