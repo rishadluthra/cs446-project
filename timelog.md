@@ -22,7 +22,13 @@ Note: times are represented in number of hours
 | 2024/02/21 |        |       |         |       | 1.5   |       | Setup on ModalNavigationDrawer |
 | 2024/02/23 |        |       |         |       | 0.5   |       | Basic ViewModel setup |
 | 2024/02/23 |        |       |         | 2     |       | 2     | Deliverable 3 - Demo backend dicussion and setup |
+| 2024/02/25 |  1.5   |       |         |       |       |       | Deliverable 3 - Building sign in page UI |
 | 2024/02/26 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion and progress update |
 | 2024/02/26 |        |       |         | 0.5   |       |       | Deliverable 3 - Demo dashboard support branch |
+| 2024/02/29 |  1.5   |       |         |       |       |       | Deliverable 3 - Building create beacon page UI |
 | 2024/03/01 |        |       |         |       |       |   2   | Deliverable 3 - Backend work for demo |
+| 2024/03/02 |  1     |   1   |         |       |       |       | Deliverable 3 - Work on create beacon page |
 | 2024/03/03 |        |       |         |       |       |   2   | Deliverable 3 - Backend work for demo |
+| 2024/03/03 |  1.5   |   5   |         |       |       |       | Deliverable 3 - Work on create beacon page |
+| 2024/03/03 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion |
+| 2024/03/03 |  1.25  |       |         |  1    |       |       | Deliverable 3 - Bug fixing app crash |
