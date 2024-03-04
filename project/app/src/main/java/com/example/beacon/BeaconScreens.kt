@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
 enum class BeaconScreens(val title: String) {
     //define your screens in here as an enum
     Dashboard(title = "Dashboard"),
-    Beacons(title = "Beacons")
+    Beacons(title = "Beacons"),
+    SignIn(title = "SignIn")
 }
 
 
@@ -72,7 +74,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
     ) {
         NavHost(
             navController = navController,
-            startDestination = BeaconScreens.Dashboard.name,
+            startDestination = BeaconScreens.SignIn.name,
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
@@ -83,6 +85,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             }
             composable(route = BeaconScreens.Beacons.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight())
+            }
+            composable(route = BeaconScreens.SignIn.name) {
+                SignInScreen(modifier = Modifier.fillMaxHeight(), navController = navController)
             }
         }
     }
