@@ -24,4 +24,5 @@ Note: times are represented in number of hours
 | 2024/02/23 |        |       |         | 2     |       | 2     | Deliverable 3 - Demo backend dicussion and setup |
 | 2024/02/26 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion and progress update |
 | 2024/02/26 |        |       |         | 0.5   |       |       | Deliverable 3 - Demo dashboard support branch |
-
+| 2024/03/01 |        |       |         |       |       |   2   | Deliverable 3 - Backend work for demo |
+| 2024/03/03 |        |       |         |       |       |   2   | Deliverable 3 - Backend work for demo |
