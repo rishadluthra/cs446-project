@@ -119,7 +119,7 @@ fun CustomAppBar(title: String, navController: NavController) {
             containerColor = PrimaryYellow,
         ),
         navigationIcon = {
-            IconButton(onClick = { /* TODO: Handle back press */ }) {
+            IconButton(onClick = { navController.navigate(BeaconScreens.Resolution.name) }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Back",
