@@ -39,8 +39,10 @@ enum class BeaconScreens(val title: String) {
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-              viewModel: BeaconViewModel = viewModel()) {
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)){//,
+//              viewModel: BeaconViewModel = viewModel()) {
+
+    val viewModel: BeaconViewModel = viewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = BeaconScreens.valueOf(
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
@@ -77,7 +79,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         ) {
             //add in each screen and its associated object here
             composable(route = BeaconScreens.Dashboard.name) {
-                DashboardScreen(modifier = Modifier.fillMaxHeight())
+                DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
             }
             composable(route = BeaconScreens.Beacons.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight())
