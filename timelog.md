@@ -32,3 +32,4 @@ Note: times are represented in number of hours
 | 2024/03/03 |  1.5   |   5   |         |       |       |       | Deliverable 3 - Work on create beacon page |
 | 2024/03/03 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion |
 | 2024/03/03 |  1.25  |       |         |  1    |       |       | Deliverable 3 - Bug fixing app crash |
+| 2024/03/04 |  1.5   | 1.5   | 1.5     |  1.5  |1.5    | 1.5   | Deliverable 3 - group meeting |
