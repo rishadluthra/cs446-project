@@ -42,3 +42,4 @@ Note: times are represented in number of hours
 | 2024/03/04 |  1     | 1     |         |       |       |       | Deliverable 3 - completing sign in page&drop beacon page without api |
 | 2024/03/04 |  1     | 2     |         |       |       |       | Deliverable 3 - Fixing the UI for the dashboard |
 | 2024/03/04 |  1.5   | 0.75  |         |       |       |       | Deliverable 3 - creating beacon logo |
+| 2024/03/04 |        | 1.75  |         |       |       |       | Deliverable 3 - functional create beacon page, sending to db |
