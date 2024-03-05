@@ -44,6 +44,11 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
     val tagsState = remember { mutableStateOf("") }
     val pincodeState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
+    //var responseCode = 0
+    var (responseCode, setresponseCode) = remember {
+        mutableStateOf(0)
+    }
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { CustomAppBar("drop a beacon", navController) },
@@ -83,14 +88,62 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             )
             Button(
                 onClick = {
-//                    viewModel.sendBeacon(titleState.value, descriptionState.value, pincodeState.value)
+                    responseCode = viewModel.sendBeacon(titleState.value, descriptionState.value, "rishad")
+                    if(responseCode == 0){
+                        setShowDialog(true)
+                    }
                 },
+
                 colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
                 Text("Drop")
+            }
+            if (showDialog){
+                AlertDialog(
+                    onDismissRequest = { setShowDialog(false) },
+                    title = { Text("Success") },
+                    text = { Text(
+                        text = "Beacon dropped",
+                        fontSize = 16.sp) },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                titleState.value = ""
+                                tagsState.value = ""
+                                pincodeState.value = ""
+                                descriptionState.value = ""
+                                setShowDialog(false)
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryYellow, contentColor = Color.Black),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 0.dp)
+                        ) {
+                            Text("Close")
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                setShowDialog(false)
+                                titleState.value = ""
+                                tagsState.value = ""
+                                pincodeState.value = ""
+                                descriptionState.value = ""
+                                navController.navigate(BeaconScreens.Dashboard.name)
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = PrimaryYellow, contentColor = Color.Black),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            Text("Go to Dashboard")
+                        }
+                    }
+                )
             }
         }
     }
