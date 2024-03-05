@@ -3,8 +3,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { AuthModule } from './auth/auth.module';
 import { BeaconsModule } from './beacons/beacons.module';
 import { GeogratisModule } from './geogratis/geogratis.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -15,8 +17,10 @@ import { GeogratisModule } from './geogratis/geogratis.module';
         return connection;
       },
     }),
+    AuthModule,
     BeaconsModule,
     GeogratisModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
