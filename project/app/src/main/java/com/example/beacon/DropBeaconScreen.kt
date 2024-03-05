@@ -114,7 +114,7 @@ fun TextFieldWithLabel(label: String, state: MutableState<String>, modifier: Mod
 @Composable
 fun CustomAppBar(title: String, navController: NavController) {
     TopAppBar(
-        title = { Text(text = title, color = Color.Black, fontSize = 18.sp) },
+        title = { Text(text = title, color = Black, fontSize = 18.sp) },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = PrimaryYellow,
         ),
