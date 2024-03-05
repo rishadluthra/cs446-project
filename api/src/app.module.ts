@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { BeaconsModule } from './beacons/beacons.module';
+import { GeogratisModule } from './geogratis/geogratis.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BeaconsModule } from './beacons/beacons.module';
       },
     }),
     BeaconsModule,
+    GeogratisModule,
   ],
 })
 export class AppModule {}

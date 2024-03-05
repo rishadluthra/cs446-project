@@ -5,19 +5,29 @@ import { Model } from 'mongoose';
 import { Beacon, BeaconDocument } from './beacon.schema';
 import { CreateBeaconDto, FindBeaconsDto, FindMyBeaconsDto } from './dto';
 
+import { GeogratisService } from '../geogratis/geogratis.service';
+
 @Injectable()
 export class BeaconsService {
   constructor(
     @InjectModel(Beacon.name)
     private readonly beaconModel: Model<BeaconDocument>,
+    private readonly geoGratisService: GeogratisService,
   ) {}
 
-  async create({ location, ...beaconBody }: CreateBeaconDto): Promise<Beacon> {
+  async create({
+    postalCode,
+    ...beaconBody
+  }: CreateBeaconDto): Promise<Beacon> {
+    const coordinates =
+      await this.geoGratisService.getCoordinatesFromPostalCode(postalCode);
+
+    if (!coordinates) {
+      throw new Error('Invalid postal code');
+    }
+
     return this.beaconModel.create({
-      location: {
-        type: 'Point',
-        coordinates: [location.latitude, location.longitude],
-      },
+      location: { type: 'Point', coordinates },
       ...beaconBody,
     });
   }
