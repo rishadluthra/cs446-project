@@ -86,7 +86,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                 DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
             }
             composable(route = BeaconScreens.Beacons.name) {
-                BeaconsScreen(modifier = Modifier.fillMaxHeight())
+                BeaconsScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
             }
             composable(route = BeaconScreens.SignIn.name) {
                 SignInScreen(modifier = Modifier.fillMaxHeight(), navController = navController)
