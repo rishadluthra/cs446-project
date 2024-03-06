@@ -168,7 +168,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryYellow)
                 )
             }
-            items(uiState.ourBeacons.size) { i ->
+            items(uiState.nearbyBeacons.size) { i ->
                 // Set each item's Surface to white
                 Surface(
                     modifier = Modifier
@@ -182,12 +182,12 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             .padding(all = 16.dp)
                     ) {
                         Text(
-                            text = uiState.ourBeacons[i].title,
+                            text = uiState.nearbyBeacons[i].title,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
-                            text = uiState.ourBeacons[i].description,
+                            text = uiState.nearbyBeacons[i].description,
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Button(

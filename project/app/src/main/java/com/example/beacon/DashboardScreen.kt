@@ -40,94 +40,6 @@ import androidx.navigation.NavController
 import com.example.beacon.ui.theme.Black
 import com.example.beacon.ui.theme.PrimaryYellow
 
-//@Composable
-//fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
-//    LaunchedEffect(true) {
-//        viewModel.refresh()
-//    }
-//    val uiState by viewModel.uiState.collectAsState()
-//    LazyColumn(modifier = Modifier.height(200.dp), verticalArrangement = Arrangement.SpaceBetween) {
-//       item {
-//           Row(horizontalArrangement = Arrangement.Center) {
-//               Text(text = "Dashboard")
-//           }
-//       }
-////        items(uiState.ourBeacons.size) { i ->
-////            Surface {
-////                Column {
-////                    Text(text = uiState.ourBeacons[i].title)
-////                    Column {
-////                        //tags go here
-////                    }
-////                    Text(text = uiState.ourBeacons[i].description)
-////                    Button(onClick = {
-//////                            navController.navigate(BeaconScreens.Resolution.name)
-////                    }) {
-////                        Text(text = "resolve")
-////                    }
-////                }
-////            }
-////        } // this will hold the user's active beacons, if any
-//        items(uiState.ourBeacons.size) { i ->
-//            Surface(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(8.dp),
-//                shape = RoundedCornerShape(20.dp), // Adjust the corner radius to match your design
-//                color = Color(0xFFFFEB46) // This color should be the yellow background color you want
-//            ) {
-//                Row(
-//                    modifier = Modifier
-//                        .padding(all = 16.dp)
-//                        .fillMaxWidth(),
-//                    verticalAlignment = Alignment.CenterVertically
-//                ) {
-//                    Column(
-//                        modifier = Modifier
-//                            .weight(1f)
-//                            .padding(end = 16.dp)
-//                    ) {
-//                        Text(
-//                            text = uiState.ourBeacons[i].title,
-//                            style = MaterialTheme.typography.bodyLarge
-//                        )
-//                        Text(
-//                            text = uiState.ourBeacons[i].description,
-//                            style = MaterialTheme.typography.bodyLarge,
-//                            modifier = Modifier.padding(top = 4.dp)
-//                        )
-//                    }
-//                    Button(
-//                        onClick = { /* TODO: Insert navigate action here */ },
-//                        colors = ButtonDefaults.buttonColors(
-//                            containerColor = Color.Transparent,
-//                            contentColor = Color.Black
-//                        )
-//                    ) {
-//                        Text(text = "resolve")
-//                    }
-//                }
-//            }
-//        }
-////        item {
-////            if (uiState.ourBeacons.isEmpty()) {
-////                Text(text = "you don't have any active beacons")
-////            }
-////            Surface() {
-////                Column {
-////                    Text(text = "notifications")
-////                    Text(text = "you don't have any notifications")
-////                } // this will hold notifications from messages to/from other users, if any
-////                Column {
-////                    Text(text = "beacons you've messaged")
-////                    Text(text = "you haven't replied to any beacons")
-////                } // this will hold active beacons to which the user has responded, if any
-////            }
-////        }
-//
-//    }
-//}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
@@ -141,7 +53,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
         .fillMaxSize()
         .background(PrimaryYellow)
     ) {
-        LazyColumn(modifier = Modifier.height(750.dp), verticalArrangement = Arrangement.SpaceBetween) {
+        LazyColumn(modifier = Modifier.height(750.dp), verticalArrangement = Arrangement.Top) {
             item{
                 TopAppBar(
                     title = {
