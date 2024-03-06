@@ -1,21 +1,7 @@
-import { Transform, Type } from 'class-transformer';
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsObject,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsString, Matches } from 'class-validator';
 
-class LocationDto {
-  @Transform(({ value }) => Number(value))
-  @IsNumber()
-  latitude: number;
-
-  @Transform(({ value }) => Number(value))
-  @IsNumber()
-  longitude: number;
-}
+const canadianPostalCodePattern =
+  /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 
 export class CreateBeaconDto {
   @IsNotEmpty()
@@ -30,8 +16,9 @@ export class CreateBeaconDto {
   @IsString()
   description: string;
 
-  @IsObject()
-  @ValidateNested()
-  @Type(() => LocationDto)
-  location: LocationDto;
+  @IsString()
+  @Matches(canadianPostalCodePattern, {
+    message: 'Invalid Canadian postal code format',
+  })
+  postalCode: string;
 }
