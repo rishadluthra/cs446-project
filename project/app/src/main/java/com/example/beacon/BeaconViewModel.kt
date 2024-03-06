@@ -94,6 +94,10 @@ class BeaconViewModel : ViewModel() {
         }
         return responseCode
     }
+
+    fun delete(id: String): Int {
+        return deleteBeacon(id)
+    }
 }
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
@@ -107,6 +111,18 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
         println(e.message)
     }
     return emptyArray()
+}
+
+fun deleteBeacon(id: String): Int {
+    try {
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/beacons/$id").delete().build()
+        val response = OkHttpClient().newCall(request).execute()
+        return response.code
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return 400
 }
 
 fun postBeacon(newBeaconJsonString: String): Int {

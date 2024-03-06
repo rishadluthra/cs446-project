@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,6 +28,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -132,7 +135,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
         viewModel.refresh()
     }
     val uiState by viewModel.uiState.collectAsState()
-
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     // Set the LazyColumn's background to yellow
     Box(modifier = Modifier
         .fillMaxSize()
@@ -194,7 +197,13 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Button(
-                            onClick = { /* TODO: Insert navigate action here */ },
+                            onClick = {
+                                val code = viewModel.delete(uiState.ourBeacons[i].id)
+                                if (code == 0) {
+                                    setShowDialog(true)
+                                }
+                                viewModel.refresh()
+                            },
                             modifier = Modifier
                                 .align(Alignment.End)
                                 .padding(top = 8.dp),
@@ -205,6 +214,30 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             Text(text = "resolve")
                         }
                     }
+                }
+            }
+            item {
+                if (showDialog){
+                    AlertDialog(
+                        onDismissRequest = { setShowDialog(false) },
+                        title = { Text("Success") },
+                        text = { Text(
+                            text = "Beacon resolved",
+                            fontSize = 16.sp) },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryYellow, contentColor = Color.Black),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp)
+                            ) {
+                                Text("Close")
+                            }
+                        }
+                    )
                 }
             }
         }
