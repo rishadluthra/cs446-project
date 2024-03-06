@@ -88,7 +88,7 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             )
             Button(
                 onClick = {
-                    responseCode = viewModel.sendBeacon(titleState.value, descriptionState.value, "rishad")
+                    responseCode = viewModel.sendBeacon(titleState.value, descriptionState.value, pincodeState.value, "rishad")
                     if(responseCode == 0){
                         setShowDialog(true)
                     }

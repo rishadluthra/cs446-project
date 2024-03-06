@@ -79,16 +79,13 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun sendBeacon(title: String, description: String, creatorId: String): Int {
+    fun sendBeacon(title: String, description: String, postalCode: String, creatorId: String): Int {
         var responseCode = 0
         thread {
             val newBeaconJsonObject = buildJsonObject {
                 put("title", title)
                 put("description", description)
-                putJsonObject("location") {
-                    put("latitude", 43.77255)
-                    put("longitude", -79.383577)
-                }
+                put("postalCode", postalCode)
                 put("creatorId", creatorId)
             }
             val newBeaconJsonString =
