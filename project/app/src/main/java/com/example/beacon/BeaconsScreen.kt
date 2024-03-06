@@ -48,6 +48,93 @@ import com.example.beacon.ui.theme.White
 //    }
 //}
 
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
+//    LaunchedEffect(true) {
+//        viewModel.refresh()
+//    }
+//    val uiState by viewModel.uiState.collectAsState()
+//
+//// Set the LazyColumn's background to yellow
+//    Box(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(White)
+//    ) {
+//        LazyColumn(
+//            modifier = Modifier.height(750.dp)
+//            , verticalArrangement = Arrangement.Top
+//        ) {
+//            item {
+//                TopAppBar(
+//                    title = {
+//                        Box(modifier = Modifier.fillMaxSize()) {
+//                            Text(
+//                                text = "Beacons Nearby",
+//                                fontSize = 32.sp,
+//                                color = Color.Black,
+//                                modifier = Modifier.align(Alignment.Center) // Center align the text
+//                            )
+//                        }
+//                    },
+//                    colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryYellow)
+//                )
+//            }
+//            items(uiState.ourBeacons.size) { i ->
+//                // Set each item's Surface to white
+//                Box {
+//                    Surface(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .border(width = Dp.Hairline, color = Color.Black),
+//                        shape = RoundedCornerShape(32.dp),
+//                        color = Color.White // Set the item background to white
+//                    ) {
+//                        Row(
+//                            modifier = Modifier.fillMaxWidth(),
+//                            verticalAlignment = Alignment.CenterVertically,
+//                        ) {
+//                            Column(
+//                                modifier = Modifier
+//                                    .weight(2f)
+//                                    .padding(all = 8.dp)
+//                            ) {
+//                                Text(
+//                                    text = uiState.ourBeacons[i].title,
+//                                    style = MaterialTheme.typography.bodyLarge,
+//                                    modifier = Modifier.padding(bottom = 8.dp)
+//                                )
+//                                Text(
+//                                    text = uiState.ourBeacons[i].description,
+//                                    style = MaterialTheme.typography.bodySmall,
+//                                    modifier = Modifier
+//
+//                                        .padding(bottom = 8.dp)
+//                                )
+//                            }
+//                            Button(
+//                                onClick = { /* TODO: Insert navigate action here */ },
+////                            modifier = Modifier.align(Alignment.Center),
+//                                colors = ButtonDefaults.buttonColors(
+//                                    containerColor = PrimaryYellow
+//                                ),
+//                            ) {
+//                                Text(
+//                                    text = "Reach Out",
+//                                    color = Color.Black
+//                                )
+//                            }
+//                        }
+//                    }
+////                    Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
+//                }
+//            }
+//        }
+//    }
+//}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
@@ -60,7 +147,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(White)
+            .background(PrimaryYellow)
     ) {
         LazyColumn(
             modifier = Modifier.height(750.dp)
@@ -83,51 +170,38 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
             }
             items(uiState.ourBeacons.size) { i ->
                 // Set each item's Surface to white
-                Box {
-                    Surface(
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White // Set the item background to white
+                ) {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .border(width = Dp.Hairline, color = Color.Black),
-                        shape = RoundedCornerShape(32.dp),
-                        color = Color.White // Set the item background to white
+                            .padding(all = 16.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
+                        Text(
+                            text = uiState.ourBeacons[i].title,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                        Text(
+                            text = uiState.ourBeacons[i].description,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Button(
+                            onClick = { /* TODO: Insert navigate action here */ },
+                            modifier = Modifier
+                                .align(Alignment.End)
+                                .padding(top = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Black
+                            ),
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .weight(2f)
-                                    .padding(all = 8.dp)
-                            ) {
-                                Text(
-                                    text = uiState.ourBeacons[i].title,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                Text(
-                                    text = uiState.ourBeacons[i].description,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier
-
-                                        .padding(bottom = 8.dp)
-                                )
-                            }
-                            Button(
-                                onClick = { /* TODO: Insert navigate action here */ },
-//                            modifier = Modifier.align(Alignment.Center),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = PrimaryYellow
-                                ),
-                            ) {
-                                Text(
-                                    text = "Reach Out",
-                                    color = Color.Black
-                                )
-                            }
+                            Text(text = "Contact")
                         }
                     }
-//                    Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp)
                 }
             }
         }
