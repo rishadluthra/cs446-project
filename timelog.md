@@ -45,3 +45,4 @@ Note: times are represented in number of hours
 | 2024/03/05 |        | 1.75  |         |       |       |       | Deliverable 3 - functional create beacon page, sending to db |
 | 2024/03/05 |  0.5   | 0.5   | 0.5     |  0.5  |  0.5  |   0.5 | Deliverable 3 - group meeting |
 | 2024/03/05 |        |       |         |  2.5  |       |   2.5 | Deliverable 3 - Backend work for postal code creation and beacon deletion |
+| 2024/03/06 |   1    |  1    |  1      |  1    |  1    |   1   | Deliverable 3 - final meeting before demo |
