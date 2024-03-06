@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
   Query,
 } from '@nestjs/common';
@@ -35,5 +37,10 @@ export class BeaconsController {
     @Query() findMyBeaconInput: FindMyBeaconsDto,
   ): Promise<Beacon[]> {
     return this.beaconsService.findByCreatorId(findMyBeaconInput);
+  }
+
+  @Delete(':id')
+  async delete_beacons(@Param('id') id: string): Promise<Beacon> {
+    return this.beaconsService.delete(id);
   }
 }

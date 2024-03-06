@@ -42,3 +42,6 @@ Note: times are represented in number of hours
 | 2024/03/04 |  1     | 1     |         |       |       |       | Deliverable 3 - completing sign in page&drop beacon page without api |
 | 2024/03/04 |  1     | 2     |         |       |       |       | Deliverable 3 - Fixing the UI for the dashboard |
 | 2024/03/04 |  1.5   | 0.75  |         |       |       |       | Deliverable 3 - creating beacon logo |
+| 2024/03/05 |        | 1.75  |         |       |       |       | Deliverable 3 - functional create beacon page, sending to db |
+| 2024/03/05 |  0.5   | 0.5   | 0.5     |  0.5  |  0.5  |   0.5 | Deliverable 3 - group meeting |
+| 2024/03/05 |        |       |         |  2.5  |       |   2.5 | Deliverable 3 - Backend work for postal code creation and beacon deletion |
