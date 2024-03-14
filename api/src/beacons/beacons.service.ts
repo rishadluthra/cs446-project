@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Beacon, BeaconDocument } from './beacon.schema';
-import { CreateBeaconDto, FindBeaconsDto, FindMyBeaconsDto } from './dto';
+import { CreateBeaconDto, FindBeaconsDto } from './dto';
 
 import { GeogratisService } from '../geogratis/geogratis.service';
 
@@ -18,15 +18,19 @@ export class BeaconsService {
   async create({
     postalCode,
     ...beaconBody
-  }: CreateBeaconDto): Promise<Beacon> {
+  }: CreateBeaconDto,
+  creatorId: String): Promise<Beacon> {
     const coordinates =
       await this.geoGratisService.getCoordinatesFromPostalCode(postalCode);
 
     if (!coordinates) {
       throw new Error('Invalid postal code');
     }
+    console.log("Inside Create:")
+    console.log(creatorId)
 
     return this.beaconModel.create({
+      creatorId,
       location: { type: 'Point', coordinates },
       ...beaconBody,
     });
@@ -52,8 +56,10 @@ export class BeaconsService {
       .exec();
   }
 
-  async findByCreatorId({ creatorId }: FindMyBeaconsDto): Promise<Beacon[]> {
-    return this.beaconModel.find({ creatorId });
+  async findByCreatorId(creatorId: String): Promise<Beacon[]> {
+    console.log("Inside findByCreatorId:")
+    console.log(creatorId);
+    return this.beaconModel.find({creatorId});
   }
 
   async delete(id: string): Promise<Beacon> {
