@@ -15,19 +15,16 @@ export class BeaconsService {
     private readonly geoGratisService: GeogratisService,
   ) {}
 
-  async create({
-    postalCode,
-    ...beaconBody
-  }: CreateBeaconDto,
-  creatorId: String): Promise<Beacon> {
+  async create(
+    { postalCode, ...beaconBody }: CreateBeaconDto,
+    creatorId: string,
+  ): Promise<Beacon> {
     const coordinates =
       await this.geoGratisService.getCoordinatesFromPostalCode(postalCode);
 
     if (!coordinates) {
       throw new Error('Invalid postal code');
     }
-    console.log("Inside Create:")
-    console.log(creatorId)
 
     return this.beaconModel.create({
       creatorId,
@@ -56,10 +53,8 @@ export class BeaconsService {
       .exec();
   }
 
-  async findByCreatorId(creatorId: String): Promise<Beacon[]> {
-    console.log("Inside findByCreatorId:")
-    console.log(creatorId);
-    return this.beaconModel.find({creatorId});
+  async findByCreatorId(creatorId: string): Promise<Beacon[]> {
+    return this.beaconModel.find({ creatorId });
   }
 
   async delete(id: string): Promise<Beacon> {

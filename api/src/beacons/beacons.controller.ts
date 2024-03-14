@@ -10,12 +10,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
+import { CurrentUser } from '../decorators/user.decorator';
+
 import { Beacon } from './beacon.schema';
 import { BeaconsService } from './beacons.service';
 import { CreateBeaconDto, FindBeaconsDto } from './dto';
-import { CurrentUser } from '../decorators/user.decorator';
-import { User } from '../users/user.schema';
+
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from '../users/user.schema';
 
 @Controller('beacons')
 export class BeaconsController {
@@ -24,11 +26,14 @@ export class BeaconsController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async create(
-      @Body() createBeaconInput: CreateBeaconDto,
-      @CurrentUser() currentUser: Partial<User>
-    ): Promise<Beacon> {
+    @CurrentUser() currentUser: Partial<User>,
+    @Body() createBeaconInput: CreateBeaconDto,
+  ): Promise<Beacon> {
     try {
-      const beacon = await this.beaconsService.create(createBeaconInput, currentUser.id);
+      const beacon = await this.beaconsService.create(
+        createBeaconInput,
+        currentUser.id,
+      );
       return beacon;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -43,7 +48,7 @@ export class BeaconsController {
   @UseGuards(JwtAuthGuard)
   @Get('/my_beacons')
   async find_my_beacons(
-    @CurrentUser() currentUser: Partial<User>
+    @CurrentUser() currentUser: Partial<User>,
   ): Promise<Beacon[]> {
     return this.beaconsService.findByCreatorId(currentUser.id);
   }
