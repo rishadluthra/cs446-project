@@ -27,9 +27,9 @@ export class BeaconsService {
     }
 
     return this.beaconModel.create({
-      creatorId,
       location: { type: 'Point', coordinates },
       ...beaconBody,
+      creatorId,
     });
   }
 
@@ -57,7 +57,7 @@ export class BeaconsService {
     return this.beaconModel.find({ creatorId });
   }
 
-  async delete(creatorId: string, id: string): Promise<Beacon> {
+  async delete(id: string, creatorId: string): Promise<Beacon> {
     return this.beaconModel.findOneAndDelete({ id, creatorId });
   }
 }

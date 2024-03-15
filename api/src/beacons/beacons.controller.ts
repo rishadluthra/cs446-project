@@ -10,13 +10,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { CurrentUser } from '../decorators/user.decorator';
-
 import { Beacon } from './beacon.schema';
 import { BeaconsService } from './beacons.service';
 import { CreateBeaconDto, FindBeaconsDto } from './dto';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../decorators/user.decorator';
 import { User } from '../users/user.schema';
 
 @Controller('beacons')
@@ -56,10 +55,10 @@ export class BeaconsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete_beacons(
+  async delete(
     @CurrentUser() currentUser: Partial<User>,
-    @Param('id') id: string
+    @Param('id') id: string,
   ): Promise<Beacon> {
-    return this.beaconsService.delete(currentUser.id, id);
+    return this.beaconsService.delete(id, currentUser.id);
   }
 }
