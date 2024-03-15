@@ -40,6 +40,7 @@ export class BeaconsController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async find(@Query() findBeaconInput: FindBeaconsDto): Promise<Beacon[]> {
     return this.beaconsService.find(findBeaconInput);
@@ -53,8 +54,12 @@ export class BeaconsController {
     return this.beaconsService.findByCreatorId(currentUser.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete_beacons(@Param('id') id: string): Promise<Beacon> {
-    return this.beaconsService.delete(id);
+  async delete_beacons(
+    @CurrentUser() currentUser: Partial<User>,
+    @Param('id') id: string
+  ): Promise<Beacon> {
+    return this.beaconsService.delete(currentUser.id, id);
   }
 }

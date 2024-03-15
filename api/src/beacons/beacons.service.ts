@@ -57,7 +57,7 @@ export class BeaconsService {
     return this.beaconModel.find({ creatorId });
   }
 
-  async delete(id: string): Promise<Beacon> {
-    return this.beaconModel.findByIdAndDelete(id);
+  async delete(creatorId: string, id: string): Promise<Beacon> {
+    return this.beaconModel.findOneAndDelete({ id, creatorId });
   }
 }
