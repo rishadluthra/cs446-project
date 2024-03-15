@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Beacon, BeaconDocument } from './beacon.schema';
-import { CreateBeaconDto, FindBeaconsDto, FindMyBeaconsDto } from './dto';
+import { CreateBeaconDto, FindBeaconsDto } from './dto';
 
 import { GeogratisService } from '../geogratis/geogratis.service';
 
@@ -15,10 +15,10 @@ export class BeaconsService {
     private readonly geoGratisService: GeogratisService,
   ) {}
 
-  async create({
-    postalCode,
-    ...beaconBody
-  }: CreateBeaconDto): Promise<Beacon> {
+  async create(
+    { postalCode, ...beaconBody }: CreateBeaconDto,
+    creatorId: string,
+  ): Promise<Beacon> {
     const coordinates =
       await this.geoGratisService.getCoordinatesFromPostalCode(postalCode);
 
@@ -29,6 +29,7 @@ export class BeaconsService {
     return this.beaconModel.create({
       location: { type: 'Point', coordinates },
       ...beaconBody,
+      creatorId,
     });
   }
 
@@ -52,11 +53,11 @@ export class BeaconsService {
       .exec();
   }
 
-  async findByCreatorId({ creatorId }: FindMyBeaconsDto): Promise<Beacon[]> {
+  async findByCreatorId(creatorId: string): Promise<Beacon[]> {
     return this.beaconModel.find({ creatorId });
   }
 
-  async delete(id: string): Promise<Beacon> {
-    return this.beaconModel.findByIdAndDelete(id);
+  async delete(id: string, creatorId: string): Promise<Beacon> {
+    return this.beaconModel.findOneAndDelete({ _id: id, creatorId });
   }
 }

@@ -6,10 +6,6 @@ const canadianPostalCodePattern =
 export class CreateBeaconDto {
   @IsNotEmpty()
   @IsString()
-  creatorId: string;
-
-  @IsNotEmpty()
-  @IsString()
   title: string;
 
   @IsNotEmpty()
