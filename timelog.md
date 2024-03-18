@@ -48,4 +48,6 @@ Note: times are represented in number of hours
 | 2024/03/06 |   1    |  1    |  1      |  1    |  1    |   1   | Deliverable 3 - final meeting before demo |
 | 2024/03/05 |        |       |         |       |       |   3   | Implement Authentication |
 | 2024/03/13 |        |       |         |       |       |   2   | Finish Implementing Authentication |
+| 2024/03/16 |        |       |         |       |  2    |       | Deliverable 4 - first two examples |
+| 2024/03/17 |        |       |         |       |  1    |       | Deliverable 4 - third example |
 
