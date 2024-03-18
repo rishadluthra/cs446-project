@@ -16,6 +16,9 @@ export class Beacon {
   @Prop({ required: true })
   description: string;
 
+  @Prop({ required: false })
+  tags: [string];
+
   @Prop({
     type: {
       type: String,

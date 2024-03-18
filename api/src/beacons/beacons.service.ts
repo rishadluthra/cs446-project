@@ -57,6 +57,28 @@ export class BeaconsService {
     return this.beaconModel.find({ creatorId });
   }
 
+  async findByTags(tags: String[],
+  {
+      latitude,
+      longitude,
+      maxDistance,
+  }: FindBeaconsDto): Promise<Beacon[]> {
+    return this.beaconModel.find($and: [
+        {tags: {$in: tags},
+        {location:
+          {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [latitude, longitude],
+              },
+              $maxDistance: maxDistance,
+            },
+          }
+        }]
+        ).exec();
+  }
+
   async delete(id: string, creatorId: string): Promise<Beacon> {
     return this.beaconModel.findOneAndDelete({ _id: id, creatorId });
   }

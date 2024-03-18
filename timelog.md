@@ -50,4 +50,5 @@ Note: times are represented in number of hours
 | 2024/03/13 |        |       |         |       |       |   2   | Finish Implementing Authentication |
 | 2024/03/16 |        |       |         |       |  2    |       | Deliverable 4 - first two examples |
 | 2024/03/17 |        |       |         |       |  1    |       | Deliverable 4 - third example |
+| 2024/03/18 |        |       |         |       | 0.75  |       | Deliverable 6 - Preliminary work on tags for backend |
 
