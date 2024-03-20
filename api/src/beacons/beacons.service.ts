@@ -37,20 +37,38 @@ export class BeaconsService {
     latitude,
     longitude,
     maxDistance,
+    tags
   }: FindBeaconsDto): Promise<Beacon[]> {
-    return this.beaconModel
-      .find({
-        location: {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [latitude, longitude],
+    if (tags && tags.length > 0) {
+      return this.beaconModel.find({$and: [
+        {tags: {$in: tags}},
+        {location:
+          {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [latitude, longitude],
+              },
+              $maxDistance: maxDistance,
             },
-            $maxDistance: maxDistance,
+          }
+        }]
+      }).exec();
+    } else {
+      return this.beaconModel
+        .find({
+          location: {
+            $near: {
+              $geometry: {
+                type: 'Point',
+                coordinates: [latitude, longitude],
+              },
+              $maxDistance: maxDistance,
+            },
           },
-        },
-      })
-      .exec();
+        })
+        .exec();
+    }
   }
 
   async findByCreatorId(creatorId: string): Promise<Beacon[]> {
@@ -63,8 +81,8 @@ export class BeaconsService {
       longitude,
       maxDistance,
   }: FindBeaconsDto): Promise<Beacon[]> {
-    return this.beaconModel.find($and: [
-        {tags: {$in: tags},
+    return this.beaconModel.find({$and: [
+        {tags: {$in: tags}},
         {location:
           {
             $near: {
@@ -76,7 +94,7 @@ export class BeaconsService {
             },
           }
         }]
-        ).exec();
+      }).exec();
   }
 
   async delete(id: string, creatorId: string): Promise<Beacon> {
