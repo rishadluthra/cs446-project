@@ -1,5 +1,6 @@
 import { Transform } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { Tags } from '../beacon.schema';
 
 export class FindBeaconsDto {
   @Transform(({ value }) => Number(value))
@@ -18,6 +19,7 @@ export class FindBeaconsDto {
   maxDistance: number;
 
   @IsOptional()
-  @IsArray()
-  tags: string[];
+  @Transform(({ value }) => Tags[value])
+  @IsEnum(Tags)
+  tag: Tags;
 }

@@ -3,6 +3,13 @@ import { HydratedDocument } from 'mongoose';
 
 export type BeaconDocument = HydratedDocument<Beacon>;
 
+export enum Tags {
+  Labour = 'Labour',
+  Tools = 'Tools',
+  Tech = 'Tech',
+  Social = 'Social',
+}
+
 @Schema({ timestamps: true })
 export class Beacon {
   id: string;
@@ -16,8 +23,8 @@ export class Beacon {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: false })
-  tags: [string];
+  @Prop({ required: true })
+  tag: Tags;
 
   @Prop({
     type: {
