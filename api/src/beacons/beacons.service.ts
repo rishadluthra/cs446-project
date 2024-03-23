@@ -37,24 +37,20 @@ export class BeaconsService {
     latitude,
     longitude,
     maxDistance,
-    tag,
+    tags,
   }: FindBeaconsDto): Promise<Beacon[]> {
     return this.beaconModel
       .find({
-        $and: [
-          { tags: tag },
-          {
-            location: {
-              $near: {
-                $geometry: {
-                  type: 'Point',
-                  coordinates: [latitude, longitude],
-                },
-                $maxDistance: maxDistance,
-              },
+        location: {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [latitude, longitude],
             },
+            $maxDistance: maxDistance,
           },
-        ],
+        },
+        ...(tags && tags.length > 0 ? { tag: { $in: tags } } : {}),
       })
       .exec();
   }

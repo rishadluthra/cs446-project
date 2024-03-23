@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString, Matches } from 'class-validator';
-import { Tags } from '../beacon.schema';
+import { Tag } from '../beacon.schema';
 
 const canadianPostalCodePattern =
   /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
@@ -20,6 +20,6 @@ export class CreateBeaconDto {
   postalCode: string;
 
   @IsNotEmpty()
-  @IsEnum(Tags)
-  tag: Tags;
+  @IsEnum(Tag)
+  tag: Tag;
 }

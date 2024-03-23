@@ -55,3 +55,4 @@ Note: times are represented in number of hours
 | 2024/03/19 |        |       |         |  1    |  1    |   1   | Deliverable 6 - Collaborative work session |
 | 2024/03/20 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags for backend |
 | 2024/03/22 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
+| 2024/03/23 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
