@@ -47,6 +47,7 @@ Note: times are represented in number of hours
 | 2024/03/05 |        |       |         |  2.5  |       |   2.5 | Deliverable 3 - Backend work for postal code creation and beacon deletion |
 | 2024/03/06 |   1    |  1    |  1      |  1    |  1    |   1   | Deliverable 3 - final meeting before demo |
 | 2024/03/05 |        |       |         |       |       |   3   | Implement Authentication |
+| 2024/03/13 |   1    |  1    |  1      |  1    |  1    |   1   | final demo meeting |
 | 2024/03/13 |        |       |         |       |       |   2   | Finish Implementing Authentication |
 | 2024/03/16 |        |       |         |       |  2    |       | Deliverable 4 - first two examples |
 | 2024/03/17 |        |       |         |       |  1    |       | Deliverable 4 - third example |
@@ -57,3 +58,4 @@ Note: times are represented in number of hours
 | 2024/03/20 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags for backend |
 | 2024/03/22 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
 | 2024/03/23 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
+| 2024/03/27 |  0.5   |   0.5 |         |  0.5  |  0.5  | 0.5   | final demo meeting |
