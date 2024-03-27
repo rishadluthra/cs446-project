@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
@@ -26,7 +26,6 @@ export class FindBeaconsDto {
 
   @IsOptional()
   @IsArray()
-  @Type(() => String)
   @IsEnum(Tag, { each: true })
   tags: Tag[];
 }

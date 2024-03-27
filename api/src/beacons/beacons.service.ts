@@ -39,20 +39,18 @@ export class BeaconsService {
     maxDistance,
     tags,
   }: FindBeaconsDto): Promise<Beacon[]> {
-    return this.beaconModel
-      .find({
-        location: {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [latitude, longitude],
-            },
-            $maxDistance: maxDistance,
+    return this.beaconModel.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [latitude, longitude],
           },
+          $maxDistance: maxDistance,
         },
-        ...(tags && tags.length > 0 ? { tag: { $in: tags } } : {}),
-      })
-      .exec();
+      },
+      ...(tags && tags.length > 0 ? { tag: { $in: tags } } : {}),
+    });
   }
 
   async findByCreatorId(creatorId: string): Promise<Beacon[]> {
