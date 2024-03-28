@@ -42,6 +42,7 @@ import com.example.beacon.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
+    val themeStrategy by viewModel.themeStrategy
     LaunchedEffect(true) {
         viewModel.refresh()
     }
@@ -51,7 +52,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(PrimaryYellow)
+            .background(themeStrategy.primaryColor)
     ) {
         LazyColumn(
             modifier = Modifier.height(750.dp)
@@ -64,12 +65,12 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             Text(
                                 text = "Beacons Nearby",
                                 fontSize = 32.sp,
-                                color = Color.Black,
+                                color = themeStrategy.primaryTextColor,
                                 modifier = Modifier.align(Alignment.Center) // Center align the text
                             )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryYellow)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = themeStrategy.primaryColor)
                 )
             }
             items(uiState.nearbyBeacons.size) { i ->
@@ -88,11 +89,13 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Text(
                             text = uiState.nearbyBeacons[i].title,
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            color = themeStrategy.primaryTextColor
                         )
                         Text(
                             text = uiState.nearbyBeacons[i].description,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = themeStrategy.primaryTextColor
                         )
                         Button(
                             onClick = { /* TODO: Insert navigate action here */ },
@@ -100,10 +103,11 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .align(Alignment.End)
                                 .padding(top = 8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Black
+                                containerColor = themeStrategy.secondaryColor
                             ),
                         ) {
-                            Text(text = "Contact")
+                            Text(text = "Contact",
+                                color = themeStrategy.primaryTextColor)
                         }
                     }
                 }
