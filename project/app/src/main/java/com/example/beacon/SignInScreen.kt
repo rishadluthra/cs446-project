@@ -77,11 +77,12 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
         ) {
             Checkbox(
                 checked = rememberMeState.value,
-                onCheckedChange = { rememberMeState.value = it }
+                onCheckedChange = { rememberMeState.value = it },
             )
             Text(
                 text = "remember me",
-                modifier = Modifier.clickable { rememberMeState.value = !rememberMeState.value }
+                modifier = Modifier.clickable { rememberMeState.value = !rememberMeState.value },
+                color = themeStrategy.primaryTextColor
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -111,9 +112,10 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("don't have account? ")
+            Text("don't have account?",
+                color = themeStrategy.primaryTextColor)
             Text(
-                text = "create account",
+                text = " create account",
                 color = themeStrategy.primaryTextColor
 //                modifier = Modifier.clickable { /* TODO: Navigate to create account screen */ }
             )
