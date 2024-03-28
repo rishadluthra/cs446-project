@@ -46,12 +46,13 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     LaunchedEffect(true) {
         viewModel.refresh()
     }
+    val themeStrategy by viewModel.themeStrategy
     val uiState by viewModel.uiState.collectAsState()
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     // Set the LazyColumn's background to yellow
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(PrimaryYellow)
+        .background(themeStrategy.primaryColor)
     ) {
         LazyColumn(modifier = Modifier.height(750.dp), verticalArrangement = Arrangement.Top) {
             item{
@@ -61,12 +62,12 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             Text(
                                 text = "Dashboard  ",
                                 fontSize = 32.sp,
-                                color = Color.Black,
+                                color = themeStrategy.primaryTextColor,
                                 modifier = Modifier.align(Alignment.Center) // Center align the text
                             )
                         }
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = PrimaryYellow)
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = themeStrategy.primaryColor)
                 )
             }
             item {
@@ -80,7 +81,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                 ) {
                     Text(
                         text = "My Active Beacons",
-                        color = Black,
+                        color = themeStrategy.primaryTextColor,
                         fontSize = 20.sp,
                         modifier = Modifier.align(Alignment.CenterStart)
                     )
@@ -120,7 +121,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .align(Alignment.End)
                                 .padding(top = 8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Black
+                                containerColor = themeStrategy.primaryColor
                             ),
                         ) {
                             Text(text = "resolve")
@@ -141,7 +142,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 onClick = {
                                     setShowDialog(false)
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = PrimaryYellow, contentColor = Color.Black),
+                                colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.secondaryColor),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 16.dp)
