@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -51,6 +52,16 @@ export class BeaconsController {
     @CurrentUser() currentUser: Partial<User>,
   ): Promise<Beacon[]> {
     return this.beaconsService.findByCreatorId(currentUser.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async update(
+    @CurrentUser() currentUser: Partial<User>,
+    @Param('id') id: string,
+    @Body() updateBeaconInput: CreateBeaconDto,
+  ): Promise<Beacon> {
+    return this.beaconsService.update(id, updateBeaconInput, currentUser.id);
   }
 
   @UseGuards(JwtAuthGuard)
