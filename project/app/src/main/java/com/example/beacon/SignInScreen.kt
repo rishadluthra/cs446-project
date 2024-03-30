@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
         )
         // Email input field
         OutlinedTextField(
+            textStyle = TextStyle(color = themeStrategy.primaryTextColor),
             value = emailState.value,
             onValueChange = { emailState.value = it },
             label = { Text("email") },
@@ -56,6 +58,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
         )
         // Password input field
         OutlinedTextField(
+            textStyle = TextStyle(color = themeStrategy.primaryTextColor),
             value = passwordState.value,
             onValueChange = { passwordState.value = it },
             label = { Text("password") },
