@@ -61,6 +61,7 @@ class BeaconViewModel : ViewModel() {
                 put("title", title)
                 put("tag", tag)
                 put("description", description)
+                put("tag", tag)
                 put("postalCode", postalCode)
             }
             val newBeaconJsonString =
