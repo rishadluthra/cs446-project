@@ -22,13 +22,11 @@ object LightThemeStrategy : ThemeStrategy {
     override val secondaryColor = LightThemeSecondaryBlack
     override val primaryTextColor = LightThemeTextBlack
     override val secondaryTextColor = LightThemeTextWhite
-    // Initialize other properties
 }
 
 object DarkThemeStrategy : ThemeStrategy {
-    override val primaryColor = DarkThemePrimaryBlack // Assuming this is from your dark theme
+    override val primaryColor = DarkThemePrimaryBlack
     override val secondaryColor = DarkThemeSecondaryGrey
     override val primaryTextColor = DarkThemeTextYellow
     override val secondaryTextColor = DarkThemeTextWhite
-    // Initialize other properties
 }

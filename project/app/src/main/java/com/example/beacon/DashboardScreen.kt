@@ -49,7 +49,6 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val themeStrategy by viewModel.themeStrategy
     val uiState by viewModel.uiState.collectAsState()
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
-    // Set the LazyColumn's background to yellow
     Box(modifier = Modifier
         .fillMaxSize()
         .background(themeStrategy.primaryColor)
@@ -63,7 +62,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 text = "Dashboard  ",
                                 fontSize = 32.sp,
                                 color = themeStrategy.primaryTextColor,
-                                modifier = Modifier.align(Alignment.Center) // Center align the text
+                                modifier = Modifier.align(Alignment.Center)
                             )
                         }
                     },
@@ -75,8 +74,6 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 2.dp)
-                       // .border(1.dp, Color.Black, RoundedCornerShape(16.dp))
-                       // .background(Color.Black)
                         .padding(horizontal = 16.dp, vertical = 8.dp)
                 ) {
                     Text(
