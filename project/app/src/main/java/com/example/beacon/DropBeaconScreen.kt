@@ -108,10 +108,12 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             if (showDialog){
                 AlertDialog(
                     onDismissRequest = { setShowDialog(false) },
-                    title = { Text("Success") },
+                    title = { Text("Success",
+                        color = themeStrategy.secondaryTextColor) },
                     containerColor = themeStrategy.primaryTextColor,
                     text = { Text(
                         text = "Beacon dropped",
+                        color = themeStrategy.secondaryTextColor,
                         fontSize = 16.sp) },
                     dismissButton = {
                         Button(
