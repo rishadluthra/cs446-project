@@ -112,8 +112,11 @@ class BeaconViewModel : ViewModel() {
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
     try {
+        val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
-            .url("http://10.0.2.2:4000/beacons/my_beacons?creatorId=rishad").build()
+            .url("http://10.0.2.2:4000/beacons/my_beacons?creatorId=rishad")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
         val response = OkHttpClient().newCall(request).execute()
         val json = response.body!!.string()
         return Json.decodeFromString<Array<BeaconInfo>>(json)
@@ -125,8 +128,11 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
 
 fun fetchNearbyBeacons(): Array<BeaconInfo> {
     try {
+        val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
-            .url("http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007&maxDistance=10000").build()
+            .url("http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007&maxDistance=10000")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
         val response = OkHttpClient().newCall(request).execute()
         val json = response.body!!.string()
         return Json.decodeFromString<Array<BeaconInfo>>(json)
@@ -138,8 +144,12 @@ fun fetchNearbyBeacons(): Array<BeaconInfo> {
 
 fun deleteBeacon(id: String): Int {
     try {
+        val authToken = AuthManager.getAuthToken()
         val request = Request.Builder()
-            .url("http://10.0.2.2:4000/beacons/$id").delete().build()
+            .url("http://10.0.2.2:4000/beacons/$id")
+            .addHeader("Authorization", "Bearer $authToken")
+            .delete()
+            .build()
         val response = OkHttpClient().newCall(request).execute()
         return response.code
     } catch (e: Exception) {
@@ -153,8 +163,10 @@ fun postBeacon(newBeaconJsonString: String): Int {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = newBeaconJsonString.toRequestBody(mediaType)
         val client = OkHttpClient()
+        val authToken = AuthManager.getAuthToken()
         val request = Request.Builder()
             .url("http://10.0.2.2:4000/beacons")
+            .addHeader("Authorization", "Bearer $authToken")
             .post(requestBody)
             .build()
         val response = client.newCall(request).execute()
