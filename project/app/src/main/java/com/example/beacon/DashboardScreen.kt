@@ -94,7 +94,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
                     shape = RoundedCornerShape(16.dp),
-                    color = Color.White // Set the item background to white
+                    color = themeStrategy.secondaryColor
                 ) {
                     Column(
                         modifier = Modifier
@@ -103,11 +103,14 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Text(
                             text = uiState.ourBeacons[i].title,
                             style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 8.dp),
+                            color = themeStrategy.secondaryTextColor
                         )
                         Text(
                             text = uiState.ourBeacons[i].description,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = themeStrategy.secondaryTextColor
+
                         )
                         Button(
                             onClick = {
@@ -124,7 +127,8 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 containerColor = themeStrategy.primaryColor
                             ),
                         ) {
-                            Text(text = "resolve")
+                            Text(text = "resolve",
+                                color = themeStrategy.primaryTextColor)
                         }
                     }
                 }
