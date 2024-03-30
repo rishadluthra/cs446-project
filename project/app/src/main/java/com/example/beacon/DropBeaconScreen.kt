@@ -1,6 +1,7 @@
 package com.example.beacon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -72,10 +73,10 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            TextFieldWithLabel(
-                viewModel,
+            DropdownWithLabel(
                 label = "choose tags",
                 state = tagsState,
+                options = listOf("select a tag", "labour", "tools", "tech", "social"),
                 modifier = Modifier.fillMaxWidth()
             )
             TextFieldWithLabel(
@@ -95,9 +96,11 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             )
             Button(
                 onClick = {
-                    responseCode = viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value)
-                    if(responseCode == 0){
-                        setShowDialog(true)
+                    if (tagsState.value != "select a tag") {
+                        responseCode = viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value)
+                        if(responseCode == 0){
+                            setShowDialog(true)
+                        }
                     }
                 },
 
@@ -174,6 +177,38 @@ fun TextFieldWithLabel(viewModel: BeaconViewModel, label: String, state: Mutable
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = if (label == "enter description of your beacon") ImeAction.Default else ImeAction.Next),
         visualTransformation = visualTransformation
     )
+}
+
+@Composable
+fun DropdownWithLabel(label: String, state: MutableState<String>, modifier: Modifier = Modifier, options: List<String>) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableStateOf(0) }
+
+    Column(modifier.padding(vertical = 8.dp)) {
+        Text(label)
+        Box {
+            Text(
+                text = options[selectedIndex],
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { expanded = true })
+                    .padding(16.dp)
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                options.forEachIndexed { index, option ->
+                    DropdownMenuItem(onClick = {
+                        selectedIndex = index
+                        state.value = option
+                        expanded = false
+                    }, text = {Text(option)})
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
