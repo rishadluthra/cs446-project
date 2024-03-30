@@ -13,7 +13,7 @@ export class BeaconsService {
     @InjectModel(Beacon.name)
     private readonly beaconModel: Model<BeaconDocument>,
     private readonly geoGratisService: GeogratisService,
-  ) { }
+  ) {}
 
   async create(
     { postalCode, ...beaconBody }: CreateBeaconDto,

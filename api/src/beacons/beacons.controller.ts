@@ -61,7 +61,16 @@ export class BeaconsController {
     @Param('id') id: string,
     @Body() updateBeaconInput: CreateBeaconDto,
   ): Promise<Beacon> {
-    return this.beaconsService.update(id, updateBeaconInput, currentUser.id);
+    try {
+      const beacon = await this.beaconsService.update(
+        id,
+        updateBeaconInput,
+        currentUser.id,
+      );
+      return beacon;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @UseGuards(JwtAuthGuard)
