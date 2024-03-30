@@ -86,7 +86,7 @@ class BeaconViewModel : ViewModel() {
                 }
 
                 // Now back on the main thread, check the response and call onSuccess or onError
-                if (responseCode == 201 && authToken != null) {
+                if (responseCode == 201 && authToken != "") {
                     AuthManager.setAuthToken(authToken)
                     onSuccess(authToken)
                 } else {
@@ -163,7 +163,7 @@ fun postBeacon(newBeaconJsonString: String): Int {
     return 400
 }
 
-suspend fun postSignIn(signInJsonString: String): Pair<Int, String?> {
+suspend fun postSignIn(signInJsonString: String): Pair<Int, String> {
     try {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = signInJsonString.toRequestBody(mediaType)
@@ -176,12 +176,12 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String?> {
             if (response.isSuccessful) {
                 val responseBody = response.body?.string()
                 val jsonObject = JSONObject(responseBody.toString())
-                val authToken = jsonObject.optString("access_token", null.toString())
+                val authToken = jsonObject.optString("access_token", "")
                 return Pair(response.code, authToken)
             }
         }
     } catch (e: Exception) {
         println(e.message)
     }
-    return Pair(400, null)
+    return Pair(400, "")
 }

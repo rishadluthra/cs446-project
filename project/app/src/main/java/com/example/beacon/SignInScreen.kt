@@ -108,7 +108,6 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                     onError = {
                         errorMessageState.value = "Email or Password is incorrect. Please try again."
                     })
-//                navController.navigate(BeaconScreens.Dashboard.name)
                       },
             modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White)
