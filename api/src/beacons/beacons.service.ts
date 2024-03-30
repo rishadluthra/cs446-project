@@ -57,6 +57,25 @@ export class BeaconsService {
     return this.beaconModel.find({ creatorId });
   }
 
+  async update(
+    id: string,
+    { postalCode, ...beaconBody }: CreateBeaconDto,
+    creatorId: string,
+  ): Promise<Beacon> {
+    const coordinates =
+      await this.geoGratisService.getCoordinatesFromPostalCode(postalCode);
+
+    if (!coordinates) {
+      throw new Error('Invalid postal code');
+    }
+
+    return this.beaconModel.findOneAndUpdate(
+      { _id: id, creatorId },
+      { location: { type: 'Point', coordinates }, ...beaconBody, creatorId },
+      { new: true },
+    );
+  }
+
   async delete(id: string, creatorId: string): Promise<Beacon> {
     return this.beaconModel.findOneAndDelete({ _id: id, creatorId });
   }
