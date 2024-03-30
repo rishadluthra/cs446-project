@@ -89,7 +89,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                 BeaconsScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
             }
             composable(route = BeaconScreens.SignIn.name) {
-                SignInScreen(modifier = Modifier.fillMaxHeight(), navController = navController)
+                SignInScreen(modifier = Modifier.fillMaxHeight(), navController = navController, viewModel = viewModel)
             }
             composable(route = BeaconScreens.DropBeacon.name) {
                 DropBeaconScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)

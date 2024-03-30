@@ -33,10 +33,11 @@ import com.example.beacon.ui.theme.White
 
 
 @Composable
-fun SignInScreen(modifier: Modifier = Modifier,navController: NavController) {
+fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, viewModel: BeaconViewModel) {
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val rememberMeState = remember { mutableStateOf(false) }
+    val errorMessageState = remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -69,6 +70,14 @@ fun SignInScreen(modifier: Modifier = Modifier,navController: NavController) {
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
         )
+
+        if (errorMessageState.value != null) {
+            Text(
+                text = errorMessageState.value ?: "",
+                color = Color.Red,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
         // Remember me checkbox
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -91,7 +100,16 @@ fun SignInScreen(modifier: Modifier = Modifier,navController: NavController) {
         }
         // Sign In button
         Button(
-            onClick = { navController.navigate(BeaconScreens.Dashboard.name) },
+            onClick = {
+                viewModel.signIn(emailState.value, passwordState.value,
+                    onSuccess = {
+                        navController.navigate(BeaconScreens.Dashboard.name)
+                    },
+                    onError = {
+                        errorMessageState.value = "Email or Password is incorrect. Please try again."
+                    })
+//                navController.navigate(BeaconScreens.Dashboard.name)
+                      },
             modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White)
         ) {

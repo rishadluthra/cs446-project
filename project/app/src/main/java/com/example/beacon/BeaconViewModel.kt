@@ -1,10 +1,14 @@
 package com.example.beacon
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
@@ -15,6 +19,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.io.IOException
 import java.lang.Exception
 import kotlin.concurrent.thread
@@ -65,6 +70,43 @@ class BeaconViewModel : ViewModel() {
             response = deleteBeacon(id)
         }
         return response
+    }
+
+    fun signIn(email: String, password: String, onSuccess: (String) -> Unit, onError: (Int) -> Unit) {
+//        thread {
+//            val signInJsonObject = buildJsonObject {
+//                put("email", email)
+//                put("password", password)
+//            }
+//            val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
+//            val (responseCode, authToken) = postSignIn(signInJsonString)
+//            if (responseCode == 201 && authToken != null) { // Assuming 200 OK is success. Adjust as needed.
+//                AuthManager.setAuthToken(authToken)
+//                onSuccess(authToken) // Implement token retrieval
+//            } else {
+//                onError(responseCode) // Pass the response code to handle different errors accordingly
+//            }
+//        }
+         // Launch a coroutine in the ViewModelScope
+            viewModelScope.launch {
+                // Perform the network operation on a background thread
+                val (responseCode, authToken) = withContext(Dispatchers.IO) {
+                    val signInJsonObject = buildJsonObject {
+                        put("email", email)
+                        put("password", password)
+                    }
+                    val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
+                    postSignIn(signInJsonString)
+                }
+
+                // Now back on the main thread, check the response and call onSuccess or onError
+                if (responseCode == 201 && authToken != null) {
+                    AuthManager.setAuthToken(authToken)
+                    onSuccess(authToken)
+                } else {
+                    onError(responseCode)
+                }
+            }
     }
 }
 
@@ -121,4 +163,27 @@ fun postBeacon(newBeaconJsonString: String): Int {
         println(e.message)
     }
     return 400
+}
+
+suspend fun postSignIn(signInJsonString: String): Pair<Int, String?> {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = signInJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/login")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                val jsonObject = JSONObject(responseBody.toString())
+                val authToken = jsonObject.optString("access_token", null.toString()) // Adjust the key as per your API response
+                return Pair(response.code, authToken)
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return Pair(400, null) // Indicate a client error in case of exception
 }
