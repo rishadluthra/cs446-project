@@ -1,5 +1,6 @@
 package com.example.beacon
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ data class UiState(
 //fill in needed parameters here
 )
 @Serializable
-data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val createdAt: String, val updatedAt: String)
+data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
 @Serializable
 data class Location(val type: String, val coordinates: Array<Float>)
 
@@ -48,14 +49,14 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun sendBeacon(title: String, description: String, postalCode: String, creatorId: String): Int {
+    fun sendBeacon(title: String, tag: String, description: String, postalCode: String): Int {
         var responseCode = 0
         thread {
             val newBeaconJsonObject = buildJsonObject {
                 put("title", title)
+                put("tag", tag)
                 put("description", description)
                 put("postalCode", postalCode)
-                put("creatorId", creatorId)
             }
             val newBeaconJsonString =
                 Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
@@ -100,7 +101,7 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
-            .url("http://10.0.2.2:4000/beacons/my_beacons?creatorId=rishad")
+            .url("http://10.0.2.2:4000/beacons/my_beacons")
             .addHeader("Authorization", "Bearer $authToken")
             .build()
         val response = OkHttpClient().newCall(request).execute()
