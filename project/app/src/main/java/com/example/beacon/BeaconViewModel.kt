@@ -73,20 +73,6 @@ class BeaconViewModel : ViewModel() {
     }
 
     fun signIn(email: String, password: String, onSuccess: (String) -> Unit, onError: (Int) -> Unit) {
-//        thread {
-//            val signInJsonObject = buildJsonObject {
-//                put("email", email)
-//                put("password", password)
-//            }
-//            val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
-//            val (responseCode, authToken) = postSignIn(signInJsonString)
-//            if (responseCode == 201 && authToken != null) { // Assuming 200 OK is success. Adjust as needed.
-//                AuthManager.setAuthToken(authToken)
-//                onSuccess(authToken) // Implement token retrieval
-//            } else {
-//                onError(responseCode) // Pass the response code to handle different errors accordingly
-//            }
-//        }
          // Launch a coroutine in the ViewModelScope
             viewModelScope.launch {
                 // Perform the network operation on a background thread
@@ -190,12 +176,12 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String?> {
             if (response.isSuccessful) {
                 val responseBody = response.body?.string()
                 val jsonObject = JSONObject(responseBody.toString())
-                val authToken = jsonObject.optString("access_token", null.toString()) // Adjust the key as per your API response
+                val authToken = jsonObject.optString("access_token", null.toString())
                 return Pair(response.code, authToken)
             }
         }
     } catch (e: Exception) {
         println(e.message)
     }
-    return Pair(400, null) // Indicate a client error in case of exception
+    return Pair(400, null)
 }
