@@ -1,6 +1,8 @@
 package com.example.beacon
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +41,7 @@ data class Location(val type: String, val coordinates: Array<Float>)
 class BeaconViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    var themeStrategy: MutableState<ThemeStrategy> = mutableStateOf(LightThemeStrategy)
 
     fun refresh() {
         thread {
@@ -94,6 +97,13 @@ class BeaconViewModel : ViewModel() {
                     onError(responseCode)
                 }
             }
+    fun toggleTheme() {
+        themeStrategy.value = if (themeStrategy.value == DarkThemeStrategy) {
+            LightThemeStrategy
+        } else {
+            DarkThemeStrategy
+        }
+        print("current theme: ${themeStrategy.value}")
     }
 }
 

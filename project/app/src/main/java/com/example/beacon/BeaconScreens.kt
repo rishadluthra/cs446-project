@@ -4,6 +4,7 @@ package com.example.beacon
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -18,12 +19,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,7 +44,8 @@ enum class BeaconScreens(val title: String) {
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+              themeStrategy: MutableState<ThemeStrategy>
 ) {
 
     val viewModel: BeaconViewModel = viewModel()
@@ -69,6 +72,15 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                                     Text(text = item.title)
                                 }
                         }
+                    }
+                    Button(
+                        onClick = {
+                            // Toggle the theme strategy
+                            viewModel.toggleTheme()
+                        },
+                        modifier = Modifier.align(Alignment.Start).padding(16.dp) // Align to bottom left
+                    ) {
+                        Text("Switch Theme")
                     }
                 }
             }

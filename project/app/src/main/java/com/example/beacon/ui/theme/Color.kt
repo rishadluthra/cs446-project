@@ -14,3 +14,13 @@ val PrimaryYellow = Color(0xFFF7CE4D)
 val Black = Color(0xFF000000)
 val White = Color(0xFFFFFFFF)
 val Grey = Color(0xADADADAD)
+
+val LightThemePrimaryYellow = Color(0xFFF7CE4D)
+val LightThemeSecondaryBlack = Color(0xFF000000)
+val LightThemeTextBlack = Color(0xFF000000)
+val LightThemeTextWhite = Color(0xFFFFFFFF)
+
+val DarkThemePrimaryBlack = Color(0xFF000000)
+val DarkThemeSecondaryGrey = Color(0xFFFF222222)
+val DarkThemeTextYellow = Color(0xFFF7CE4D)
+val DarkThemeTextWhite = Color(0xFFFFFFFF)

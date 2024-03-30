@@ -1,5 +1,4 @@
 package com.example.beacon
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,28 +7,20 @@ import androidx.compose.material.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.beacon.ui.theme.Black
-import com.example.beacon.ui.theme.PrimaryYellow
-import com.example.beacon.ui.theme.Purple80
-import com.example.beacon.ui.theme.White
 
 
 @Composable
@@ -37,12 +28,13 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
     val emailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val rememberMeState = remember { mutableStateOf(false) }
+    val themeStrategy by viewModel.themeStrategy
     val errorMessageState = remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(PrimaryYellow)
+            .background(themeStrategy.primaryColor)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -50,7 +42,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
         Text(
             text = "sign In",
             fontSize = 32.sp,
-            color = Color.Black,
+            color = themeStrategy.primaryTextColor,
             modifier = Modifier.padding(bottom = 32.dp)
         )
         // Email input field
@@ -94,7 +86,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
             Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = "forgot password?",
-                color = Black
+                color = themeStrategy.primaryTextColor
 //                modifier = Modifier.clickable { /* TODO: Handle forgot password */ }
             )
         }
@@ -110,7 +102,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                     })
                       },
             modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Black, contentColor = White)
+            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.secondaryColor, contentColor = themeStrategy.secondaryTextColor)
         ) {
             Text("SIGN IN")
         }
@@ -122,7 +114,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
             Text("don't have account? ")
             Text(
                 text = "create account",
-                color = Black
+                color = themeStrategy.primaryTextColor
 //                modifier = Modifier.clickable { /* TODO: Navigate to create account screen */ }
             )
         }
