@@ -66,22 +66,26 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TextFieldWithLabel(
+                viewModel,
                 label = "enter a title...",
                 state = titleState,
                 modifier = Modifier
                     .fillMaxWidth()
             )
             TextFieldWithLabel(
+                viewModel,
                 label = "choose tags",
                 state = tagsState,
                 modifier = Modifier.fillMaxWidth()
             )
             TextFieldWithLabel(
+                viewModel,
                 label = "enter the postal code for the beacon",
                 state = pincodeState,
                 modifier = Modifier.fillMaxWidth()
             )
             TextFieldWithLabel(
+                viewModel,
                 label = "enter description of your beacon",
                 state = descriptionState,
                 modifier = Modifier
@@ -157,8 +161,10 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
 }
 
 @Composable
-fun TextFieldWithLabel(label: String, state: MutableState<String>, modifier: Modifier = Modifier, visualTransformation: VisualTransformation = VisualTransformation.None) {
+fun TextFieldWithLabel(viewModel: BeaconViewModel, label: String, state: MutableState<String>, modifier: Modifier = Modifier, visualTransformation: VisualTransformation = VisualTransformation.None) {
+    val themeStrategy by viewModel.themeStrategy
     OutlinedTextField(
+        textStyle = TextStyle(color = themeStrategy.primaryTextColor),
         value = state.value,
         onValueChange = { state.value = it },
         label = { Text(label) },
