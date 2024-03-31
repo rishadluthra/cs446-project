@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Schema as MongooseSchema } from 'mongoose';
 
 export type BeaconDocument = HydratedDocument<Beacon>;
 
@@ -14,7 +14,7 @@ export enum Tag {
 export class Beacon {
   id: string;
 
-  @Prop({ required: true })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
   creatorId: string;
 
   @Prop({ required: true })
