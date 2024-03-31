@@ -1,6 +1,8 @@
 package com.example.beacon
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -39,12 +41,16 @@ data class Location(val type: String, val coordinates: Array<Float>)
 class BeaconViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+    var themeStrategy: MutableState<ThemeStrategy> = mutableStateOf(LightThemeStrategy)
 
     fun refresh() {
         thread {
             _uiState.update { currentState ->
-                 currentState.copy(ourBeacons = fetchOurBeacons().asList(), nearbyBeacons = fetchNearbyBeacons().asList())
-            //initialize parameters here
+                currentState.copy(
+                    ourBeacons = fetchOurBeacons().asList(),
+                    nearbyBeacons = fetchNearbyBeacons().asList()
+                )
+                //initialize parameters here
             }
         }
     }
@@ -73,6 +79,15 @@ class BeaconViewModel : ViewModel() {
         return response
     }
 
+    fun toggleTheme() {
+        themeStrategy.value = if (themeStrategy.value == DarkThemeStrategy) {
+            LightThemeStrategy
+        } else {
+            DarkThemeStrategy
+        }
+        print("current theme: ${themeStrategy.value}")
+    }
+
     fun signIn(email: String, password: String, onSuccess: (String) -> Unit, onError: (Int) -> Unit) {
          // Launch a coroutine in the ViewModelScope
             viewModelScope.launch {
@@ -85,7 +100,6 @@ class BeaconViewModel : ViewModel() {
                     val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
                     postSignIn(signInJsonString)
                 }
-
                 // Now back on the main thread, check the response and call onSuccess or onError
                 if (responseCode == 201 && authToken != "") {
                     AuthManager.setAuthToken(authToken)
@@ -95,7 +109,8 @@ class BeaconViewModel : ViewModel() {
                 }
             }
     }
-}
+
+
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
     try {
@@ -182,7 +197,9 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String> {
             }
         }
     } catch (e: Exception) {
-        println(e.message)
+            println(e.message)
     }
-    return Pair(400, "")
+        return Pair(400, "") // Indicate a client error in case of exception
+    }
 }
+
