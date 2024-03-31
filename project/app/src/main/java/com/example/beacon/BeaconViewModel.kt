@@ -87,28 +87,50 @@ class BeaconViewModel : ViewModel() {
         print("current theme: ${themeStrategy.value}")
     }
 
-    fun signIn(email: String, password: String, onSuccess: (String) -> Unit, onError: (Int) -> Unit) {
-         // Launch a coroutine in the ViewModelScope
-            viewModelScope.launch {
-                // Perform the network operation on a background thread
-                val (responseCode, authToken) = withContext(Dispatchers.IO) {
-                    val signInJsonObject = buildJsonObject {
-                        put("email", email)
-                        put("password", password)
-                    }
-                    val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
-                    postSignIn(signInJsonString)
+    fun signIn(
+        email: String,
+        password: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        // Launch a coroutine in the ViewModelScope
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val (responseCode, authToken) = withContext(Dispatchers.IO) {
+                val signInJsonObject = buildJsonObject {
+                    put("email", email)
+                    put("password", password)
                 }
-                // Now back on the main thread, check the response and call onSuccess or onError
-                if (responseCode == 201 && authToken != "") {
-                    AuthManager.setAuthToken(authToken)
-                    onSuccess(authToken)
-                } else {
-                    onError(responseCode)
-                }
+                val signInJsonString =
+                    Json.encodeToString(JsonObject.serializer(), signInJsonObject)
+                postSignIn(signInJsonString)
             }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201 && authToken != "") {
+                AuthManager.setAuthToken(authToken)
+                onSuccess(authToken)
+            } else {
+                onError(responseCode)
+            }
+        }
     }
 
+    fun createAccount(firstName: String, lastName: String, email: String, password: String): Int {
+        var responseCode = 0
+        thread {
+            val newBeaconJsonObject = buildJsonObject {
+                put("firstName", firstName)
+                put("lastName", lastName)
+                put("email", email)
+                put("password", password)
+            }
+            val newBeaconJsonString =
+                Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+            responseCode = postAccountDetails(newBeaconJsonString)
+        }
+        return responseCode
+    }
+}
 
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
@@ -199,6 +221,22 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String> {
             println(e.message)
     }
         return Pair(400, "") // Indicate a client error in case of exception
+}
+
+fun postAccountDetails(newBeaconJsonString: String): Int {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = newBeaconJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/register")
+            .post(requestBody)
+            .build()
+        val response = client.newCall(request).execute()
+        return response.code
+    } catch (e: Exception) {
+        println(e.message)
     }
+    return 400
 }
 
