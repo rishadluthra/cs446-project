@@ -59,3 +59,6 @@ Note: times are represented in number of hours
 | 2024/03/22 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
 | 2024/03/23 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
 | 2024/03/27 |  0.5   |   0.5 |         |  0.5  |  0.5  | 0.5   | final demo meeting |
+| 2024/03/27 |  4     |       |         |       |       |       | Final demo - light and dark mode |
+| 2024/03/30 |  0.5   |   0.5 |  0.5    |  0.5  |  0.5  | 0.5   | final demo meeting |
+| 2024/03/30 |  8.5   |       |         |       |       |       | Final demo - frontend auth, finished themes, create account page |
