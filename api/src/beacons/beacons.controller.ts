@@ -47,11 +47,17 @@ export class BeaconsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/my_beacons')
+  @Get('my_beacons')
   async find_my_beacons(
     @CurrentUser() currentUser: Partial<User>,
   ): Promise<Beacon[]> {
     return this.beaconsService.findByCreatorId(currentUser.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Beacon> {
+    return this.beaconsService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard)

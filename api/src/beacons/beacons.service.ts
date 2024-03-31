@@ -53,6 +53,10 @@ export class BeaconsService {
     });
   }
 
+  async findOne(id: string): Promise<Beacon> {
+    return this.beaconModel.findById(id);
+  }
+
   async findByCreatorId(creatorId: string): Promise<Beacon[]> {
     return this.beaconModel.find({ creatorId });
   }
