@@ -120,8 +120,8 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                 color = themeStrategy.primaryTextColor)
             Text(
                 text = " create account",
-                color = themeStrategy.primaryTextColor
-//                modifier = Modifier.clickable { /* TODO: Navigate to create account screen */ }
+                color = themeStrategy.primaryTextColor,
+                modifier = Modifier.clickable { navController.navigate(BeaconScreens.CreateAccount.name) }
             )
         }
     }
