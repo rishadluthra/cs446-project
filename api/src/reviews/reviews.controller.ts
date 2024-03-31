@@ -43,7 +43,8 @@ export class ReviewsController {
     @Query('targetEmail') targetEmail: string,
   ): Promise<Review[]> {
     try {
-      return this.reviewsService.findByTargetEmail(targetEmail);
+      const reviews = await this.reviewsService.findByTargetEmail(targetEmail);
+      return reviews;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
