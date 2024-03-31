@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { BeaconsModule } from './beacons/beacons.module';
 import { GeogratisModule } from './geogratis/geogratis.module';
 import { UsersModule } from './users/users.module';
+import { EmailModule } from './email/email.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     BeaconsModule,
     GeogratisModule,
+    EmailModule,
     UsersModule,
   ],
 })
