@@ -29,17 +29,25 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
     val confirmEmailState = remember { mutableStateOf("") }
     val passwordState = remember { mutableStateOf("") }
     val confirmPasswordState = remember { mutableStateOf("") }
+    val confirmVerificationState = remember { mutableStateOf("") }
     val errorMessageState = remember { mutableStateOf<String?>("") }
+    val verificationState = remember { mutableStateOf("") }
     val themeStrategy by viewModel.themeStrategy
 
     // Check if the emails and passwords match (simple validation)
+    val pattern = ".*(@uwaterloo.ca)"
+    val validEmail = emailState.value.isNotEmpty() && Regex(pattern).matches(emailState.value)
+    val validPassword = passwordState.value.isNotEmpty()
     val doEmailsMatch = emailState.value == confirmEmailState.value
     val doPasswordsMatch = passwordState.value == confirmPasswordState.value
+
+    val doesVerificationMatch = verificationState.value == confirmVerificationState.value
 
     var (responseCode, setresponseCode) = remember {
         mutableStateOf(0)
     }
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    val (showVerification, setShowVerification) = remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -135,11 +143,18 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
         // Register Button
         Button(
             onClick = {
-                if (doEmailsMatch && doPasswordsMatch) {
-                    responseCode = viewModel.createAccount(firstNameState.value, lastNameState.value,
-                        emailState.value, passwordState.value)
+                if (!(validEmail && validPassword)) {
+                    errorMessageState.value = "Please enter valid email or password."
+                }
+                else if (doEmailsMatch && doPasswordsMatch) {
+                    //API CALL TO SET confirmVerificationState
+                    responseCode = 0
+                    confirmVerificationState.value = "123"
                     if(responseCode == 0){
-                        setShowDialog(true)
+                        setShowVerification(true)
+                    }
+                    else {
+                        errorMessageState.value = "Email unable to send."
                     }
                 } else {
                     errorMessageState.value = "Please make sure emails and passwords match."
@@ -150,7 +165,83 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
         ) {
             Text("CREATE ACCOUNT")
         }
+        // Back to Sign In Button
+        Button(
+            onClick = {
+                navController.navigate(BeaconScreens.SignIn.name)
+            },
+            modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.secondaryColor, contentColor = themeStrategy.secondaryTextColor)
+        ) {
+            Text("BACK TO SIGN IN")
+        }
 
+        if (showVerification) {
+            AlertDialog(
+                onDismissRequest = { setShowVerification(false) },
+                title = { Text("Email Verification Code",
+                    color = themeStrategy.secondaryTextColor) },
+                containerColor = themeStrategy.primaryTextColor,
+                text = {
+                    Column (
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        OutlinedTextField(
+                            textStyle = TextStyle(color = themeStrategy.secondaryTextColor),
+                            value = verificationState.value,
+                            onValueChange = { verificationState.value = it },
+                            label = { Text("Enter Verification Code") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                            isError = !doesVerificationMatch && confirmVerificationState.value.isNotEmpty()
+                        )
+                    }
+                       },
+                confirmButton = {
+                    Column  (
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(
+                            onClick = {
+                                //API CALL THAT RETURNS VERIFICATION STATE
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = themeStrategy.primaryColor,
+                                contentColor = themeStrategy.primaryTextColor
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            Text("Resend Code")
+                        }
+                        Button(
+                            onClick = {
+                                if (doesVerificationMatch && confirmVerificationState.value.isNotEmpty()) {
+                                    verificationState.value = ""
+                                    responseCode = viewModel.createAccount(firstNameState.value, lastNameState.value,
+                                        emailState.value, passwordState.value)
+                                    if (responseCode == 0) {
+                                        setShowVerification(false)
+                                        setShowDialog(true)
+                                    }
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = themeStrategy.primaryColor,
+                                contentColor = themeStrategy.primaryTextColor
+                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp)
+                        ) {
+                            Text("Verify")
+                        }
+                    }
+                }
+            )
+        }
         if (showDialog){
             AlertDialog(
                 onDismissRequest = { setShowDialog(false) },
@@ -171,7 +262,7 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                             passwordState.value = ""
                             confirmPasswordState.value = ""
                             setShowDialog(false)
-                            navController.navigate(BeaconScreens.SignIn.name)
+                            navController.navigate(BeaconScreens.Dashboard.name)
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
                         modifier = Modifier
