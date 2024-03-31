@@ -7,12 +7,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CurrentUser } from 'src/decorators/user.decorator';
-import { User } from 'src/users/user.schema';
+
 import { CreateReviewDto } from './dto';
 import { Review } from './review.schema';
 import { ReviewsService } from './reviews.service';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../decorators/user.decorator';
+import { User } from '../users/user.schema';
 
 @Controller('reviews')
 export class ReviewsController {

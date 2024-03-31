@@ -10,7 +10,6 @@ import {
 
 export class CreateReviewDto {
   @IsNotEmpty()
-  @IsString()
   @IsEmail()
   targetEmail: string;
 
