@@ -9,6 +9,7 @@ export class EmailController {
 
   @Get('send')
   async sendEmail(
+    @Body() { to: String }
   ): Promise<String> {
     try {
       const code = await this.emailService.sendEmail("beaconsinfo10@gmail.com");
