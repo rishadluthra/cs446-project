@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AuthModule } from './auth/auth.module';
 import { BeaconsModule } from './beacons/beacons.module';
+import { EmailModule } from './email/email.module';
 import { GeogratisModule } from './geogratis/geogratis.module';
 <<<<<<< HEAD
 import { ReportsModule } from './reports/reports.module';
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
 =======
 >>>>>>> 1823a18 (Reviews backend (#5))
     ReviewsModule,
+    EmailModule,
     UsersModule,
   ],
 })
