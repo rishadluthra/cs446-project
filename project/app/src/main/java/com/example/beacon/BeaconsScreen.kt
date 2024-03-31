@@ -1,6 +1,7 @@
 package com.example.beacon
 
 import android.text.Layout
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 //import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,21 +53,37 @@ import com.example.beacon.ui.theme.PrimaryYellow
 import com.example.beacon.ui.theme.White
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.SideEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val themeStrategy by viewModel.themeStrategy
-    LaunchedEffect(true) {
-        viewModel.refresh()
-    }
     val uiState by viewModel.uiState.collectAsState()
     val tagsState = remember { mutableStateListOf<String>() }
     val tags = listOf("labour", "tools", "tech", "social")
+    val tagsKey = remember(tagsState) { tagsState.joinToString() }
+    var selectedTags by remember { mutableStateOf(listOf<String>()) }
+    var sliderValue by remember { mutableStateOf(1000) }
+    var maxDistance by remember { mutableStateOf(1000) }
 
-    SideEffect {
-        println("Selected Tags: ${tagsState.joinToString()}")
+    LaunchedEffect(true) {
+        viewModel.refreshNearby(tagsState, maxDistance)
+    }
+
+//    LaunchedEffect(tagsKey) {
+//        viewModel.refreshNearby(tagsState.toList())
+//    }
+    LaunchedEffect(selectedTags) {
+        Log.d("SelectedTags", selectedTags.joinToString(", "))
+        viewModel.refreshNearby(selectedTags, maxDistance)
+    }
+
+    LaunchedEffect(maxDistance) {
+        Log.d("SelectedTags", selectedTags.joinToString(", "))
+        viewModel.refreshNearby(selectedTags, maxDistance)
     }
 
     Box(
@@ -91,19 +109,52 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = themeStrategy.primaryColor)
                 )
-                MultiTagSelection(
-                    selectedTags = tagsState,
-                    tags = tags,
-                    onTagSelected = { tag, isSelected ->
-                        if (isSelected && !tagsState.contains(tag)) {
-                            tagsState.add(tag)
-                        } else if (!isSelected && tagsState.contains(tag)) {
-                            tagsState.remove(tag)
+            }
+            item {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = themeStrategy.secondaryColor
+                ) {
+                    Column() {
+                        Text("Choose tags to filter",modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            tags.forEach { tag ->
+                                var isChecked by remember { mutableStateOf(false) }
+                                Checkbox(
+                                    checked = isChecked,
+                                    onCheckedChange = { isSelected ->
+                                        isChecked = isSelected
+                                        selectedTags = if (isSelected) {
+                                            selectedTags + tag
+                                        } else {
+                                            selectedTags - tag
+                                        }
+                                    }
+                                )
+                                Text(text = tag, modifier = Modifier.align(Alignment.CenterVertically), color = themeStrategy.secondaryTextColor)
+                            }
                         }
-                    },
-                    chooseTagsLabel = "Choose tags to filter on"
-                )
-                print(tagsState.joinToString())
+                        Text("Slide to enter maximum search range",modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
+                        Text("Current range: ${sliderValue} Km", modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
+                        Slider(
+                            value = sliderValue.toFloat(),
+                            onValueChange = { sliderValue = it.toInt() },
+                            valueRange = 1000f..8000f, // Range from 1 to 1000
+                            onValueChangeFinished = {
+                                maxDistance = sliderValue
+                            },
+                            colors = SliderDefaults.colors(
+                                thumbColor = themeStrategy.primaryColor,
+                                activeTrackColor = themeStrategy.primaryColor
+                            ),
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
+                }
+
             }
             items(uiState.nearbyBeacons.size) { i ->
                 Surface(
