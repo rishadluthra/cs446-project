@@ -22,8 +22,9 @@ export class ReviewsService {
     const target = await this.usersService.findOneByEmail(targetEmail);
 
     if (!target) {
-      throw new Error('Invalid target user');
+      return;
     }
+
     if (target.id === creatorId) {
       throw new Error('Self review');
     }
@@ -39,7 +40,7 @@ export class ReviewsService {
     const target = await this.usersService.findOneByEmail(targetEmail);
 
     if (!target) {
-      throw new Error('Invalid target user');
+      return [];
     }
 
     return this.reviewModel.find({ targetId: target.id });

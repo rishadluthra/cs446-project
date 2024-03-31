@@ -42,11 +42,6 @@ export class ReviewsController {
   async findByTargetEmail(
     @Query('targetEmail') targetEmail: string,
   ): Promise<Review[]> {
-    try {
-      const reviews = await this.reviewsService.findByTargetEmail(targetEmail);
-      return reviews;
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return this.reviewsService.findByTargetEmail(targetEmail);
   }
 }
