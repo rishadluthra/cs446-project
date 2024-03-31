@@ -15,10 +15,6 @@ export class UsersService {
     return this.userModel.findOne({ email });
   }
 
-  async findById(id: string): Promise<User | null> {
-      return this.userModel.findById( id );
-  }
-
   async create({
     firstName,
     lastName,
