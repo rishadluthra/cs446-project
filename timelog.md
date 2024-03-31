@@ -61,3 +61,6 @@ Note: times are represented in number of hours
 | 2024/03/27 |  0.5   |   0.5 |         |  0.5  |  0.5  | 0.5   | final demo meeting |
 | 2024/03/27 |        |       |         |       |       |   3   | Add tag to beacon creation |
 
+| 2024/03/27 |  4     |       |         |       |       |       | Final demo - light and dark mode |
+| 2024/03/30 |  0.5   |   0.5 |  0.5    |  0.5  |  0.5  | 0.5   | final demo meeting |
+| 2024/03/30 |  8.5   |       |         |       |       |       | Final demo - frontend auth, finished themes, create account page |
