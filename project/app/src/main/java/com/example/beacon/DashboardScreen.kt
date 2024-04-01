@@ -111,10 +111,13 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         )
                         Button(
                             onClick = {
-                                val code = viewModel.delete(uiState.ourBeacons[i].id)
-                                if (code == 0) {
-                                    setShowDialog(true)
-                                }
+                                viewModel.delete(uiState.ourBeacons[i].id,
+                                    onSuccess = {
+                                                setShowDialog(true)
+                                    },
+                                    onError = {
+
+                                    })
                                 viewModel.refresh()
                             },
                             modifier = Modifier

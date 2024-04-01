@@ -46,11 +46,8 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
     val pincodeState = remember { mutableStateOf("") }
     val descriptionState = remember { mutableStateOf("") }
     val themeStrategy by viewModel.themeStrategy
+    val errorMessageState = remember { mutableStateOf<String?>(null) }
 
-    //var responseCode = 0
-    var (responseCode, setresponseCode) = remember {
-        mutableStateOf(0)
-    }
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -95,10 +92,13 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             )
             Button(
                 onClick = {
-                    responseCode = viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value)
-                    if(responseCode == 0){
-                        setShowDialog(true)
-                    }
+                    viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value,
+                        onSuccess = {
+                            setShowDialog(true)
+                        }, onError = {
+                            errorMessageState.value = "Please ensure that all fields are filled and that the postal code is valid."
+                        }
+                    )
                 },
 
                 colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryTextColor, contentColor = themeStrategy.secondaryColor),
@@ -108,6 +108,13 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             ) {
                 Text("Drop",
                         color = themeStrategy.primaryColor)
+            }
+            if (errorMessageState.value != null) {
+                Text(
+                    text = errorMessageState.value ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
             if (showDialog){
                 AlertDialog(
