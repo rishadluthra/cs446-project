@@ -14,6 +14,8 @@ export class Report {
   targetId: string;
 
   createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const ReportSchema = SchemaFactory.createForClass(Report);
