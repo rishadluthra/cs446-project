@@ -25,13 +25,13 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     BeaconsModule,
+    EmailModule,
     GeogratisModule,
 <<<<<<< HEAD
     ReportsModule,
 =======
 >>>>>>> 1823a18 (Reviews backend (#5))
     ReviewsModule,
-    EmailModule,
     UsersModule,
   ],
 })

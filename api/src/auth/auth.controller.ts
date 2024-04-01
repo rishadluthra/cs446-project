@@ -6,12 +6,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { CurrentUser } from '../decorators/user.decorator';
-
 import { AuthService } from './auth.service';
 import { AccessTokenDto } from './dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
+import { CurrentUser } from '../decorators/user.decorator';
 import { CreateUserDto } from '../users/dto';
 import { User } from '../users/user.schema';
 
@@ -39,6 +39,18 @@ export class AuthController {
         password,
       });
       return accessToken;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('send-verfication-email')
+  async sendVerificationEmail(
+    @CurrentUser() currentUser: Partial<User>,
+  ): Promise<string> {
+    try {
+      return this.authService.sendVerificationEmail(currentUser.email);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
