@@ -305,24 +305,27 @@ suspend fun postRegisterAndSignIn(registerJsonString: String): Pair<Int, String>
 }
 
 fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
+    var clientErrorCode = -1
     try {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = verifyJsonString.toRequestBody(mediaType)
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("http://10.0.2.2:4000/auth/send-verification-email")
+            .url("http://10.0.2.2:4000/auth/send-verfication-email")
             .post(requestBody)
             .build()
         client.newCall(request).execute().use { response ->
             if (response.isSuccessful) {
                 val verificationCode = response.body?.string().toString()
                 return Pair(response.code, verificationCode)
+            } else {
+                clientErrorCode = response.code
             }
         }
     } catch (e: Exception) {
         println(e.message)
     }
-    return Pair(400, "") // Indicate a client error in case of exception
+    return Pair(clientErrorCode, "") // Indicate a client error in case of exception
 }
 
 fun postAccountDetails(newBeaconJsonString: String): Int {
