@@ -21,9 +21,9 @@ import { UsersModule } from './users/users.module';
     }),
     AuthModule,
     BeaconsModule,
+    EmailModule,
     GeogratisModule,
     ReviewsModule,
-    EmailModule,
     UsersModule,
   ],
 })

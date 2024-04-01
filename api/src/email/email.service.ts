@@ -1,42 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { createTransport, Transporter } from 'nodemailer';
 
+import { EmailDto } from './dto/email.dto';
 
 @Injectable()
 export class EmailService {
-  private transporter;
+  private transporter: Transporter;
 
-    constructor() {
-      this.transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: 'beaconsinfo10@gmail.com',
-          pass: 'xnio ajlk pqyw rzxu',
-        },
-      });
+  constructor() {
+    this.transporter = createTransport({
+      service: 'Gmail',
+      auth: {
+        user: 'beaconsinfo10@gmail.com',
+        pass: 'xnio ajlk pqyw rzxu',
+      },
+    });
+  }
+
+  async sendEmail(
+    recipient: string,
+    { subject, text }: EmailDto,
+  ): Promise<void> {
+    const mailOptions = {
+      from: 'beaconsinfo10@gmail.com',
+      to: recipient,
+      subject,
+      text,
+    };
+
+    try {
+      return this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      throw error;
     }
-
-
-
-    async sendEmail(to: string): Promise<String | null> {
-        let min = 100000;
-        let max = 999999;
-        const code = Math.floor(Math .random() * (max - min + 1)) + min
-        const mailOptions = {
-            from: 'beaconsinfo10@gmail.com',
-            to: to,
-            subject: 'Beacon Verification Code',
-            text: 'Here is the verification code for your Beacon Account: ' + code.toString(),
-        };
-
-        try {
-            await this.transporter.sendMail(mailOptions);
-            console.log('Email sent successfully');
-            return code.toString()
-        } catch (error) {
-            console.error('Error sending email:', error);
-            throw error;
-            return null
-        }
-    }
+  }
 }
