@@ -304,6 +304,7 @@ suspend fun postRegisterAndSignIn(registerJsonString: String): Pair<Int, String>
 }
 
 fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
+    var clientErrorCode = -1
     try {
         val mediaType = "application/json; charset=utf-8".toMediaType()
         val requestBody = verifyJsonString.toRequestBody(mediaType)
@@ -316,12 +317,14 @@ fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
             if (response.isSuccessful) {
                 val verificationCode = response.body?.string().toString()
                 return Pair(response.code, verificationCode)
+            } else {
+                clientErrorCode = response.code
             }
         }
     } catch (e: Exception) {
         println(e.message)
     }
-    return Pair(400, "") // Indicate a client error in case of exception
+    return Pair(clientErrorCode, "") // Indicate a client error in case of exception
 }
 
 fun postAccountDetails(newBeaconJsonString: String): Int {

@@ -12,7 +12,7 @@ export class EmailService {
       service: 'Gmail',
       auth: {
         user: 'beaconsinfo10@gmail.com',
-        pass: 'xnio ajlk pqyw rzxu',
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
   }
@@ -29,7 +29,8 @@ export class EmailService {
     };
 
     try {
-      return this.transporter.sendMail(mailOptions);
+      const code = await this.transporter.sendMail(mailOptions);
+      return code
     } catch (error) {
       throw error;
     }

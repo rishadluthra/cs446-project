@@ -44,13 +44,13 @@ export class AuthController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('send-verfication-email')
+  @Post('send-verification-email')
   async sendVerificationEmail(
-    @CurrentUser() currentUser: Partial<User>,
+    @Body() body : { email: string},
   ): Promise<string> {
     try {
-      return this.authService.sendVerificationEmail(currentUser.email);
+      const code = await this.authService.sendVerificationEmail(body.email);
+      return code;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
