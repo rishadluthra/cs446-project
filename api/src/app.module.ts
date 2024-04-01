@@ -7,6 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { BeaconsModule } from './beacons/beacons.module';
 import { EmailModule } from './email/email.module';
 import { GeogratisModule } from './geogratis/geogratis.module';
+<<<<<<< HEAD
+import { ReportsModule } from './reports/reports.module';
+=======
+>>>>>>> 1823a18 (Reviews backend (#5))
 import { ReviewsModule } from './reviews/reviews.module';
 import { UsersModule } from './users/users.module';
 
@@ -23,6 +27,10 @@ import { UsersModule } from './users/users.module';
     BeaconsModule,
     EmailModule,
     GeogratisModule,
+<<<<<<< HEAD
+    ReportsModule,
+=======
+>>>>>>> 1823a18 (Reviews backend (#5))
     ReviewsModule,
     UsersModule,
   ],

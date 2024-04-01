@@ -44,7 +44,7 @@ export class AuthController {
     }
   }
 
-  @Post('send-verfication-email')
+  @Post('send-verification-email')
   async sendVerificationEmail(
     @Body() body : { email: string},
   ): Promise<string> {
