@@ -1,4 +1,5 @@
 package com.example.beacon
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -39,18 +40,15 @@ import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-//TODO: Add this parameters to the screen - modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController
-fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
-    val titleState = remember { mutableStateOf("") }
-    val tagsState = remember { mutableStateOf("") }
+fun UpdateBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
+    val beacon = BeaconManager.getBeacon()
+    val titleState = remember { mutableStateOf(beacon.title) }
+    val tagsState = remember { mutableStateOf(beacon.tag) }
     val pincodeState = remember { mutableStateOf("") }
-    val descriptionState = remember { mutableStateOf("") }
+    val descriptionState = remember { mutableStateOf(beacon.description) }
+    val errorMessageState = remember { mutableStateOf<String?>(null) }
     val themeStrategy by viewModel.themeStrategy
 
-    //var responseCode = 0
-    var (responseCode, setresponseCode) = remember {
-        mutableStateOf(0)
-    }
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -93,48 +91,68 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
 //                    .weight(3f), // This makes the TextField expand
                 visualTransformation = VisualTransformation.None
             )
+            if (errorMessageState.value != null) {
+                Text(
+                    text = errorMessageState.value ?: "",
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
             Button(
                 onClick = {
-                    responseCode = viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value)
-                    if(responseCode == 0){
-                        setShowDialog(true)
+                    if (titleState.value.isNotEmpty() &&
+                        tagsState.value.isNotEmpty() &&
+                        pincodeState.value.isNotEmpty() &&
+                        descriptionState.value.isNotEmpty()) {
+                        viewModel.updateBeacon(
+                            titleState.value,
+                            tagsState.value,
+                            descriptionState.value,
+                            pincodeState.value,
+                            beacon.id,
+                            onSuccess = {
+                                setShowDialog(true)
+                                errorMessageState.value = ""
+                            },
+                            onError = {
+                                errorMessageState.value = "Could not update beacon. Please make sure all fields are entered correctly, including a valid postal code."
+                            }
+                        )
+                    }
+                    else {
+                        errorMessageState.value = "Please fill in all fields."
                     }
                 },
 
-                colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryTextColor, contentColor = themeStrategy.secondaryColor),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = themeStrategy.primaryTextColor,
+                    contentColor = themeStrategy.secondaryColor
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text("Drop",
-                        color = themeStrategy.primaryColor)
+                Text(
+                    "Update",
+                    color = themeStrategy.primaryColor
+                )
             }
-            if (showDialog){
+            if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { setShowDialog(false) },
-                    title = { Text("Success",
-                        color = themeStrategy.secondaryTextColor) },
+                    title = {
+                        Text(
+                            "Success",
+                            color = themeStrategy.secondaryTextColor
+                        )
+                    },
                     containerColor = themeStrategy.primaryTextColor,
-                    text = { Text(
-                        text = "Beacon dropped",
-                        color = themeStrategy.secondaryTextColor,
-                        fontSize = 16.sp) },
-                    dismissButton = {
-                        Button(
-                            onClick = {
-                                titleState.value = ""
-                                tagsState.value = ""
-                                pincodeState.value = ""
-                                descriptionState.value = ""
-                                setShowDialog(false)
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 0.dp)
-                        ) {
-                            Text("Close")
-                        }
+                    text = {
+                        Text(
+                            text = "Beacon updated",
+                            color = themeStrategy.secondaryTextColor,
+                            fontSize = 16.sp
+                        )
                     },
                     confirmButton = {
                         Button(
@@ -146,7 +164,10 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                                 descriptionState.value = ""
                                 navController.navigate(BeaconScreens.Dashboard.name)
                             },
-                            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = themeStrategy.primaryColor,
+                                contentColor = themeStrategy.primaryTextColor
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp)
@@ -158,42 +179,5 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             }
         }
     }
-}
-
-@Composable
-fun TextFieldWithLabel(viewModel: BeaconViewModel, label: String, state: MutableState<String>, modifier: Modifier = Modifier, visualTransformation: VisualTransformation = VisualTransformation.None) {
-    val themeStrategy by viewModel.themeStrategy
-    OutlinedTextField(
-        textStyle = TextStyle(color = themeStrategy.primaryTextColor),
-        value = state.value,
-        onValueChange = { state.value = it },
-        label = { Text(label) },
-        singleLine = label != "enter description of your beacon",
-        modifier = modifier
-            .padding(vertical = 8.dp),
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = if (label == "enter description of your beacon") ImeAction.Default else ImeAction.Next),
-        visualTransformation = visualTransformation
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomAppBar(title: String, navController: NavController, viewModel: BeaconViewModel) {
-    val themeStrategy by viewModel.themeStrategy
-    TopAppBar(
-        title = { Text(text = title, color = themeStrategy.primaryTextColor, fontSize = 18.sp) },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = themeStrategy.primaryColor
-        ),
-        navigationIcon = {
-            IconButton(onClick = { navController.navigate(BeaconScreens.Dashboard.name) }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back",
-                    tint = themeStrategy.primaryTextColor
-                )
-            }
-        },
-    )
 }
 

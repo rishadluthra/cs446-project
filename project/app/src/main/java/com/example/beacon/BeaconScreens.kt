@@ -38,7 +38,8 @@ enum class BeaconScreens(val title: String) {
     Dashboard(title = "Dashboard"),
     Beacons(title = "Beacons"),
     SignIn(title = "Sign In"),
-    DropBeacon(title = "Drop Beacon")
+    DropBeacon(title = "Drop Beacon"),
+    UpdateBeacon(title = "Update Beacon")
 }
 
 
@@ -95,7 +96,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         ) {
             //add in each screen and its associated object here
             composable(route = BeaconScreens.Dashboard.name) {
-                DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
+                DashboardScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
             composable(route = BeaconScreens.Beacons.name) {
                 BeaconsScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
@@ -105,6 +106,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             }
             composable(route = BeaconScreens.DropBeacon.name) {
                 DropBeaconScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
+            }
+            composable(route = BeaconScreens.UpdateBeacon.name) {
+                UpdateBeaconScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
         }
     }
