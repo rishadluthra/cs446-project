@@ -8,7 +8,6 @@ import {
 
 import { AuthService } from './auth.service';
 import { AccessTokenDto } from './dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
 import { CurrentUser } from '../decorators/user.decorator';
@@ -46,7 +45,7 @@ export class AuthController {
 
   @Post('send-verification-email')
   async sendVerificationEmail(
-    @Body() body : { email: string},
+    @Body() body: { email: string },
   ): Promise<string> {
     try {
       const code = await this.authService.sendVerificationEmail(body.email);

@@ -11,7 +11,7 @@ export class EmailService {
     this.transporter = createTransport({
       service: 'Gmail',
       auth: {
-        user: 'beaconsinfo10@gmail.com',
+        user: process.env.EMAIL_ADDRESS,
         pass: process.env.EMAIL_PASSWORD,
       },
     });
@@ -22,7 +22,7 @@ export class EmailService {
     { subject, text }: EmailDto,
   ): Promise<void> {
     const mailOptions = {
-      from: 'beaconsinfo10@gmail.com',
+      from: process.env.EMAIL_ADDRESS,
       to: recipient,
       subject,
       text,
@@ -30,7 +30,7 @@ export class EmailService {
 
     try {
       const code = await this.transporter.sendMail(mailOptions);
-      return code
+      return code;
     } catch (error) {
       throw error;
     }
