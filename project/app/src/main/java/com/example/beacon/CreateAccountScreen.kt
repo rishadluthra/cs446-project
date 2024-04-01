@@ -32,6 +32,7 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
     val confirmVerificationState = remember { mutableStateOf("") }
     val errorMessageState = remember { mutableStateOf<String?>("") }
     val verificationState = remember { mutableStateOf("") }
+    val errorVerificationState = remember { mutableStateOf("") }
     val themeStrategy by viewModel.themeStrategy
 
     // Check if the emails and passwords match (simple validation)
@@ -147,15 +148,14 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                     errorMessageState.value = "Please enter valid email or password."
                 }
                 else if (doEmailsMatch && doPasswordsMatch) {
-                    //API CALL TO SET confirmVerificationState
-                    responseCode = 0
-                    confirmVerificationState.value = "123"
-                    if(responseCode == 0){
-                        setShowVerification(true)
-                    }
-                    else {
-                        errorMessageState.value = "Email unable to send."
-                    }
+                    setShowVerification(true)
+                    viewModel.sendEmailAndVerify(emailState.value,
+                        onSuccess = {
+                            confirmVerificationState.value = VerificationManager.getVerificationCode()
+                        },
+                        onError = {
+                            errorMessageState.value = "Failed to send verification email."
+                        })
                 } else {
                     errorMessageState.value = "Please make sure emails and passwords match."
                 }
@@ -202,9 +202,17 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                     Column  (
                         verticalArrangement = Arrangement.SpaceEvenly
                     ) {
+                        Text(
+                            text = errorVerificationState.value,
+                            color = Color.Red,
+                            )
                         Button(
                             onClick = {
-                                //API CALL THAT RETURNS VERIFICATION STATE
+                                viewModel.sendEmailAndVerify(emailState.value,
+                                    onSuccess = {},
+                                    onError = {
+                                        errorMessageState.value = "Failed to send email."
+                                    })
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = themeStrategy.primaryColor,
@@ -219,6 +227,7 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                         Button(
                             onClick = {
                                 if (doesVerificationMatch && confirmVerificationState.value.isNotEmpty()) {
+                                    errorVerificationState.value = ""
                                     verificationState.value = ""
                                     responseCode = viewModel.createAccount(firstNameState.value, lastNameState.value,
                                         emailState.value, passwordState.value)
@@ -226,6 +235,9 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                                         setShowVerification(false)
                                         setShowDialog(true)
                                     }
+                                }
+                                else {
+                                    errorVerificationState.value = "Incorrect Verification Code"
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(

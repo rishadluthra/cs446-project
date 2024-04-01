@@ -147,6 +147,36 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+    fun sendEmailAndVerify(
+        email: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val (responseCode, verification) = withContext(Dispatchers.IO) {
+                val newEmailJsonObject = buildJsonObject {
+                    put("email", email)
+                }
+                val newEmailJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newEmailJsonObject)
+                Log.d("responseCode", "----------------------------------------------------------------------------------")
+                Log.d("json:" , newEmailJsonString)
+                getVerificationCode(newEmailJsonString)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            Log.d("verification", verification)
+            Log.d("responseCode", responseCode.toString())
+            Log.d("responseCode", "----------------------------------------------------------------------------------")
+            if (responseCode == 201 && verification != "") {
+                VerificationManager.setVerificationCode(verification)
+                onSuccess(verification)
+            } else {
+                onError(responseCode)
+            }
+        }
+    }
+
     fun createAccount(firstName: String, lastName: String, email: String, password: String): Int {
         var responseCode = 0
         thread {
@@ -270,6 +300,30 @@ suspend fun postRegisterAndSignIn(registerJsonString: String): Pair<Int, String>
                 val jsonObject = JSONObject(responseBody.toString())
                 val authToken = jsonObject.optString("access_token", "")
                 return Pair(response.code, authToken)
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return Pair(400, "") // Indicate a client error in case of exception
+}
+
+fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = verifyJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/email/send")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            Log.d("responseSuccessful? ", "---------------------------")
+            Log.d("responseSuccessful? ", response.isSuccessful.toString())
+            Log.d("responseCode actually:", response.code.toString())
+            if (response.isSuccessful) {
+                val verificationCode = response.body?.string().toString()
+                return Pair(response.code, verificationCode)
             }
         }
     } catch (e: Exception) {
