@@ -309,7 +309,7 @@ fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
         val requestBody = verifyJsonString.toRequestBody(mediaType)
         val client = OkHttpClient()
         val request = Request.Builder()
-            .url("http://10.0.2.2:4000/email/send")
+            .url("http://10.0.2.2:4000/auth/send-verification-email")
             .post(requestBody)
             .build()
         client.newCall(request).execute().use { response ->
