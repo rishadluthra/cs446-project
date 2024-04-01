@@ -68,3 +68,4 @@ Note: times are represented in number of hours
 | 2024/03/31 |        |       |         |       |  1    |       | Deliverable 6 - Adapting reviews to work with email searches and creation |
 | 2024/04/01 |        |       |         |       |  1    |       | Deliverable 6 - Work on reports for backend |
 | 2024/03/27 |        |       |         |       |       |   3   | Add tag to beacon creation |
+| 2024/03/27 | 2.5    | 1.75  |         | 2.5   | 1.75  |       | Update beacon page bugfixes |
