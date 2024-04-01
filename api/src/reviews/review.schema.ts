@@ -20,6 +20,8 @@ export class Review {
   review: string;
 
   createdAt: Date;
+
+  updatedAt: Date;
 }
 
 export const ReviewSchema = SchemaFactory.createForClass(Review);
