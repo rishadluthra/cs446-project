@@ -10,7 +10,7 @@ import {
 
 import { CreateReviewDto } from './dto';
 import { Review } from './review.schema';
-import { ReviewsService } from './reviews.service';
+import { ReviewsService, ReviewsWithAverageRating } from './reviews.service';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../decorators/user.decorator';
@@ -41,7 +41,7 @@ export class ReviewsController {
   @Get()
   async findByTargetEmail(
     @Query('targetEmail') targetEmail: string,
-  ): Promise<Review[]> {
+  ): Promise<ReviewsWithAverageRating> {
     return this.reviewsService.findByTargetEmail(targetEmail);
   }
 }

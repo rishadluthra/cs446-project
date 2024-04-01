@@ -7,6 +7,11 @@ import { Review, ReviewDocument } from './review.schema';
 
 import { UsersService } from '../users/users.service';
 
+export type ReviewsWithAverageRating = {
+  reviews: Review[];
+  averageRating: number;
+};
+
 @Injectable()
 export class ReviewsService {
   constructor(
@@ -36,13 +41,26 @@ export class ReviewsService {
     });
   }
 
-  async findByTargetEmail(targetEmail: string): Promise<Review[]> {
+  async findByTargetEmail(
+    targetEmail: string,
+  ): Promise<ReviewsWithAverageRating> {
     const target = await this.usersService.findOneByEmail(targetEmail);
 
     if (!target) {
-      return [];
+      return;
     }
 
-    return this.reviewModel.find({ targetId: target.id });
+    const reviews = await this.reviewModel.find({ targetId: target.id });
+
+    const sumOfRatings = reviews.reduce(
+      (sum, review) => sum + review.rating,
+      0,
+    );
+    const averageRating = sumOfRatings / reviews.length;
+
+    return {
+      reviews,
+      averageRating: parseFloat(averageRating.toFixed(2)),
+    };
   }
 }
