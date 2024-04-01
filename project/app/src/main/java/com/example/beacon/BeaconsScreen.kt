@@ -116,7 +116,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Slider(
                             value = sliderValue.toFloat(),
                             onValueChange = { sliderValue = it.toInt() },
-                            valueRange = 1000f..8000f,
+                            valueRange = 1000f..5000f,
                             onValueChangeFinished = {
                                 maxDistance = sliderValue
                             },
