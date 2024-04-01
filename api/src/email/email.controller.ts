@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { CurrentUser } from '../decorators/user.decorator';
 
@@ -7,13 +7,13 @@ import { CurrentUser } from '../decorators/user.decorator';
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @Get('send')
+  @Post('send')
   async sendEmail(
-    @Body() { to: String }
+    @Body() { email: String }
   ): Promise<String> {
     try {
       const code = await this.emailService.sendEmail("beaconsinfo10@gmail.com");
-      return code;
+      return code.toString();
     } catch (error) {
       return error;
     }
