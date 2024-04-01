@@ -1,9 +1,12 @@
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ReportDocument, Report } from './report.schema';
+
+import { Report, ReportDocument } from './report.schema';
 
 import { UsersService } from '../users/users.service';
-import { InjectModel } from '@nestjs/mongoose';
 
+@Injectable()
 export class ReportsService {
   constructor(
     @InjectModel(Report.name)
@@ -19,8 +22,9 @@ export class ReportsService {
     }
 
     if (target.id === creatorId) {
-      throw new Error('Self review');
+      throw new Error('Self report');
     }
+
     return this.reportModel.create({
       targetId: target.id,
       creatorId,

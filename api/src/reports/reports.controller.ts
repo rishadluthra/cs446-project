@@ -5,11 +5,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ReportsService } from './reports.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+
 import { Report } from './report.schema';
-import { CurrentUser } from 'src/decorators/user.decorator';
-import { User } from 'src/users/user.schema';
+import { ReportsService } from './reports.service';
+
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CurrentUser } from '../decorators/user.decorator';
+import { User } from '../users/user.schema';
 
 @Controller('reports')
 export class ReportsController {
