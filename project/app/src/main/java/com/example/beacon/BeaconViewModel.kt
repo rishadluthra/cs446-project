@@ -161,14 +161,9 @@ class BeaconViewModel : ViewModel() {
                 }
                 val newEmailJsonString =
                     Json.encodeToString(JsonObject.serializer(), newEmailJsonObject)
-                Log.d("responseCode", "----------------------------------------------------------------------------------")
-                Log.d("json:" , newEmailJsonString)
                 getVerificationCode(newEmailJsonString)
             }
             // Now back on the main thread, check the response and call onSuccess or onError
-            Log.d("verification", verification)
-            Log.d("responseCode", responseCode.toString())
-            Log.d("responseCode", "----------------------------------------------------------------------------------")
             if (responseCode == 201 && verification != "") {
                 VerificationManager.setVerificationCode(verification)
                 onSuccess(verification)
@@ -319,9 +314,6 @@ fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
             .post(requestBody)
             .build()
         client.newCall(request).execute().use { response ->
-            Log.d("responseSuccessful? ", "---------------------------")
-            Log.d("responseSuccessful? ", response.isSuccessful.toString())
-            Log.d("responseCode actually:", response.code.toString())
             if (response.isSuccessful) {
                 val verificationCode = response.body?.string().toString()
                 return Pair(response.code, verificationCode)
