@@ -41,26 +41,22 @@ class BeaconViewModel : ViewModel() {
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var themeStrategy: MutableState<ThemeStrategy> = mutableStateOf(LightThemeStrategy)
 
-    fun refreshOur() {
+    fun refreshOurBeacons() {
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
                     ourBeacons = fetchOurBeacons().asList(),
-                    //nearbyBeacons = fetchNearbyBeacons(null).asList()
                 )
-                //initialize parameters here
             }
         }
     }
 
     fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
-        println("In refresh Nearby")
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
                     nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm).asList()
                 )
-                //initialize parameters here
             }
         }
     }
@@ -151,7 +147,6 @@ fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInf
         val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
         "$distUrl$allTags"
     }
-    println(url)
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()

@@ -51,12 +51,10 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
         viewModel.refreshNearby(tagsState, maxDistance)
     }
     LaunchedEffect(selectedTags) {
-        Log.d("SelectedTags", selectedTags.joinToString(", "))
         viewModel.refreshNearby(selectedTags, maxDistance)
     }
 
     LaunchedEffect(maxDistance) {
-        Log.d("SelectedTags", selectedTags.joinToString(", "))
         viewModel.refreshNearby(selectedTags, maxDistance)
     }
 
