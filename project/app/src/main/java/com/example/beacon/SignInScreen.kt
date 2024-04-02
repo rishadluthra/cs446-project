@@ -3,14 +3,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +40,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
     ) {
 
         Text(
-            text = "sign In",
+            text = "Sign In",
             fontSize = 32.sp,
             color = themeStrategy.primaryTextColor,
             modifier = Modifier.padding(bottom = 32.dp)
@@ -120,8 +118,8 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                 color = themeStrategy.primaryTextColor)
             Text(
                 text = " create account",
-                color = themeStrategy.primaryTextColor
-//                modifier = Modifier.clickable { /* TODO: Navigate to create account screen */ }
+                color = themeStrategy.primaryTextColor,
+                modifier = Modifier.clickable { navController.navigate(BeaconScreens.CreateAccount.name) }
             )
         }
     }

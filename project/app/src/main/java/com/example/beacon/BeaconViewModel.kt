@@ -17,7 +17,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonObject
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -31,7 +30,6 @@ data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
     var ourBeacons: List<BeaconInfo> = emptyList(),
     var nearbyBeacons: List<BeaconInfo> = emptyList()
-//fill in needed parameters here
 )
 @Serializable
 data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
@@ -43,42 +41,33 @@ class BeaconViewModel : ViewModel() {
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var themeStrategy: MutableState<ThemeStrategy> = mutableStateOf(LightThemeStrategy)
 
-    fun refresh() {
+    fun refreshOurBeacons() {
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
                     ourBeacons = fetchOurBeacons().asList(),
-                    nearbyBeacons = fetchNearbyBeacons().asList()
                 )
-                //initialize parameters here
             }
         }
     }
 
-    fun sendBeacon(title: String, tag: String, description: String, postalCode: String): Int {
-        var responseCode = 0
+    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
         thread {
-            val newBeaconJsonObject = buildJsonObject {
-                put("title", title)
-                put("tag", tag)
-                put("description", description)
-                put("postalCode", postalCode)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm).asList()
+                )
             }
-            val newBeaconJsonString =
-                Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-            responseCode = postBeacon(newBeaconJsonString)
         }
-        return responseCode
     }
 
-    fun updateBeacon(title: String,
-                     tag: String,
-                     description: String,
-                     postalCode: String,
-                     beaconId: String,
-                     onSuccess: (Int) -> Unit,
-                     onError: (Int) -> Unit
-    ) {
+
+    fun sendBeacon(title: String,
+                   tag: String,
+                   description: String,
+                   postalCode: String,
+                   onSuccess: (Int) -> Unit,
+                   onError: (Int) -> Unit) {
         viewModelScope.launch {
             // Perform the network operation on a background thread
             val responseCode = withContext(Dispatchers.IO) {
@@ -90,23 +79,60 @@ class BeaconViewModel : ViewModel() {
                 }
                 val newBeaconJsonString =
                     Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-                patchBeacon(newBeaconJsonString, beaconId)
+                postBeacon(newBeaconJsonString)
             }
             // Now back on the main thread, check the response and call onSuccess or onError
-            if (responseCode == 200) {
+            if (responseCode == 201) {
                 onSuccess(responseCode)
             } else {
                 onError(responseCode)
             }
         }
     }
+    
+    fun updateBeacon(title: String,
+                     tag: String,
+                     description: String,
+                     postalCode: String,
+                     beaconId: String,
+                     onSuccess: (Int) -> Unit,
+                     onError: (Int) -> Unit
+    ) {
+      viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val responseCode = withContext(Dispatchers.IO) {
+                val newBeaconJsonObject = buildJsonObject {
+                    put("title", title)
+                    put("tag", tag)
+                    put("description", description)
+                    put("postalCode", postalCode)
+                }
+                val newBeaconJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+                    patchBeacon(newBeaconJsonString, beaconId)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 200) {
+              onSuccess(responseCode)
+            } else {
+              onError(responseCode)
+            }
+    }
 
-    fun delete(id: String): Int {
-        var response = 0
-        thread {
-            response = deleteBeacon(id)
+
+    fun delete(id: String,
+               onSuccess: (Int) -> Unit,
+               onError: (Int) -> Unit) {
+        viewModelScope.launch {
+            val responseCode = withContext(Dispatchers.IO) {
+                deleteBeacon(id)
+            }
+            if (responseCode == 200) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
         }
-        return response
     }
 
     fun toggleTheme() {
@@ -145,8 +171,63 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+
+    fun createAccountAndSignIn(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        // Launch a coroutine in the ViewModelScope
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val (responseCode, authToken) = withContext(Dispatchers.IO) {
+                val newUserJsonObject = buildJsonObject {
+                    put("firstName", firstName)
+                    put("lastName", lastName)
+                    put("email", email)
+                    put("password", password)
+                }
+                val createAccountJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newUserJsonObject)
+                postRegisterAndSignIn(createAccountJsonString)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201 && authToken != "") {
+                AuthManager.setAuthToken(authToken)
+                onSuccess(authToken)
+            } else {
+                onError(responseCode)
+            }
+        }
+    }
 }
 
+    fun sendEmailAndVerify(
+        email: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        viewModelScope.launch {
+            val (responseCode, verification) = withContext(Dispatchers.IO) {
+                val newEmailJsonObject = buildJsonObject {
+                    put("email", email)
+                }
+                val newEmailJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newEmailJsonObject)
+                getVerificationCode(newEmailJsonString)
+            }
+            if (responseCode == 201 && verification != "") {
+                VerificationManager.setVerificationCode(verification)
+                onSuccess(verification)
+            } else {
+                onError(responseCode)
+            }
+        }
+    }
+}
 
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
@@ -165,11 +246,22 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
     return emptyArray()
 }
 
-fun fetchNearbyBeacons(): Array<BeaconInfo> {
+fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInfo> {
+    val maxDistance = maxDistanceKm * 1000
+    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007"
+    val distUrl = "$baseUrl&maxDistance=$maxDistance"
+
+    val url: String = if (!tags.isNullOrEmpty()) {
+        val tagsQueryString = tags.joinToString("&") { "tags[]=$it" }
+        "$distUrl&$tagsQueryString"
+    } else {
+        val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
+        "$distUrl$allTags"
+    }
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
-            .url("http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007&maxDistance=10000")
+            .url(url)
             .addHeader("Authorization", "Bearer $authToken")
             .build()
         val response = OkHttpClient().newCall(request).execute()
@@ -256,5 +348,52 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String> {
             println(e.message)
     }
         return Pair(400, "") // Indicate a client error in case of exception
+}
+
+suspend fun postRegisterAndSignIn(registerJsonString: String): Pair<Int, String> {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = registerJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/register")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                val jsonObject = JSONObject(responseBody.toString())
+                val authToken = jsonObject.optString("access_token", "")
+                return Pair(response.code, authToken)
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return Pair(400, "") // Indicate a client error in case of exception
+}
+
+fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
+    var clientErrorCode = -1
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = verifyJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/send-verification-email")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val verificationCode = response.body?.string().toString()
+                return Pair(response.code, verificationCode)
+            } else {
+                clientErrorCode = response.code
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return Pair(clientErrorCode, "") // Indicate a client error in case of exception
 }
 

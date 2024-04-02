@@ -38,7 +38,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
     LaunchedEffect(true) {
-        viewModel.refresh()
+        viewModel.refreshOurBeacons()
     }
     val themeStrategy by viewModel.themeStrategy
     val uiState by viewModel.uiState.collectAsState()
@@ -125,18 +125,22 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                                 )
                             }
                             Button(
-                                onClick = {
-                                    val code = viewModel.delete(uiState.ourBeacons[i].id)
-                                    if (code == 0) {
-                                        setShowDialog(true)
-                                    }
-                                    viewModel.refresh()
-                                },
-                                modifier = Modifier
-                                    .padding(top = 8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = themeStrategy.primaryColor
-                                ),
+                              onClick = {
+                                  viewModel.delete(uiState.ourBeacons[i].id,
+                                      onSuccess = {
+                                                  setShowDialog(true)
+                                      },
+                                      onError = {
+
+                                      })
+                                  viewModel.refreshOurBeacons()
+                              },
+                              modifier = Modifier
+                                  .align(Alignment.End)
+                                  .padding(top = 8.dp),
+                              colors = ButtonDefaults.buttonColors(
+                                  containerColor = themeStrategy.primaryColor
+                              ),
                             ) {
                                 Text(
                                     text = "resolve",

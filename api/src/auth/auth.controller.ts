@@ -6,12 +6,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { CurrentUser } from '../decorators/user.decorator';
-
 import { AuthService } from './auth.service';
 import { AccessTokenDto } from './dto';
 import { LocalAuthGuard } from './local-auth.guard';
 
+import { CurrentUser } from '../decorators/user.decorator';
 import { CreateUserDto } from '../users/dto';
 import { User } from '../users/user.schema';
 
@@ -39,6 +38,18 @@ export class AuthController {
         password,
       });
       return accessToken;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @Post('send-verification-email')
+  async sendVerificationEmail(
+    @Body() body: { email: string },
+  ): Promise<string> {
+    try {
+      const code = await this.authService.sendVerificationEmail(body.email);
+      return code;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
