@@ -154,6 +154,7 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                             confirmVerificationState.value = VerificationManager.getVerificationCode()
                         },
                         onError = {
+                            setShowVerification(false)
                             errorMessageState.value = "Failed to send verification email."
                         })
                 } else {
@@ -229,12 +230,16 @@ fun CreateAccountScreen(modifier: Modifier = Modifier, navController: NavControl
                                 if (doesVerificationMatch && confirmVerificationState.value.isNotEmpty()) {
                                     errorVerificationState.value = ""
                                     verificationState.value = ""
-                                    responseCode = viewModel.createAccount(firstNameState.value, lastNameState.value,
-                                        emailState.value, passwordState.value)
-                                    if (responseCode == 0) {
-                                        setShowVerification(false)
-                                        setShowDialog(true)
-                                    }
+                                    viewModel.createAccountAndSignIn(firstNameState.value, lastNameState.value,
+                                        emailState.value, passwordState.value,
+                                        onSuccess = {
+                                            setShowVerification(false)
+                                            setShowDialog(true)
+                                        },
+                                        onError = {
+                                            errorMessageState.value = "Could not create account"
+                                        }
+                                    )
                                 }
                                 else {
                                     errorVerificationState.value = "Incorrect Verification Code"

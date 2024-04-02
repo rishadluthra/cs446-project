@@ -153,7 +153,6 @@ class BeaconViewModel : ViewModel() {
         onError: (Int) -> Unit
     ) {
         viewModelScope.launch {
-            // Perform the network operation on a background thread
             val (responseCode, verification) = withContext(Dispatchers.IO) {
                 val newEmailJsonObject = buildJsonObject {
                     put("email", email)
@@ -162,7 +161,6 @@ class BeaconViewModel : ViewModel() {
                     Json.encodeToString(JsonObject.serializer(), newEmailJsonObject)
                 getVerificationCode(newEmailJsonString)
             }
-            // Now back on the main thread, check the response and call onSuccess or onError
             if (responseCode == 201 && verification != "") {
                 VerificationManager.setVerificationCode(verification)
                 onSuccess(verification)
@@ -170,22 +168,6 @@ class BeaconViewModel : ViewModel() {
                 onError(responseCode)
             }
         }
-    }
-
-    fun createAccount(firstName: String, lastName: String, email: String, password: String): Int {
-        var responseCode = 0
-        thread {
-            val newBeaconJsonObject = buildJsonObject {
-                put("firstName", firstName)
-                put("lastName", lastName)
-                put("email", email)
-                put("password", password)
-            }
-            val newBeaconJsonString =
-                Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-            responseCode = postAccountDetails(newBeaconJsonString)
-        }
-        return responseCode
     }
 }
 
@@ -325,22 +307,5 @@ fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
         println(e.message)
     }
     return Pair(clientErrorCode, "") // Indicate a client error in case of exception
-}
-
-fun postAccountDetails(newBeaconJsonString: String): Int {
-    try {
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val requestBody = newBeaconJsonString.toRequestBody(mediaType)
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url("http://10.0.2.2:4000/auth/register")
-            .post(requestBody)
-            .build()
-        val response = client.newCall(request).execute()
-        return response.code
-    } catch (e: Exception) {
-        println(e.message)
-    }
-    return 400
 }
 
