@@ -75,7 +75,7 @@ class BeaconViewModel : ViewModel() {
                 postBeacon(newBeaconJsonString)
             }
             // Now back on the main thread, check the response and call onSuccess or onError
-            if (responseCode == 200) {
+            if (responseCode == 201) {
                 onSuccess(responseCode)
             } else {
                 onError(responseCode)
