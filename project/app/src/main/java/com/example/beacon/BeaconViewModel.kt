@@ -113,28 +113,89 @@ class BeaconViewModel : ViewModel() {
         print("current theme: ${themeStrategy.value}")
     }
 
-    fun signIn(email: String, password: String, onSuccess: (String) -> Unit, onError: (Int) -> Unit) {
-         // Launch a coroutine in the ViewModelScope
-            viewModelScope.launch {
-                // Perform the network operation on a background thread
-                val (responseCode, authToken) = withContext(Dispatchers.IO) {
-                    val signInJsonObject = buildJsonObject {
-                        put("email", email)
-                        put("password", password)
-                    }
-                    val signInJsonString = Json.encodeToString(JsonObject.serializer(), signInJsonObject)
-                    postSignIn(signInJsonString)
+    fun signIn(
+        email: String,
+        password: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        // Launch a coroutine in the ViewModelScope
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val (responseCode, authToken) = withContext(Dispatchers.IO) {
+                val signInJsonObject = buildJsonObject {
+                    put("email", email)
+                    put("password", password)
                 }
-                // Now back on the main thread, check the response and call onSuccess or onError
-                if (responseCode == 201 && authToken != "") {
-                    AuthManager.setAuthToken(authToken)
-                    onSuccess(authToken)
-                } else {
-                    onError(responseCode)
-                }
+                val signInJsonString =
+                    Json.encodeToString(JsonObject.serializer(), signInJsonObject)
+                postSignIn(signInJsonString)
             }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201 && authToken != "") {
+                AuthManager.setAuthToken(authToken)
+                onSuccess(authToken)
+            } else {
+                onError(responseCode)
+            }
+        }
     }
 
+    fun createAccountAndSignIn(
+        firstName: String,
+        lastName: String,
+        email: String,
+        password: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        // Launch a coroutine in the ViewModelScope
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val (responseCode, authToken) = withContext(Dispatchers.IO) {
+                val newUserJsonObject = buildJsonObject {
+                    put("firstName", firstName)
+                    put("lastName", lastName)
+                    put("email", email)
+                    put("password", password)
+                }
+                val createAccountJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newUserJsonObject)
+                postRegisterAndSignIn(createAccountJsonString)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201 && authToken != "") {
+                AuthManager.setAuthToken(authToken)
+                onSuccess(authToken)
+            } else {
+                onError(responseCode)
+            }
+        }
+    }
+
+    fun sendEmailAndVerify(
+        email: String,
+        onSuccess: (String) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        viewModelScope.launch {
+            val (responseCode, verification) = withContext(Dispatchers.IO) {
+                val newEmailJsonObject = buildJsonObject {
+                    put("email", email)
+                }
+                val newEmailJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newEmailJsonObject)
+                getVerificationCode(newEmailJsonString)
+            }
+            if (responseCode == 201 && verification != "") {
+                VerificationManager.setVerificationCode(verification)
+                onSuccess(verification)
+            } else {
+                onError(responseCode)
+            }
+        }
+    }
+}
 
 
 fun fetchOurBeacons(): Array<BeaconInfo> {
@@ -236,6 +297,52 @@ suspend fun postSignIn(signInJsonString: String): Pair<Int, String> {
             println(e.message)
     }
         return Pair(400, "") // Indicate a client error in case of exception
+}
+
+suspend fun postRegisterAndSignIn(registerJsonString: String): Pair<Int, String> {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = registerJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/register")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val responseBody = response.body?.string()
+                val jsonObject = JSONObject(responseBody.toString())
+                val authToken = jsonObject.optString("access_token", "")
+                return Pair(response.code, authToken)
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
     }
+    return Pair(400, "") // Indicate a client error in case of exception
+}
+
+fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
+    var clientErrorCode = -1
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = verifyJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/auth/send-verification-email")
+            .post(requestBody)
+            .build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val verificationCode = response.body?.string().toString()
+                return Pair(response.code, verificationCode)
+            } else {
+                clientErrorCode = response.code
+            }
+        }
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return Pair(clientErrorCode, "") // Indicate a client error in case of exception
 }
 

@@ -74,6 +74,12 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                 modifier = Modifier
                     .fillMaxWidth()
             )
+            DropdownWithLabel(
+                label = "choose tags",
+                state = tagsState,
+                options = listOf("select a tag", "labour", "tools", "tech", "social"),
+                modifier = Modifier.fillMaxWidth()
+            )
             TextFieldWithLabel(
                 viewModel,
                 label = "enter the postal code for the beacon",
