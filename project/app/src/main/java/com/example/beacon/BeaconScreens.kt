@@ -118,6 +118,20 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                         ) {
                             Text("Switch Theme")
                         }
+                        Button(
+                            onClick = {
+                                // Toggle the theme strategy
+                                AuthManager.setAuthToken("")
+                                navController.navigate(BeaconScreens.SignIn.name)
+                            },
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 12.dp, end = 20.dp)
+                                .width(150.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor)
+                        ) {
+                            Text("Log Out")
+                        }
                     }
                 }
             }
