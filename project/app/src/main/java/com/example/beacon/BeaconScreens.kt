@@ -87,7 +87,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                     ) {
                         Spacer(modifier = Modifier.height(40.dp))
                         Image(
-                            painter = painterResource(id = R.drawable.beacon_app_logo), // Replace "your_image_resource" with your actual resource ID
+                            painter = painterResource(id = R.drawable.beacon_app_logo),
                             contentDescription = "Drawer Header Image",
                             modifier = Modifier
                                 .fillMaxWidth()
