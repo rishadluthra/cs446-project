@@ -61,29 +61,47 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun sendBeacon(title: String, tag: String, description: String, postalCode: String): Int {
-        var responseCode = 0
-        thread {
-            val newBeaconJsonObject = buildJsonObject {
-                put("title", title)
-                put("tag", tag)
-                put("description", description)
-                put("tag", tag)
-                put("postalCode", postalCode)
+    fun sendBeacon(title: String,
+                   tag: String,
+                   description: String,
+                   postalCode: String,
+                   onSuccess: (Int) -> Unit,
+                   onError: (Int) -> Unit) {
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val responseCode = withContext(Dispatchers.IO) {
+                val newBeaconJsonObject = buildJsonObject {
+                    put("title", title)
+                    put("tag", tag)
+                    put("description", description)
+                    put("postalCode", postalCode)
+                }
+                val newBeaconJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+                postBeacon(newBeaconJsonString)
             }
-            val newBeaconJsonString =
-                Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-            responseCode = postBeacon(newBeaconJsonString)
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
         }
-        return responseCode
     }
 
-    fun delete(id: String): Int {
-        var response = 0
-        thread {
-            response = deleteBeacon(id)
+    fun delete(id: String,
+               onSuccess: (Int) -> Unit,
+               onError: (Int) -> Unit) {
+        viewModelScope.launch {
+            val responseCode = withContext(Dispatchers.IO) {
+                deleteBeacon(id)
+            }
+            if (responseCode == 200) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
         }
-        return response
     }
 
     fun toggleTheme() {
