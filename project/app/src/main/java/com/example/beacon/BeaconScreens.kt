@@ -56,13 +56,14 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
     )
     val coroutineScope = rememberCoroutineScope()
+    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
     ModalNavigationDrawer(drawerState = drawerState,
         drawerContent = {ModalDrawerSheet{
             Surface(color = MaterialTheme.colorScheme.surface){
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     //TODO: Beacon image goes here
                     LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                        items(BeaconScreens.entries) {
+                        items(sidebarButtons) {
                             item ->
                                 Button(onClick={
                                     coroutineScope.launch{drawerState.close()}
