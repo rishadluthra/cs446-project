@@ -48,6 +48,7 @@ enum class BeaconScreens(val title: String) {
     DropBeacon(title = "Drop Beacon"),
     UpdateBeacon(title = "Update Beacon"),
     CreateAccount(title = "Create Account")
+    Reviews(title = "My Reviews"),
 }
 
 
@@ -172,6 +173,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             composable(route = BeaconScreens.CreateAccount.name) {
                 CreateAccountScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
-        }
+            composable(route = BeaconScreens.Reviews.name) {
+                ReviewScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, )
+            }
+        }    
     }
 }
