@@ -144,7 +144,6 @@ class BeaconViewModel : ViewModel() {
         }
         print("current theme: ${themeStrategy.value}")
     }
-
     fun signIn(
         email: String,
         password: String,

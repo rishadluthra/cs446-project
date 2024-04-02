@@ -1,11 +1,11 @@
 package com.example.beacon
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -43,8 +44,18 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
             text = "Sign In",
             fontSize = 32.sp,
             color = themeStrategy.primaryTextColor,
-            modifier = Modifier.padding(bottom = 32.dp)
+            modifier = Modifier.padding(bottom = 32.dp, end = 10.dp)
         )
+        Image(
+            painter = painterResource(id = R.drawable.beacon_app_logo),
+            contentDescription = "Drawer Header Image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .padding(end = 5.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.height(100.dp))
         // Email input field
         OutlinedTextField(
             textStyle = TextStyle(color = themeStrategy.primaryTextColor),
@@ -72,27 +83,6 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-        // Remember me checkbox
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            Checkbox(
-                checked = rememberMeState.value,
-                onCheckedChange = { rememberMeState.value = it },
-            )
-            Text(
-                text = "remember me",
-                modifier = Modifier.clickable { rememberMeState.value = !rememberMeState.value },
-                color = themeStrategy.primaryTextColor
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "forgot password?",
-                color = themeStrategy.primaryTextColor
-//                modifier = Modifier.clickable { /* TODO: Handle forgot password */ }
-            )
-        }
         // Sign In button
         Button(
             onClick = {
@@ -104,12 +94,13 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                         errorMessageState.value = "Email or Password is incorrect. Please try again."
                     })
                       },
-            modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp),
             colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.secondaryColor, contentColor = themeStrategy.secondaryTextColor)
         ) {
             Text("SIGN IN")
         }
-        Spacer(modifier = Modifier.height(32.dp))
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +73,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     title = {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Text(
-                                text = "Beacons Nearby",
+                                text = "Nearby Beacons",
                                 fontSize = 32.sp,
                                 color = themeStrategy.primaryTextColor,
                                 modifier = Modifier.align(Alignment.Center)
@@ -141,10 +142,13 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             .padding(all = 16.dp)
                     ) {
                         Text(
-                            text = uiState.nearbyBeacons[i].title,
-                            style = MaterialTheme.typography.bodyLarge,
+                            text = uiState.ourBeacons[i].title,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
                             modifier = Modifier.padding(bottom = 8.dp),
-                            color = themeStrategy.secondaryTextColor
+                            color = themeStrategy.secondaryTextColor,
                         )
                         Text(
                             text = uiState.nearbyBeacons[i].description,

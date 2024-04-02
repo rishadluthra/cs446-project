@@ -28,6 +28,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -93,9 +95,12 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                     ) {
                         Text(
                             text = uiState.ourBeacons[i].title,
-                            style = MaterialTheme.typography.bodyLarge,
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
                             modifier = Modifier.padding(bottom = 8.dp),
-                            color = themeStrategy.secondaryTextColor
+                            color = themeStrategy.secondaryTextColor,
                         )
                         Text(
                             text = uiState.ourBeacons[i].description,
