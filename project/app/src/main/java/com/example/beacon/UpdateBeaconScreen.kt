@@ -11,31 +11,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.graphics.vector.ImageVector
-//import androidx.compose.material3.icons.Icons
-//import androidx.compose.material3.icons.filled.ArrowBack
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import com.example.beacon.ui.theme.Black
-import com.example.beacon.ui.theme.PrimaryYellow
-import com.example.beacon.ui.theme.White
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.buildJsonObject
-import kotlinx.serialization.json.put
-import kotlinx.serialization.json.putJsonObject
-import kotlinx.coroutines.*
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import org.json.JSONObject
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)

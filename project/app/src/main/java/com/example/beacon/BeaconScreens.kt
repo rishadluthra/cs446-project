@@ -1,17 +1,22 @@
 package com.example.beacon
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -73,7 +80,6 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerEnabled,
-//        scrimColor = themeStrategy.primaryColor,
         drawerContent = {
             ModalDrawerSheet {
                 Surface(
@@ -85,10 +91,19 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                     Column(
 
                     ) {
-                        //TODO: Beacon image goes here
+                        Spacer(modifier = Modifier.height(40.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.beacon_app_logo_round), // Replace "your_image_resource" with your actual resource ID
+                            contentDescription = "Drawer Header Image",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(129.dp)
+                                .padding(end = 20.dp)
+                        )
                         LazyColumn(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
+
                             items(sidebarButtons) {
                                     item ->
                                 Button(
@@ -105,6 +120,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                                 }
                             }
                         }
+                        Spacer(modifier = Modifier.height(300.dp))
                         Button(
                             onClick = {
                                 // Toggle the theme strategy
@@ -120,7 +136,6 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                         }
                         Button(
                             onClick = {
-                                // Toggle the theme strategy
                                 AuthManager.setAuthToken("")
                                 navController.navigate(BeaconScreens.SignIn.name)
                             },
