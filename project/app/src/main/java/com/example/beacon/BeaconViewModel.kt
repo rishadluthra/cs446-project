@@ -30,7 +30,6 @@ data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
     var ourBeacons: List<BeaconInfo> = emptyList(),
     var nearbyBeacons: List<BeaconInfo> = emptyList()
-//fill in needed parameters here
 )
 @Serializable
 data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
@@ -42,40 +41,67 @@ class BeaconViewModel : ViewModel() {
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
     var themeStrategy: MutableState<ThemeStrategy> = mutableStateOf(LightThemeStrategy)
 
-    fun refresh() {
+    fun refreshOurBeacons() {
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
                     ourBeacons = fetchOurBeacons().asList(),
-                    nearbyBeacons = fetchNearbyBeacons().asList()
                 )
-                //initialize parameters here
             }
         }
     }
 
-    fun sendBeacon(title: String, tag: String, description: String, postalCode: String): Int {
-        var responseCode = 0
+    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
         thread {
-            val newBeaconJsonObject = buildJsonObject {
-                put("title", title)
-                put("tag", tag)
-                put("description", description)
-                put("postalCode", postalCode)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm).asList()
+                )
             }
-            val newBeaconJsonString =
-                Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-            responseCode = postBeacon(newBeaconJsonString)
         }
-        return responseCode
     }
 
-    fun delete(id: String): Int {
-        var response = 0
-        thread {
-            response = deleteBeacon(id)
+    fun sendBeacon(title: String,
+                   tag: String,
+                   description: String,
+                   postalCode: String,
+                   onSuccess: (Int) -> Unit,
+                   onError: (Int) -> Unit) {
+        viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val responseCode = withContext(Dispatchers.IO) {
+                val newBeaconJsonObject = buildJsonObject {
+                    put("title", title)
+                    put("tag", tag)
+                    put("description", description)
+                    put("postalCode", postalCode)
+                }
+                val newBeaconJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+                postBeacon(newBeaconJsonString)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 201) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
         }
-        return response
+    }
+
+    fun delete(id: String,
+               onSuccess: (Int) -> Unit,
+               onError: (Int) -> Unit) {
+        viewModelScope.launch {
+            val responseCode = withContext(Dispatchers.IO) {
+                deleteBeacon(id)
+            }
+            if (responseCode == 200) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
+        }
     }
 
     fun toggleTheme() {
@@ -188,11 +214,22 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
     return emptyArray()
 }
 
-fun fetchNearbyBeacons(): Array<BeaconInfo> {
+fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInfo> {
+    val maxDistance = maxDistanceKm * 1000
+    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007"
+    val distUrl = "$baseUrl&maxDistance=$maxDistance"
+
+    val url: String = if (!tags.isNullOrEmpty()) {
+        val tagsQueryString = tags.joinToString("&") { "tags[]=$it" }
+        "$distUrl&$tagsQueryString"
+    } else {
+        val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
+        "$distUrl$allTags"
+    }
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
-            .url("http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007&maxDistance=10000")
+            .url(url)
             .addHeader("Authorization", "Bearer $authToken")
             .build()
         val response = OkHttpClient().newCall(request).execute()

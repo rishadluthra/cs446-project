@@ -44,7 +44,7 @@ import com.example.beacon.ui.theme.PrimaryYellow
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     LaunchedEffect(true) {
-        viewModel.refresh()
+        viewModel.refreshOurBeacons()
     }
     val themeStrategy by viewModel.themeStrategy
     val uiState by viewModel.uiState.collectAsState()
@@ -111,11 +111,14 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         )
                         Button(
                             onClick = {
-                                val code = viewModel.delete(uiState.ourBeacons[i].id)
-                                if (code == 0) {
-                                    setShowDialog(true)
-                                }
-                                viewModel.refresh()
+                                viewModel.delete(uiState.ourBeacons[i].id,
+                                    onSuccess = {
+                                                setShowDialog(true)
+                                    },
+                                    onError = {
+
+                                    })
+                                viewModel.refreshOurBeacons()
                             },
                             modifier = Modifier
                                 .align(Alignment.End)

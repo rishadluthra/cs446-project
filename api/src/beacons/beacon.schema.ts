@@ -46,6 +46,7 @@ export class Beacon {
     coordinates: [number, number];
   };
 
+  @Prop({ expires: '30d'})
   createdAt: Date;
 
   updatedAt: Date;
