@@ -48,8 +48,8 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val tagsState = remember { mutableStateListOf<String>() }
     val tags = listOf("labour", "tools", "tech", "social")
     var selectedTags by remember { mutableStateOf(listOf<String>()) }
-    var sliderValue by remember { mutableStateOf(1000) }
-    var maxDistance by remember { mutableStateOf(1000) }
+    var sliderValue by remember { mutableStateOf(1) }
+    var maxDistance by remember { mutableStateOf(1) }
     val context = LocalContext.current
 
     LaunchedEffect(true) {
@@ -119,7 +119,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Slider(
                             value = sliderValue.toFloat(),
                             onValueChange = { sliderValue = it.toInt() },
-                            valueRange = 1000f..5000f,
+                            valueRange = 1f..100f,
                             onValueChangeFinished = {
                                 maxDistance = sliderValue
                             },
