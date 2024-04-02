@@ -1,15 +1,20 @@
 package com.example.beacon
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -47,11 +52,11 @@ enum class BeaconScreens(val title: String) {
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
-              themeStrategy: MutableState<ThemeStrategy>
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 ) {
 
     val viewModel: BeaconViewModel = viewModel()
+    val themeStrategy by viewModel.themeStrategy
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = BeaconScreens.valueOf(
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
@@ -59,7 +64,6 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
     val coroutineScope = rememberCoroutineScope()
     val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
     val drawerEnabled = currentScreen !in listOf(BeaconScreens.SignIn, BeaconScreens.CreateAccount)
-
     LaunchedEffect(currentScreen) {
         if (!drawerEnabled) {
             drawerState.close()
@@ -69,22 +73,36 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = drawerEnabled,
+//        scrimColor = themeStrategy.primaryColor,
         drawerContent = {
-            ModalDrawerSheet{
-                Surface(color = MaterialTheme.colorScheme.surface){
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            ModalDrawerSheet {
+                Surface(
+                    color = themeStrategy.secondaryColor,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .requiredWidth(250.dp)
+                ){
+                    Column(
+
+                    ) {
                         //TODO: Beacon image goes here
-                        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                        LazyColumn(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
                             items(sidebarButtons) {
-                                item ->
-                                    Button(onClick={
+                                    item ->
+                                Button(
+                                    onClick = {
                                         coroutineScope.launch{drawerState.close()}
                                         if (currentScreen != item) {
                                             navController.navigate(item.name)
                                         }
-                                        }) {
-                                        Text(text = item.title)
-                                    }
+                                    },
+                                    modifier = Modifier.padding(top = 12.dp, start = 40.dp).width(150.dp).align(Alignment.CenterHorizontally),
+                                    colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor)
+                                ) {
+                                    Text(text = item.title)
+                                }
                             }
                         }
                         Button(
@@ -92,7 +110,11 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                                 // Toggle the theme strategy
                                 viewModel.toggleTheme()
                             },
-                            modifier = Modifier.align(Alignment.Start).padding(16.dp)
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(top = 12.dp, end = 20.dp)
+                                .width(150.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor)
                         ) {
                             Text("Switch Theme")
                         }
