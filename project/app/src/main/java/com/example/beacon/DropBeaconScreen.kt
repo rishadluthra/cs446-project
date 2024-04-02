@@ -1,7 +1,10 @@
 package com.example.beacon
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +52,7 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
     val themeStrategy by viewModel.themeStrategy
     val errorMessageState = remember { mutableStateOf<String?>(null) }
 
+
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
@@ -71,34 +76,36 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
             )
             TextFieldWithLabel(
                 viewModel,
-                label = "choose tags",
-                state = tagsState,
-                modifier = Modifier.fillMaxWidth()
-            )
-            TextFieldWithLabel(
-                viewModel,
                 label = "enter the postal code for the beacon",
                 state = pincodeState,
                 modifier = Modifier.fillMaxWidth()
             )
             TextFieldWithLabel(
                 viewModel,
-                label = "enter description of your beacon",
+                label = "enter description of the beacon",
                 state = descriptionState,
                 modifier = Modifier
                     .fillMaxWidth(),
-//                    .weight(3f), // This makes the TextField expand
                 visualTransformation = VisualTransformation.None
+            )
+            DropdownWithLabel(
+                label = "choose tags",
+                state = tagsState,
+                options = listOf("choose a tag for the beacon", "labour", "tools", "tech", "social"),
+                modifier = Modifier.fillMaxWidth(),
+                viewModel = viewModel
             )
             Button(
                 onClick = {
+                  if (tagsState.value != "select a tag") {
                     viewModel.sendBeacon(titleState.value, tagsState.value, descriptionState.value, pincodeState.value,
-                        onSuccess = {
-                            setShowDialog(true)
-                        }, onError = {
-                            errorMessageState.value = "Please ensure that all fields are filled and that the postal code is valid."
-                        }
+                      onSuccess = {
+                        setShowDialog(true)
+                      }, onError = {
+                        errorMessageState.value = "Please ensure that all fields are filled and that the postal code is valid."
+                      }
                     )
+                  }
                 },
 
                 colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryTextColor, contentColor = themeStrategy.secondaryColor),
@@ -106,7 +113,7 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                     .fillMaxWidth()
                     .padding(vertical = 16.dp)
             ) {
-                Text("Drop",
+                Text("drop",
                         color = themeStrategy.primaryColor)
             }
             if (errorMessageState.value != null) {
@@ -181,6 +188,44 @@ fun TextFieldWithLabel(viewModel: BeaconViewModel, label: String, state: Mutable
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = if (label == "enter description of your beacon") ImeAction.Default else ImeAction.Next),
         visualTransformation = visualTransformation
     )
+}
+
+@Composable
+fun DropdownWithLabel(label: String, state: MutableState<String>, modifier: Modifier = Modifier, options: List<String>, viewModel: BeaconViewModel) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableStateOf(0) }
+    val themeStrategy by viewModel.themeStrategy
+
+    Column(modifier.padding(vertical = 16.dp)) {
+        Box() {
+            Text(
+                text = options[selectedIndex],
+                style = TextStyle(color = themeStrategy.primaryTextColor),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = { expanded = true })
+                    .padding(0.dp)
+                    .border(1.5.dp, Color.Gray, RoundedCornerShape(4.dp))
+                    .background(Color.Transparent)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            )
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(themeStrategy.secondaryColor)
+            ) {
+                options.forEachIndexed { index, option ->
+                    DropdownMenuItem(onClick = {
+                        selectedIndex = index
+                        state.value = option
+                        expanded = false
+                    }, text = {Text(text = option, style = TextStyle(color = themeStrategy.secondaryTextColor))})
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

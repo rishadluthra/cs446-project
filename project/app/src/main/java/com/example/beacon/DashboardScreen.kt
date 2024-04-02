@@ -44,7 +44,7 @@ import com.example.beacon.ui.theme.PrimaryYellow
 @Composable
 fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     LaunchedEffect(true) {
-        viewModel.refresh()
+        viewModel.refreshOurBeacons()
     }
     val themeStrategy by viewModel.themeStrategy
     val uiState by viewModel.uiState.collectAsState()
@@ -118,7 +118,7 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     onError = {
 
                                     })
-                                viewModel.refresh()
+                                viewModel.refreshOurBeacons()
                             },
                             modifier = Modifier
                                 .align(Alignment.End)

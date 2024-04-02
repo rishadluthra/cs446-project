@@ -66,5 +66,7 @@ Note: times are represented in number of hours
 | 2024/03/30 |  0.5   |   0.5 |  0.5    |  0.5  |  0.5  | 0.5   | final demo meeting |
 | 2024/03/30 |  8.5   |       |         |       |       |       | Final demo - frontend auth, finished themes, create account page |
 | 2024/03/31 |        |       |         |       |  1    |       | Deliverable 6 - Adapting reviews to work with email searches and creation |
+| 2024/03/31 |        |       |         |  2.5  |       |       | Deliverable 6 - Create Account Email Verification Frontend |
 | 2024/04/01 |        |       |         |       |  1    |       | Deliverable 6 - Work on reports for backend |
-| 2024/04/01 |        |       |         |       |  1.5  |       | Deliverable 6 - Call to fix response codes plus actually fixing codes |
+| 2024/04/01 |        |       |         |       |       |   3   | Add tag to beacon creation |
+| 2024/04/01 | 2.25   | 1.75  |         | 2.25  | 1.75  |       | Update beacon page bugfixes |
