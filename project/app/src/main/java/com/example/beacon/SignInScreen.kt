@@ -47,7 +47,7 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
             modifier = Modifier.padding(bottom = 32.dp, end = 10.dp)
         )
         Image(
-            painter = painterResource(id = R.drawable.beacon_app_logo), // Replace "your_image_resource" with your actual resource ID
+            painter = painterResource(id = R.drawable.beacon_app_logo),
             contentDescription = "Drawer Header Image",
             modifier = Modifier
                 .fillMaxWidth()
@@ -83,27 +83,6 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
-//        // Remember me checkbox
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.padding(top = 16.dp)
-//        ) {
-//            Checkbox(
-//                checked = rememberMeState.value,
-//                onCheckedChange = { rememberMeState.value = it },
-//            )
-//            Text(
-//                text = "remember me",
-//                modifier = Modifier.clickable { rememberMeState.value = !rememberMeState.value },
-//                color = themeStrategy.primaryTextColor
-//            )
-//            Spacer(modifier = Modifier.weight(1f))
-//            Text(
-//                text = "forgot password?",
-//                color = themeStrategy.primaryTextColor
-////                modifier = Modifier.clickable { /* TODO: Handle forgot password */ }
-//            )
-//        }
         // Sign In button
         Button(
             onClick = {
@@ -122,7 +101,6 @@ fun SignInScreen(modifier: Modifier = Modifier, navController: NavController, vi
         ) {
             Text("SIGN IN")
         }
-//        Spacer(modifier = Modifier.height(32.dp))
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
