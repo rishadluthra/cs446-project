@@ -136,7 +136,6 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                                   viewModel.refreshOurBeacons()
                               },
                               modifier = Modifier
-                                  .align(Alignment.End)
                                   .padding(top = 8.dp),
                               colors = ButtonDefaults.buttonColors(
                                   containerColor = themeStrategy.primaryColor

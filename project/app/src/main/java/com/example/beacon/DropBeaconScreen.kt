@@ -78,7 +78,8 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                 label = "choose tags",
                 state = tagsState,
                 options = listOf("select a tag", "labour", "tools", "tech", "social"),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                viewModel = viewModel
             )
             TextFieldWithLabel(
                 viewModel,
@@ -93,13 +94,6 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
                 modifier = Modifier
                     .fillMaxWidth(),
                 visualTransformation = VisualTransformation.None
-            )
-            DropdownWithLabel(
-                label = "choose tags",
-                state = tagsState,
-                options = listOf("choose a tag for the beacon", "labour", "tools", "tech", "social"),
-                modifier = Modifier.fillMaxWidth(),
-                viewModel = viewModel
             )
             Button(
                 onClick = {

@@ -98,7 +98,7 @@ class BeaconViewModel : ViewModel() {
                      onSuccess: (Int) -> Unit,
                      onError: (Int) -> Unit
     ) {
-      viewModelScope.launch {
+        viewModelScope.launch {
             // Perform the network operation on a background thread
             val responseCode = withContext(Dispatchers.IO) {
                 val newBeaconJsonObject = buildJsonObject {
@@ -109,14 +109,15 @@ class BeaconViewModel : ViewModel() {
                 }
                 val newBeaconJsonString =
                     Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
-                    patchBeacon(newBeaconJsonString, beaconId)
+                patchBeacon(newBeaconJsonString, beaconId)
             }
             // Now back on the main thread, check the response and call onSuccess or onError
             if (responseCode == 200) {
-              onSuccess(responseCode)
+                onSuccess(responseCode)
             } else {
-              onError(responseCode)
+                onError(responseCode)
             }
+        }
     }
 
 
@@ -203,7 +204,6 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
-}
 
     fun sendEmailAndVerify(
         email: String,

@@ -70,11 +70,12 @@ fun UpdateBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel
                 modifier = Modifier
                     .fillMaxWidth()
             )
-            TextFieldWithLabel(
-                viewModel,
+            DropdownWithLabel(
                 label = "choose tags",
                 state = tagsState,
-                modifier = Modifier.fillMaxWidth()
+                options = listOf("select a tag", "labour", "tools", "tech", "social"),
+                modifier = Modifier.fillMaxWidth(),
+                viewModel = viewModel
             )
             TextFieldWithLabel(
                 viewModel,
