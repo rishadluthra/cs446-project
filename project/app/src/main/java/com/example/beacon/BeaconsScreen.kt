@@ -73,7 +73,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     title = {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Text(
-                                text = "Beacons Nearby",
+                                text = "Nearby Beacons",
                                 fontSize = 32.sp,
                                 color = themeStrategy.primaryTextColor,
                                 modifier = Modifier.align(Alignment.Center)

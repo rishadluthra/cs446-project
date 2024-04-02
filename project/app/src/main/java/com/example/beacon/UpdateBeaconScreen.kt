@@ -32,7 +32,7 @@ fun UpdateBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { CustomAppBar("drop a beacon", navController, viewModel) },
+        topBar = { CustomAppBar("edit beacon", navController, viewModel) },
         containerColor = themeStrategy.primaryColor
 
     ) { innerPadding ->
