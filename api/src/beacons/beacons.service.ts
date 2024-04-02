@@ -38,7 +38,7 @@ export class BeaconsService {
     longitude,
     maxDistance,
     tags,
-  }: FindBeaconsDto): Promise<Beacon[]> {
+  }: FindBeaconsDto, creatorId: string): Promise<Beacon[]> {
     const beacons = await this.beaconModel
       .find({
         location: {
@@ -64,7 +64,9 @@ export class BeaconsService {
       id: beacon._id.toString(),
       _id: undefined,
       __v: undefined,
-    }));
+    })).filter((beacon) => {
+      return beacon.creatorId != creatorId;
+    });
   }
 
   async findOne(id: string): Promise<Beacon> {
