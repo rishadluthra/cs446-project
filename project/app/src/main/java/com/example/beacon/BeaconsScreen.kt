@@ -1,6 +1,8 @@
 package com.example.beacon
 
+import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +50,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     var selectedTags by remember { mutableStateOf(listOf<String>()) }
     var sliderValue by remember { mutableStateOf(1000) }
     var maxDistance by remember { mutableStateOf(1000) }
+    val context = LocalContext.current
 
     LaunchedEffect(true) {
         viewModel.refreshNearby(tagsState, maxDistance)
@@ -156,7 +160,17 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             color = themeStrategy.secondaryTextColor
                         )
                         Button(
-                            onClick = { /* TODO: Insert navigate action here */ },
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                    data = android.net.Uri.parse("mailto:${uiState.nearbyBeacons[i].creatorEmail}")
+                                    putExtra(Intent.EXTRA_SUBJECT, "Responding to Beacon: ${uiState.nearbyBeacons[i].title}")
+                                }
+                                if (intent.resolveActivity(context.packageManager) != null) {
+                                    context.startActivity(Intent.createChooser(intent, "Send Email..."))
+                                } else {
+                                    Toast.makeText(context, "No email applications found.", Toast.LENGTH_LONG).show()
+                                }
+                                      },
                             modifier = Modifier
                                 .align(Alignment.End)
                                 .padding(top = 8.dp),

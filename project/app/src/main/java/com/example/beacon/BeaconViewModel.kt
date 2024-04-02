@@ -1,6 +1,5 @@
 package com.example.beacon
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -22,17 +21,19 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
-import java.io.IOException
 import java.lang.Exception
 import kotlin.concurrent.thread
 
 data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
-    var ourBeacons: List<BeaconInfo> = emptyList(),
+    var ourBeacons: List<MyBeaconsInfo> = emptyList(),
     var nearbyBeacons: List<BeaconInfo> = emptyList()
 )
 @Serializable
-data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
+data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String, val creatorEmail: String)
+
+@Serializable
+data class MyBeaconsInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
 @Serializable
 data class Location(val type: String, val coordinates: Array<Float>)
 
@@ -229,7 +230,7 @@ class BeaconViewModel : ViewModel() {
 }
 
 
-fun fetchOurBeacons(): Array<BeaconInfo> {
+fun fetchOurBeacons(): Array<MyBeaconsInfo> {
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
@@ -238,7 +239,7 @@ fun fetchOurBeacons(): Array<BeaconInfo> {
             .build()
         val response = OkHttpClient().newCall(request).execute()
         val json = response.body!!.string()
-        return Json.decodeFromString<Array<BeaconInfo>>(json)
+        return Json.decodeFromString<Array<MyBeaconsInfo>>(json)
     } catch (e: Exception) {
         println(e.message)
     }
