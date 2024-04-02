@@ -61,6 +61,7 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+
     fun sendBeacon(title: String,
                    tag: String,
                    description: String,
@@ -88,6 +89,36 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+    
+    fun updateBeacon(title: String,
+                     tag: String,
+                     description: String,
+                     postalCode: String,
+                     beaconId: String,
+                     onSuccess: (Int) -> Unit,
+                     onError: (Int) -> Unit
+    ) {
+      viewModelScope.launch {
+            // Perform the network operation on a background thread
+            val responseCode = withContext(Dispatchers.IO) {
+                val newBeaconJsonObject = buildJsonObject {
+                    put("title", title)
+                    put("tag", tag)
+                    put("description", description)
+                    put("postalCode", postalCode)
+                }
+                val newBeaconJsonString =
+                    Json.encodeToString(JsonObject.serializer(), newBeaconJsonObject)
+                    patchBeacon(newBeaconJsonString, beaconId)
+            }
+            // Now back on the main thread, check the response and call onSuccess or onError
+            if (responseCode == 200) {
+              onSuccess(responseCode)
+            } else {
+              onError(responseCode)
+            }
+    }
+
 
     fun delete(id: String,
                onSuccess: (Int) -> Unit,
@@ -172,6 +203,7 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+}
 
     fun sendEmailAndVerify(
         email: String,
@@ -267,6 +299,25 @@ fun postBeacon(newBeaconJsonString: String): Int {
             .url("http://10.0.2.2:4000/beacons")
             .addHeader("Authorization", "Bearer $authToken")
             .post(requestBody)
+            .build()
+        val response = client.newCall(request).execute()
+        return response.code
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return 400
+}
+
+fun patchBeacon(newBeaconJsonString: String, beaconId: String): Int {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = newBeaconJsonString.toRequestBody(mediaType)
+        val client = OkHttpClient()
+        val authToken = AuthManager.getAuthToken()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/beacons/${beaconId}")
+            .addHeader("Authorization", "Bearer $authToken")
+            .patch(requestBody)
             .build()
         val response = client.newCall(request).execute()
         return response.code

@@ -69,7 +69,7 @@ fun DropBeaconScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, 
         ) {
             TextFieldWithLabel(
                 viewModel,
-                label = "enter a title...",
+                label = "enter a title",
                 state = titleState,
                 modifier = Modifier
                     .fillMaxWidth()

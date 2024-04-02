@@ -1,18 +1,14 @@
 package com.example.beacon
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
@@ -32,17 +28,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.beacon.ui.theme.Black
-import com.example.beacon.ui.theme.PrimaryYellow
+import androidx.navigation.compose.rememberNavController
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
+fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, navController: NavController) {
     LaunchedEffect(true) {
         viewModel.refreshOurBeacons()
     }
@@ -109,26 +103,50 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             color = themeStrategy.secondaryTextColor
 
                         )
-                        Button(
-                            onClick = {
-                                viewModel.delete(uiState.ourBeacons[i].id,
-                                    onSuccess = {
-                                                setShowDialog(true)
-                                    },
-                                    onError = {
-
-                                    })
-                                viewModel.refreshOurBeacons()
-                            },
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .padding(top = 8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = themeStrategy.primaryColor
-                            ),
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Absolute.Right,
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(text = "resolve",
-                                color = themeStrategy.primaryTextColor)
+                            Button(
+                                onClick = {
+                                    BeaconManager.setBeacon(uiState.ourBeacons[i])
+                                    navController.navigate(BeaconScreens.UpdateBeacon.name)
+                                },
+                                modifier = Modifier
+                                    .padding(top = 8.dp, end = 12.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = themeStrategy.primaryColor
+                                ),
+                            ) {
+                                Text(
+                                    text = "edit",
+                                    color = themeStrategy.primaryTextColor
+                                )
+                            }
+                            Button(
+                              onClick = {
+                                  viewModel.delete(uiState.ourBeacons[i].id,
+                                      onSuccess = {
+                                                  setShowDialog(true)
+                                      },
+                                      onError = {
+
+                                      })
+                                  viewModel.refreshOurBeacons()
+                              },
+                              modifier = Modifier
+                                  .align(Alignment.End)
+                                  .padding(top = 8.dp),
+                              colors = ButtonDefaults.buttonColors(
+                                  containerColor = themeStrategy.primaryColor
+                              ),
+                            ) {
+                                Text(
+                                    text = "resolve",
+                                    color = themeStrategy.primaryTextColor
+                                )
+                            }
                         }
                     }
                 }
