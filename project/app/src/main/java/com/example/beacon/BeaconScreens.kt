@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,37 +58,48 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
     )
     val coroutineScope = rememberCoroutineScope()
     val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
-    ModalNavigationDrawer(drawerState = drawerState,
-        drawerContent = {ModalDrawerSheet{
-            Surface(color = MaterialTheme.colorScheme.surface){
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    //TODO: Beacon image goes here
-                    LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                        items(sidebarButtons) {
-                            item ->
-                                Button(onClick={
-                                    coroutineScope.launch{drawerState.close()}
-                                    if (currentScreen != item) {
-                                        navController.navigate(item.name)
+    val drawerEnabled = currentScreen !in listOf(BeaconScreens.SignIn, BeaconScreens.CreateAccount)
+
+    LaunchedEffect(currentScreen) {
+        if (!drawerEnabled) {
+            drawerState.close()
+        }
+    }
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = drawerEnabled,
+        drawerContent = {
+            ModalDrawerSheet{
+                Surface(color = MaterialTheme.colorScheme.surface){
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        //TODO: Beacon image goes here
+                        LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                            items(sidebarButtons) {
+                                item ->
+                                    Button(onClick={
+                                        coroutineScope.launch{drawerState.close()}
+                                        if (currentScreen != item) {
+                                            navController.navigate(item.name)
+                                        }
+                                        }) {
+                                        Text(text = item.title)
                                     }
-                                    }) {
-//                                    Text(text = item.title.lowercase())
-                                    Text(text = item.title)
-                                }
+                            }
                         }
-                    }
-                    Button(
-                        onClick = {
-                            // Toggle the theme strategy
-                            viewModel.toggleTheme()
-                        },
-                        modifier = Modifier.align(Alignment.Start).padding(16.dp) // Align to bottom left
-                    ) {
-                        Text("Switch Theme")
+                        Button(
+                            onClick = {
+                                // Toggle the theme strategy
+                                viewModel.toggleTheme()
+                            },
+                            modifier = Modifier.align(Alignment.Start).padding(16.dp)
+                        ) {
+                            Text("Switch Theme")
+                        }
                     }
                 }
             }
-        }}
+        }
     ) {
         NavHost(
             navController = navController,
