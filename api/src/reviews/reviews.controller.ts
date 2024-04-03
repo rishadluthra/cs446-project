@@ -46,10 +46,10 @@ export class ReviewsController {
   }
 
   @UseGuards(JwtAuthGuard)
-    @Get('my_reviews')
-    async findMyReviews(
-      @CurrentUser() currentUser: Partial<User>,
-    ): Promise<ReviewsWithAverageRating> {
-      return this.reviewsService.findByTargetEmail(currentUser.email);
-    }
+  @Get('my_reviews')
+  async findMyReviews(
+    @CurrentUser() currentUser: Partial<User>,
+  ): Promise<ReviewsWithAverageRating> {
+    return this.reviewsService.findByTargetEmail(currentUser.email);
+  }
 }

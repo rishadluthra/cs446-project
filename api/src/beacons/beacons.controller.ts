@@ -42,8 +42,10 @@ export class BeaconsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async find(@CurrentUser() currentUser: Partial<User>,
-  @Query() findBeaconInput: FindBeaconsDto): Promise<Beacon[]> {
+  async find(
+    @CurrentUser() currentUser: Partial<User>,
+    @Query() findBeaconInput: FindBeaconsDto,
+  ): Promise<Beacon[]> {
     return this.beaconsService.find(findBeaconInput, currentUser.id);
   }
 

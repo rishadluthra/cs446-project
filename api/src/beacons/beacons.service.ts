@@ -33,12 +33,10 @@ export class BeaconsService {
     });
   }
 
-  async find({
-    latitude,
-    longitude,
-    maxDistance,
-    tags,
-  }: FindBeaconsDto, creatorId: string): Promise<Beacon[]> {
+  async find(
+    { latitude, longitude, maxDistance, tags }: FindBeaconsDto,
+    creatorId: string,
+  ): Promise<Beacon[]> {
     const beacons = await this.beaconModel
       .find({
         location: {
@@ -57,16 +55,18 @@ export class BeaconsService {
         select: 'email',
       });
 
-    return beacons.map((beacon) => ({
-      ...beacon.toObject(),
-      creatorId: (beacon.creatorId as any).id,
-      creatorEmail: (beacon.creatorId as any).email,
-      id: beacon._id.toString(),
-      _id: undefined,
-      __v: undefined,
-    })).filter((beacon) => {
-      return beacon.creatorId != creatorId;
-    });
+    return beacons
+      .map((beacon) => ({
+        ...beacon.toObject(),
+        creatorId: (beacon.creatorId as any).id,
+        creatorEmail: (beacon.creatorId as any).email,
+        id: beacon._id.toString(),
+        _id: undefined,
+        __v: undefined,
+      }))
+      .filter((beacon) => {
+        return beacon.creatorId != creatorId;
+      });
   }
 
   async findOne(id: string): Promise<Beacon> {
