@@ -34,7 +34,7 @@ export class BeaconsService {
   }
 
   async find(
-    { latitude, longitude, maxDistance, tags }: FindBeaconsDto,
+    { longitude, latitude, maxDistance, tags }: FindBeaconsDto,
     creatorId: string,
   ): Promise<Beacon[]> {
     const beacons = await this.beaconModel.aggregate([
@@ -42,7 +42,7 @@ export class BeaconsService {
         $geoNear: {
           near: {
             type: 'Point',
-            coordinates: [latitude, longitude],
+            coordinates: [longitude, latitude],
           },
           distanceField: 'distance',
           maxDistance: maxDistance,

@@ -16,7 +16,7 @@ export class GeogratisService {
 
       const [longitude, latitude] = response.data[0].geometry.coordinates;
 
-      return [latitude, longitude];
+      return [longitude, latitude];
     } catch {
       return null;
     }
