@@ -1,6 +1,8 @@
 package com.example.beacon
 
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -75,11 +78,11 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
+    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int, latitude: Double, longitude: Double) {
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
-                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm).asList()
+                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm, latitude, longitude).asList()
                 )
             }
         }
@@ -342,18 +345,21 @@ fun fetchOurBeacons(): Array<MyBeaconsInfo> {
     return emptyArray()
 }
 
-fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInfo> {
+fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double, longitude: Double): Array<BeaconInfo> {
     val maxDistance = maxDistanceKm * 1000
-    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007"
+    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.462696&longitude=-80.542045"
     val distUrl = "$baseUrl&maxDistance=$maxDistance"
+    Log.d("BASEURL", "$baseUrl")
+    Log.d("distURL", "$distUrl")
+
 
     val url: String = if (!tags.isNullOrEmpty()) {
         val tagsQueryString = tags.joinToString("&") { "tags[]=$it" }
         "$distUrl&$tagsQueryString"
     } else {
-        val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
-        "$distUrl$allTags"
+        "$distUrl"
     }
+    Log.d("Url", "$url")
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
