@@ -75,13 +75,11 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                 coroutineScope.launch {
                     try {
                         val locationResult = fusedLocationClient.lastLocation.await()
-                        Log.d("perm", "permis isf owe")
                         locationResult?.let {
                             latitude = it.latitude
                             longitude = it.longitude
                         }
                     } catch (e: SecurityException) {
-                        Log.d("exception", "afjsjkfsalkjl;agjklsgajlgs")
                     }
                 }
             }
