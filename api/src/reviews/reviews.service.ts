@@ -56,7 +56,11 @@ export class ReviewsService {
       (sum, review) => sum + review.rating,
       0,
     );
-    const averageRating = sumOfRatings / reviews.length;
+
+    var averageRating = 0;
+    if (reviews.length != 0) {
+      averageRating = sumOfRatings / reviews.length;
+    }
 
     return {
       reviews,
