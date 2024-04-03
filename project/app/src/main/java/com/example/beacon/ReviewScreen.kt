@@ -169,8 +169,6 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                                 }
                                             )
                                             viewModel.refreshSearchedReviews(searchedUser)
-                                            viewModel.reviewUser(searchedUser, rating, reviewText)
-                                            showReviewPanel = false
                                         },
                                         colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
                                         modifier = Modifier
