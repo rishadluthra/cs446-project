@@ -155,6 +155,19 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 ) {
                                     Button(
                                         onClick = {
+                                            viewModel.reviewUser(
+                                                searchedUser,
+                                                rating,
+                                                reviewText,
+                                                onSuccess = {
+                                                    showReviewPanel = false
+                                                    setReviewText("")
+                                                },
+                                                onError = {
+                                                    showReviewPanel = false
+                                                    setReviewText("")
+                                                }
+                                            )
                                             viewModel.refreshSearchedReviews(searchedUser)
                                             viewModel.reviewUser(searchedUser, rating, reviewText)
                                             showReviewPanel = false
