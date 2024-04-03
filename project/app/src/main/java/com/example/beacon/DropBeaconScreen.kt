@@ -176,6 +176,10 @@ fun DropdownWithLabel(label: String, state: MutableState<String>, modifier: Modi
     var selectedIndex by remember { mutableStateOf(0) }
     val themeStrategy by viewModel.themeStrategy
 
+    if (state.value != "") {
+        selectedIndex = options.indexOf(state.value)
+    }
+    
     Column(modifier.padding(vertical = 16.dp)) {
         Box() {
             Text(
