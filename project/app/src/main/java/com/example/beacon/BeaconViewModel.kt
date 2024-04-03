@@ -354,8 +354,6 @@ fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double,
         val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
         "$distUrl$allTags"
     }
-    Log.d("Nearby Beacons", "-------")
-    Log.d("Nearby Beacon", "$url")
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()

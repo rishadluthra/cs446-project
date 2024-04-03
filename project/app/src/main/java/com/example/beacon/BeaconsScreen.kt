@@ -78,9 +78,6 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         locationResult?.let {
                             latitude = it.latitude
                             longitude = it.longitude
-                            Log.d("Location", "------------------------")
-                            Log.d("Location", "$latitude and $longitude")
-
                         }
                     } catch (e: SecurityException) {
                     }
@@ -99,8 +96,6 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         locationResult?.let {
                             latitude = it.latitude
                             longitude = it.longitude
-                            Log.d("Location", "------------------------")
-                            Log.d("Location", "$latitude and $longitude")
                             viewModel.refreshNearby(tagsState, maxDistance, latitude, longitude)
                         }
                     } catch (e: SecurityException) {
@@ -115,20 +110,12 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
         }
     }
 
-//    LaunchedEffect(true) {
-//        viewModel.refreshNearby(tagsState, maxDistance)
-//    }
-//
     LaunchedEffect(selectedTags) {
         viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
-        Log.d("Location", "------------------------")
-        Log.d("Location", "$latitude and $longitude")
     }
 
     LaunchedEffect(maxDistance) {
         viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
-        Log.d("Location", "------------------------")
-        Log.d("Location", "$latitude and $longitude")
     }
 
     Box(
