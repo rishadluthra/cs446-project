@@ -47,7 +47,7 @@ enum class BeaconScreens(val title: String) {
     SignIn(title = "Sign In"),
     DropBeacon(title = "Drop Beacon"),
     UpdateBeacon(title = "Update Beacon"),
-    CreateAccount(title = "Create Account")
+    CreateAccount(title = "Create Account"),
     Reviews(title = "My Reviews"),
 }
 
@@ -64,7 +64,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
     )
     val coroutineScope = rememberCoroutineScope()
-    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
+    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon, BeaconScreens.Reviews)
     val drawerEnabled = currentScreen !in listOf(BeaconScreens.SignIn, BeaconScreens.CreateAccount)
     LaunchedEffect(currentScreen) {
         if (!drawerEnabled) {
@@ -174,7 +174,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                 CreateAccountScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
             }
             composable(route = BeaconScreens.Reviews.name) {
-                ReviewScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, )
+                ReviewScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel)
             }
         }    
     }

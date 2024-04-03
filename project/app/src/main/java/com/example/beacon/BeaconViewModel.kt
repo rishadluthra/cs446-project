@@ -29,7 +29,7 @@ import kotlin.concurrent.thread
 
 data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
-    var ourBeacons: List<BeaconInfo> = emptyList(),
+    var ourBeacons: List<MyBeaconsInfo> = emptyList(),
     var nearbyBeacons: List<BeaconInfo> = emptyList(),
 
     var ourReviews: List<Review> = emptyList(),
@@ -87,12 +87,14 @@ class BeaconViewModel : ViewModel() {
     }
 
 
-    fun sendBeacon(title: String,
-                   tag: String,
-                   description: String,
-                   postalCode: String,
-                   onSuccess: (Int) -> Unit,
-                   onError: (Int) -> Unit) {
+    fun sendBeacon(
+        title: String,
+        tag: String,
+        description: String,
+        postalCode: String,
+        onSuccess: (Int) -> Unit,
+        onError: (Int) -> Unit
+    ) {
         viewModelScope.launch {
             // Perform the network operation on a background thread
             val responseCode = withContext(Dispatchers.IO) {
@@ -114,14 +116,15 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
-    
-    fun updateBeacon(title: String,
-                     tag: String,
-                     description: String,
-                     postalCode: String,
-                     beaconId: String,
-                     onSuccess: (Int) -> Unit,
-                     onError: (Int) -> Unit
+
+    fun updateBeacon(
+        title: String,
+        tag: String,
+        description: String,
+        postalCode: String,
+        beaconId: String,
+        onSuccess: (Int) -> Unit,
+        onError: (Int) -> Unit
     ) {
         viewModelScope.launch {
             // Perform the network operation on a background thread
@@ -169,9 +172,11 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun delete(id: String,
-               onSuccess: (Int) -> Unit,
-               onError: (Int) -> Unit) {
+    fun delete(
+        id: String,
+        onSuccess: (Int) -> Unit,
+        onError: (Int) -> Unit
+    ) {
         viewModelScope.launch {
             val responseCode = withContext(Dispatchers.IO) {
                 deleteBeacon(id)
@@ -232,7 +237,7 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
-    
+
     fun reportUser(reportEmail: String): Int {
         var responseCode = 0
         thread {
@@ -300,21 +305,20 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
-}
-
-fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
-    var responseCode = 0
-    thread {
-        val reviewJsonObject = buildJsonObject {
-            put("targetEmail", targetEmail)
-            put("rating", rating)
-            put("review", review)
+    fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
+        var responseCode = 0
+        thread {
+            val reviewJsonObject = buildJsonObject {
+                put("targetEmail", targetEmail)
+                put("rating", rating)
+                put("review", review)
+            }
+            val reviewJsonString =
+                Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
+            responseCode = postReview(reviewJsonString)
         }
-        val reviewJsonString =
-            Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
-        responseCode = postReview(reviewJsonString)
+        return responseCode
     }
-    return responseCode
 }
 
 fun fetchOurBeacons(): Array<MyBeaconsInfo> {

@@ -59,8 +59,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.beacon.ui.theme.Black
-import com.example.beacon.ui.theme.PrimaryYellow
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
