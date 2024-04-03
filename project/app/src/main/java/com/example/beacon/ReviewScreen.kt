@@ -90,9 +90,8 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     // Search Bar Results
     val (displayResults, setDisplayResults) = remember { mutableStateOf(false) }
 
-
     // Review
-    val (showReviewPanel, setShowReviewPanel) = remember { mutableStateOf(false) }
+    var showReviewPanel by remember { mutableStateOf(false) }
     val (reviewText, setReviewText) = remember { mutableStateOf("") }
     val (rating, setRating) = remember { mutableIntStateOf(5) }
 
@@ -118,6 +117,95 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     },
                     colors = TopAppBarDefaults.topAppBarColors(containerColor = themeStrategy.primaryColor)
                 )
+            }
+
+            if (showReviewPanel) {
+                item {
+                    Dialog(
+                        onDismissRequest = { showReviewPanel = false }
+                    ) {
+                        Surface(
+                            modifier = Modifier.width(300.dp),
+                            shape = MaterialTheme.shapes.medium,
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                TextField(
+                                    value = reviewText,
+                                    onValueChange = { setReviewText(it) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp),
+                                    label = { Text("Enter Review") }
+                                )
+
+                                Slider(
+                                    value = rating.toFloat(),
+                                    onValueChange = { setRating(it.toInt()) },
+                                    valueRange = 1f..5f,
+                                    steps = 4,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 16.dp)
+                                )
+
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Button(
+                                        onClick = {
+                                            showReviewPanel = false
+                                            viewModel.reviewUser(searchedUser, rating, reviewText)
+//                                            Log.d("AAAA", "Before")
+                                            viewModel.refreshSearchedReviews(searchedUser)
+//                                            Log.d("AAAA", "After")
+                                        }
+                                    ) {
+                                        Text("Submit")
+                                    }
+                                    Button(
+                                        onClick = { showReviewPanel = false }
+                                    ) {
+                                        Text("Cancel")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (showReportConfirmation) {
+                item {
+                    AlertDialog(
+                        onDismissRequest = { setShowReportConfirmation(false) },
+                        title = { Text("Success") },
+                        text = {
+                            Text(
+                                text = "Report Submitted",
+                                fontSize = 16.sp
+                            )
+                        },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    setShowReportConfirmation(false)
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = themeStrategy.primaryColor,
+                                    contentColor = themeStrategy.secondaryColor
+                                ),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp)
+                            ) {
+                                Text("Close")
+                            }
+                        }
+                    )
+                }
             }
 
 //          THIS IS THE SEARCH BAR (FIXED, SHOW APPEAR NO MATTER WHAT)
@@ -162,7 +250,9 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .padding(horizontal = 16.dp)
                         ) {
                             Button(
-                                onClick = { setShowReviewPanel(true) },
+                                onClick = {
+                                    showReviewPanel = true
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth(0.5f)
                                     .padding(vertical = 0.dp)
@@ -200,6 +290,15 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .padding(horizontal = 16.dp, vertical =  16.dp)
                                 .align(alignment = Alignment.CenterHorizontally)
                         )
+                        Text(
+                            text = "Average Rating: ${uiState.searchOverallRating}",
+                            color = themeStrategy.primaryTextColor,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .fillMaxWidth(1f)
+                                .padding(horizontal = 16.dp, vertical =  16.dp)
+                                .align(alignment = Alignment.CenterHorizontally)
+                        )
                     }
                 }
 
@@ -230,13 +329,13 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     .padding(all = 16.dp)
                             ) {
                                 Text(
-                                    text = uiState.searchedReviews[i].review,
+                                    text = "Comment: ${uiState.searchedReviews[i].review}",
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(bottom = 8.dp),
                                     color = themeStrategy.secondaryTextColor
                                 )
                                 Text(
-                                    text = "${uiState.searchedReviews[i].rating.toString()}/5",
+                                    text = "Rating: ${uiState.searchedReviews[i].rating}/5",
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = themeStrategy.secondaryTextColor
                                 )
@@ -268,6 +367,14 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .fillMaxWidth(1f)
                                 .padding(horizontal = 16.dp, vertical = 16.dp)
                         )
+                        Text(
+                            text = "Average Rating: ${uiState.searchOverallRating}",
+                            color = themeStrategy.primaryTextColor,
+                            fontSize = 12.sp,
+                            modifier = Modifier
+                                .fillMaxWidth(1f)
+                                .padding(horizontal = 16.dp, vertical =  16.dp)
+                        )
                     }
                     items(uiState.ourReviews.size) { i ->
                         Surface(
@@ -282,107 +389,19 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     .padding(all = 16.dp)
                             ) {
                                 Text(
-                                    text = uiState.ourReviews[i].review,
+                                    text = "Comment: ${uiState.ourReviews[i].review}",
                                     style = MaterialTheme.typography.bodyLarge,
                                     modifier = Modifier.padding(bottom = 8.dp),
                                     color = themeStrategy.secondaryTextColor
                                 )
                                 Text(
-                                    text = "${uiState.ourReviews[i].rating.toString()}/5",
+                                    text = "Rating: ${uiState.ourReviews[i].rating}/5",
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = themeStrategy.secondaryTextColor
                                 )
                             }
                         }
                     }
-                }
-            }
-            if (showReviewPanel) {
-                item {
-                    Dialog(
-                        onDismissRequest = { setShowReviewPanel(false) }
-                    ) {
-                        Surface(
-                            modifier = Modifier.width(300.dp),
-                            shape = MaterialTheme.shapes.medium,
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                TextField(
-                                    value = reviewText,
-                                    onValueChange = { setReviewText(it) },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 8.dp),
-                                    label = { Text("Enter Review") }
-                                )
-
-                                Slider(
-                                    value = rating.toFloat(),
-                                    onValueChange = { setRating(it.toInt()) },
-                                    valueRange = 1f..5f,
-                                    steps = 4,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 16.dp)
-                                )
-
-                                Row(
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            setShowReviewPanel(false)
-                                            viewModel.reviewUser(searchedUser, rating, reviewText)
-//                                            Log.d("AAAA", "Before")
-                                            viewModel.refreshSearchedReviews(searchedUser)
-//                                            Log.d("AAAA", "After")
-                                        }
-                                    ) {
-                                        Text("Submit")
-                                    }
-                                    Button(
-                                        onClick = { setShowReviewPanel(false) }
-                                    ) {
-                                        Text("Cancel")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (showReportConfirmation) {
-                item {
-                    AlertDialog(
-                        onDismissRequest = { setShowReportConfirmation(false) },
-                        title = { Text("Success") },
-                        text = {
-                            Text(
-                                text = "Report Submitted",
-                                fontSize = 16.sp
-                            )
-                        },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    setShowReportConfirmation(false)
-                                },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = themeStrategy.primaryColor,
-                                    contentColor = themeStrategy.secondaryColor
-                                ),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp)
-                            ) {
-                                Text("Close")
-                            }
-                        }
-                    )
                 }
             }
         }
