@@ -19,6 +19,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
@@ -26,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -47,13 +49,14 @@ enum class BeaconScreens(val title: String) {
     SignIn(title = "Sign In"),
     DropBeacon(title = "Drop Beacon"),
     UpdateBeacon(title = "Update Beacon"),
-    CreateAccount(title = "Create Account")
+    CreateAccount(title = "Create Account"),
+    Reviews(title = "My Reviews")
 }
 
 
 @Composable
 fun BeaconApp(navController: NavHostController = rememberNavController(),
-              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+              drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
 ) {
 
     val viewModel: BeaconViewModel = viewModel()
@@ -63,7 +66,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
     )
     val coroutineScope = rememberCoroutineScope()
-    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
+    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon, BeaconScreens.Reviews)
     val drawerEnabled = currentScreen !in listOf(BeaconScreens.SignIn, BeaconScreens.CreateAccount)
     LaunchedEffect(currentScreen) {
         if (!drawerEnabled) {
@@ -114,7 +117,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(300.dp))
+                        Spacer(modifier = Modifier.height(200.dp))
                         Button(
                             onClick = {
                                 // Toggle the theme strategy
@@ -171,6 +174,9 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
             }
             composable(route = BeaconScreens.CreateAccount.name) {
                 CreateAccountScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, navController = navController)
+            }
+            composable(route = BeaconScreens.Reviews.name) {
+                ReviewScreen(modifier = Modifier.fillMaxHeight(), viewModel = viewModel, )
             }
         }
     }

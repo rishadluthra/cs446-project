@@ -29,7 +29,15 @@ import kotlin.concurrent.thread
 data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
     var ourBeacons: List<MyBeaconsInfo> = emptyList(),
-    var nearbyBeacons: List<BeaconInfo> = emptyList()
+    var nearbyBeacons: List<BeaconInfo> = emptyList(),
+
+    var ourReviews: List<Review> = emptyList(),
+    var ourEmail: String = "",
+    var ourAverageRating: Int = -1,
+
+    var searchedReviews: List<Review> = emptyList(),
+    var validSearch: Boolean = true,
+    var searchOverallRating: Int = -1
 )
 @Serializable
 data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String, val creatorEmail: String)
@@ -38,6 +46,9 @@ data class BeaconInfo(val id: String, val creatorId: String, val title: String, 
 data class MyBeaconsInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)
 @Serializable
 data class Location(val type: String, val coordinates: Array<Float>)
+@Serializable
+data class Review(val creatorId: String, val targetId: String, val rating: Int, val review: String, val createdAt: String, val updatedAt: String, val id: String)
+
 
 class BeaconViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
@@ -54,6 +65,16 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+    fun refreshOurEmail() {
+        thread {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ourEmail = getMyEmail()
+                )
+            }
+        }
+    }
+
     fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
         thread {
             _uiState.update { currentState ->
@@ -64,6 +85,30 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+
+    fun refreshOurReviews() {
+        thread {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ourReviews = getMyReviews().asList(),
+                    ourAverageRating = getMyAverageRating(),
+                    validSearch = true
+                )
+            }
+        }
+    }
+
+     fun refreshSearchedReviews(email: String) {
+        thread {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    searchedReviews = getReviewsByTargetEmail(email).asList(),
+                    searchOverallRating = getMyAverageRatingByTargetEmail(email),
+                    validSearch = checkUserValidity(email)
+                )
+            }
+        }
+    }
 
     fun sendBeacon(title: String,
                    tag: String,
@@ -139,6 +184,16 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+    fun checkUserValidity(reportEmail: String): Boolean {
+        var responseCode = false
+        val thread = thread(start = true) {
+            responseCode = isUserValid(reportEmail)
+        }
+        thread.join()
+        return responseCode
+
+    }
+
     fun toggleTheme() {
         themeStrategy.value = if (themeStrategy.value == DarkThemeStrategy) {
             LightThemeStrategy
@@ -206,7 +261,34 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+    fun reportUser(reportEmail: String): Int {
+        var responseCode = 0
+        thread {
+            val reportEmailJsonObject = buildJsonObject {
+                put("reportEmail", reportEmail)
+            }
+            val reportEmailJsonString =
+                Json.encodeToString(JsonObject.serializer(), reportEmailJsonObject)
+            responseCode = postReportUser(reportEmailJsonString)
+        }
+        return responseCode
+    }
 
+    fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
+        var responseCode = 0
+        thread {
+            val reviewJsonObject = buildJsonObject {
+                put("targetEmail", targetEmail)
+                put("rating", rating)
+                put("review", review)
+            }
+            val reviewJsonString =
+                Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
+            responseCode = postReview(reviewJsonString)
+        }
+        return responseCode
+    }
+    
     fun sendEmailAndVerify(
         email: String,
         onSuccess: (String) -> Unit,
@@ -398,4 +480,151 @@ fun getVerificationCode(verifyJsonString: String): Pair<Int, String> {
     }
     return Pair(clientErrorCode, "") // Indicate a client error in case of exception
 }
+
+fun getMyReviews(): Array<Review> {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reviews/my_reviews")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        val jsonString = response.body!!.string()
+        val jsonObject = JSONObject(jsonString)
+        val jsonReviews = jsonObject.getString("reviews")
+        return Json.decodeFromString<Array<Review>>(jsonReviews)
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return emptyArray()
+}
+
+fun getReviewsByTargetEmail(targetEmail: String): Array<Review> {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reviews?targetEmail=$targetEmail")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        val jsonString = response.body!!.string()
+        val jsonObject = JSONObject(jsonString)
+        val jsonReviews = jsonObject.getString("reviews")
+        return Json.decodeFromString<Array<Review>>(jsonReviews)
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return emptyArray()
+}
+
+fun getMyAverageRating(): Int {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reviews/my_reviews")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        val jsonString = response.body!!.string()
+        val jsonObject = JSONObject(jsonString)
+        return jsonObject.getString("averageRating").toFloat().toInt()
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return -1
+}
+
+fun getMyAverageRatingByTargetEmail(targetEmail: String): Int {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reviews?targetEmail=$targetEmail")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        val jsonString = response.body!!.string()
+        val jsonObject = JSONObject(jsonString)
+        return jsonObject.getString("averageRating").toFloat().toInt()
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return -1
+}
+
+fun postReview(reviewJsonString: String): Int {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = reviewJsonString.toRequestBody(mediaType)
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reviews")
+            .addHeader("Authorization", "Bearer $authToken")
+            .post(requestBody)
+            .build()
+        val response = client.newCall(request).execute()
+        return response.code
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return 0
+}
+
+fun postReportUser(targetEmailJsonString: String): Int {
+    try {
+        val mediaType = "application/json; charset=utf-8".toMediaType()
+        val requestBody = targetEmailJsonString.toRequestBody(mediaType)
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/reports")
+            .addHeader("Authorization", "Bearer $authToken")
+            .post(requestBody)
+            .build()
+        val response = client.newCall(request).execute()
+        return response.code
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return 0
+}
+
+fun getMyEmail(): String {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/users/my_email")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        return response.body!!.string()
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return "Not Found"
+}
+
+fun isUserValid(targetEmail: String): Boolean {
+    try {
+        val authToken = AuthManager.getAuthToken()
+        val client = OkHttpClient()
+        val request = Request.Builder()
+            .url("http://10.0.2.2:4000/users?targetEmail=$targetEmail")
+            .addHeader("Authorization", "Bearer $authToken")
+            .build()
+        val response = client.newCall(request).execute()
+        val string = response.body!!.string()
+        return string.toBoolean()
+    } catch (e: Exception) {
+        println(e.message)
+    }
+    return false
+}
+
+
 
