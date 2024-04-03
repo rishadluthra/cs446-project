@@ -190,8 +190,6 @@ class BeaconViewModel : ViewModel() {
             responseCode = isUserValid(reportEmail)
         }
         thread.join()
-        Log.d("CheckUserValidity", "--------------------------")
-        Log.d("CheckUserValidity", responseCode.toString())
         return responseCode
 
     }

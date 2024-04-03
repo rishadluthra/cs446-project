@@ -129,9 +129,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     label = { Text("Enter Review",
                                             color = themeStrategy.primaryTextColor) },
                                     colors = TextFieldDefaults.outlinedTextFieldColors(
-                                        containerColor = themeStrategy.primaryColor, // Set the background color here
-//                                        focusedBorderColor = Color.Gray, // Color of the border when the TextField is focused
-//                                        unfocusedBorderColor = Color.Gray // Color of the border when the TextField is not focused
+                                        containerColor = themeStrategy.primaryColor,
                                     )
                                 )
 
@@ -142,13 +140,12 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     valueRange = 1f..5f,
                                     steps = 4,
                                     colors = SliderDefaults.colors(
-                                        thumbColor = themeStrategy.primaryColor, // Color of the slider thumb
+                                        thumbColor = themeStrategy.primaryColor,
                                         activeTrackColor = themeStrategy.primaryColor, // Color of the track to the left of the thumb
                                         inactiveTrackColor = Color.Gray // Color of the track to the right of the thumb
                                     ),
                                     modifier = Modifier
                                         .fillMaxWidth()
-//                                        .padding(bottom = 5.dp)
                                 )
                                 Text("Selected rating: ${sliderValue}", modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
                                 Spacer(modifier = Modifier.height(20.dp))
@@ -270,7 +267,6 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     showReviewPanel = true
                                 },
                                 modifier = Modifier
-//                                    .fillMaxWidth(0.5f)
                                     .width(170.dp)
                                     .padding(start = 10.dp)
                                     .height(56.dp),
@@ -288,7 +284,6 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     viewModel.reportUser(searchedUser)
                                 },
                                 modifier = Modifier
-//                                    .fillMaxWidth(1f)
                                     .width(170.dp)
                                     .padding(end = 10.dp)
                                     .height(56.dp),
