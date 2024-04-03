@@ -311,7 +311,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             Text(
                                 text = "Average Rating: ${uiState.searchOverallRating}",
                                 color = themeStrategy.primaryTextColor,
-                                fontSize = 12.sp,
+                                fontSize = 18.sp,
                                 modifier = Modifier
                                     .fillMaxWidth(1f)
                                     .padding(horizontal = 16.dp, vertical = 16.dp)
@@ -388,22 +388,24 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     }
                 } else {
                     item {
-                        Text(
-                            text = "Your Reviews",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 20.sp,
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(horizontal = 16.dp, vertical = 16.dp)
-                        )
-                        if (uiState.searchedReviews.isNotEmpty()) {
+                        Box(modifier = Modifier.fillMaxSize()) {
                             Text(
-                                text = "Average Rating: ${uiState.searchOverallRating}",
+                                text = "Your Reviews",
                                 color = themeStrategy.primaryTextColor,
-                                fontSize = 12.sp,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .align(alignment = Alignment.Center)
+                            )
+                        }
+                        if (uiState.ourReviews.isNotEmpty()) {
+                            Text(
+                                text = "Average Rating: ${uiState.ourAverageRating}",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 18.sp,
                                 modifier = Modifier
                                     .fillMaxWidth(1f)
-                                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                                    .padding(horizontal = 16.dp, vertical = 16.dp),
                             )
                         }
                     }
