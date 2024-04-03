@@ -59,7 +59,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val tagsState = remember { mutableStateListOf<String>() }
     val tags = listOf("labour", "tools", "tech", "social")
     var selectedTags by remember { mutableStateOf(listOf<String>()) }
-    var sliderValue by remember { mutableStateOf(1) }
+    var sliderValue by remember { mutableStateOf(5) }
     var maxDistance by remember { mutableStateOf(5) }
     var latitude by remember { mutableStateOf(0.0) }
     var longitude by remember { mutableStateOf(0.0) }
@@ -171,11 +171,11 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             }
                         }
                         Text("Slide to enter maximum search range",modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
-                        Text("Current range: ${sliderValue} Km", modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
+                        Text("Current range: ${sliderValue} km", modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
                         Slider(
                             value = sliderValue.toFloat(),
                             onValueChange = { sliderValue = it.toInt() },
-                            valueRange = 5f..100f,
+                            valueRange = 1f..100f,
                             onValueChangeFinished = {
                                 maxDistance = sliderValue
                             },
