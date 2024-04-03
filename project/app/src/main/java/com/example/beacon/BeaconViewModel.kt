@@ -1,6 +1,8 @@
 package com.example.beacon
 
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -347,6 +350,23 @@ fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double,
     val baseUrl = "http://10.0.2.2:4000/beacons?latitude=$latitude&longitude=$longitude"
     val distUrl = "$baseUrl&maxDistance=$maxDistance"
 
+//    val locationPermissionRequest = rememberLauncherForActivityResult(
+//        contract = ActivityResultContracts.RequestPermission(),
+//        onResult = { isGranted: Boolean ->
+//            if (isGranted) {
+//                coroutineScope.launch {
+//                    try {
+//                        val locationResult = fusedLocationClient.lastLocation.await()
+//                        locationResult?.let {
+//                            latitude = it.latitude
+//                            longitude = it.longitude
+//                        }
+//                    } catch (e: SecurityException) {
+//                    }
+//                }
+//            }
+//        }
+
     val url: String = if (!tags.isNullOrEmpty()) {
         val tagsQueryString = tags.joinToString("&") { "tags[]=$it" }
         "$distUrl&$tagsQueryString"
@@ -354,6 +374,7 @@ fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double,
         val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
         "$distUrl$allTags"
     }
+    Log.d("Url", "$url")
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()
