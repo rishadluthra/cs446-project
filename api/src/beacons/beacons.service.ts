@@ -72,6 +72,7 @@ export class BeaconsService {
         ...beacon,
         id: beacon._id,
         creatorId: beacon.creatorId,
+        creatorEmail: beacon.creator.email,
         distance: beacon.distance,
         creator: undefined,
         _id: undefined,
