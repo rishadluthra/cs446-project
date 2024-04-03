@@ -29,7 +29,7 @@ import kotlin.concurrent.thread
 data class UiState(
     var name: String = "testName", //TODO: Set this to the dummy name from the backend!!!!
     var ourBeacons: List<MyBeaconsInfo> = emptyList(),
-    var nearbyBeacons: List<BeaconInfo> = emptyList()
+    var nearbyBeacons: List<BeaconInfo> = emptyList(),
 
     var ourReviews: List<Review> = emptyList(),
     var ourEmail: String = "",
@@ -229,33 +229,7 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
-    fun reportUser(reportEmail: String): Int {
-        var responseCode = 0
-        thread {
-            val reportEmailJsonObject = buildJsonObject {
-                put("reportEmail", reportEmail)
-            }
-            val reportEmailJsonString =
-                Json.encodeToString(JsonObject.serializer(), reportEmailJsonObject)
-            responseCode = postReportUser(reportEmailJsonString)
-        }
-        return responseCode
-    }
 
-    fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
-        var responseCode = 0
-        thread {
-            val reviewJsonObject = buildJsonObject {
-                put("targetEmail", targetEmail)
-                put("rating", rating)
-                put("review", review)
-            }
-            val reviewJsonString =
-                Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
-            responseCode = postReview(reviewJsonString)
-        }
-        return responseCode
-    }
     fun createAccountAndSignIn(
         firstName: String,
         lastName: String,
