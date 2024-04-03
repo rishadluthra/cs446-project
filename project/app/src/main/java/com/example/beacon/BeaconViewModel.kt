@@ -75,11 +75,11 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int) {
+    fun refreshNearby(tags: List<String>?, maxDistanceKm: Int, latitude: Double, longitude: Double) {
         thread {
             _uiState.update { currentState ->
                 currentState.copy(
-                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm).asList()
+                    nearbyBeacons = fetchNearbyBeacons(tags, maxDistanceKm, latitude, longitude).asList()
                 )
             }
         }
@@ -342,9 +342,9 @@ fun fetchOurBeacons(): Array<MyBeaconsInfo> {
     return emptyArray()
 }
 
-fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInfo> {
+fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double, longitude: Double): Array<BeaconInfo> {
     val maxDistance = maxDistanceKm * 1000
-    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.475807&longitude=-80.542007"
+    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=$latitude&longitude=$longitude"
     val distUrl = "$baseUrl&maxDistance=$maxDistance"
 
     val url: String = if (!tags.isNullOrEmpty()) {
@@ -354,6 +354,8 @@ fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int): Array<BeaconInf
         val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
         "$distUrl$allTags"
     }
+    Log.d("Nearby Beacons", "-------")
+    Log.d("Nearby Beacon", "$url")
     try {
         val authToken = AuthManager.getAuthToken()
         val request = okhttp3.Request.Builder()

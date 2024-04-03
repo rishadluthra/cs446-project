@@ -1,7 +1,11 @@
 package com.example.beacon
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,9 +41,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import kotlin.math.round
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import android.Manifest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,17 +61,74 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     var selectedTags by remember { mutableStateOf(listOf<String>()) }
     var sliderValue by remember { mutableStateOf(1) }
     var maxDistance by remember { mutableStateOf(1) }
-    val context = LocalContext.current
+    var latitude by remember { mutableStateOf(0.0) }
+    var longitude by remember { mutableStateOf(0.0) }
 
-    LaunchedEffect(true) {
-        viewModel.refreshNearby(tagsState, maxDistance)
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val coroutineScope = rememberCoroutineScope()
+
+    val locationPermissionRequest = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                coroutineScope.launch {
+                    try {
+                        val locationResult = fusedLocationClient.lastLocation.await()
+                        locationResult?.let {
+                            latitude = it.latitude
+                            longitude = it.longitude
+                            Log.d("Location", "------------------------")
+                            Log.d("Location", "$latitude and $longitude")
+
+                        }
+                    } catch (e: SecurityException) {
+                    }
+                }
+            }
+        }
+    )
+
+    LaunchedEffect(key1 = true) {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                // Permission is already granted, directly request location
+                coroutineScope.launch {
+                    try {
+                        val locationResult = fusedLocationClient.lastLocation.await()
+                        locationResult?.let {
+                            latitude = it.latitude
+                            longitude = it.longitude
+                            Log.d("Location", "------------------------")
+                            Log.d("Location", "$latitude and $longitude")
+                            viewModel.refreshNearby(tagsState, maxDistance, latitude, longitude)
+                        }
+                    } catch (e: SecurityException) {
+                        // Handle exception
+                    }
+                }
+            }
+            else -> {
+                // Request permission
+                locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        }
     }
+
+//    LaunchedEffect(true) {
+//        viewModel.refreshNearby(tagsState, maxDistance)
+//    }
+//
     LaunchedEffect(selectedTags) {
-        viewModel.refreshNearby(selectedTags, maxDistance)
+        viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
+        Log.d("Location", "------------------------")
+        Log.d("Location", "$latitude and $longitude")
     }
 
     LaunchedEffect(maxDistance) {
-        viewModel.refreshNearby(selectedTags, maxDistance)
+        viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
+        Log.d("Location", "------------------------")
+        Log.d("Location", "$latitude and $longitude")
     }
 
     Box(
