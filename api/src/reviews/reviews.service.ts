@@ -57,8 +57,8 @@ export class ReviewsService {
       0,
     );
 
-    var averageRating = 0;
-    if (reviews.length != 0) {
+    let averageRating = 0;
+    if (reviews.length !== 0) {
       averageRating = sumOfRatings / reviews.length;
     }
 

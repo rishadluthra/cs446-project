@@ -37,30 +37,43 @@ export class BeaconsService {
     { latitude, longitude, maxDistance, tags }: FindBeaconsDto,
     creatorId: string,
   ): Promise<Beacon[]> {
-    const beacons = await this.beaconModel
-      .find({
-        location: {
-          $near: {
-            $geometry: {
-              type: 'Point',
-              coordinates: [latitude, longitude],
-            },
-            $maxDistance: maxDistance,
+    const beacons = await this.beaconModel.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: 'Point',
+            coordinates: [latitude, longitude],
           },
+          distanceField: 'distance',
+          maxDistance: maxDistance,
+          spherical: true,
         },
-        ...(tags && tags.length > 0 ? { tag: { $in: tags } } : {}),
-      })
-      .populate({
-        path: 'creatorId',
-        select: 'email',
-      });
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'creatorId',
+          foreignField: '_id',
+          as: 'creator',
+        },
+      },
+      {
+        $unwind: '$creator',
+      },
+      {
+        $match: {
+          ...(tags && tags.length > 0 ? { tag: { $in: tags } } : {}),
+        },
+      },
+    ]);
 
     return beacons
       .map((beacon) => ({
-        ...beacon.toObject(),
-        creatorId: (beacon.creatorId as any).id,
-        creatorEmail: (beacon.creatorId as any).email,
-        id: beacon._id.toString(),
+        ...beacon,
+        id: beacon._id,
+        creatorId: beacon.creatorId,
+        distance: beacon.distance,
+        creator: undefined,
         _id: undefined,
         __v: undefined,
       }))
