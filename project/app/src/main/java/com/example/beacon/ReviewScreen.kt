@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -40,6 +41,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -78,9 +81,12 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
         .fillMaxSize()
         .background(themeStrategy.primaryColor)
     ) {
-        LazyColumn(modifier = Modifier.height(750.dp).fillMaxWidth(), verticalArrangement = Arrangement.Top) {
+        LazyColumn(modifier = Modifier
+            .height(750.dp)
+            .fillMaxWidth(), verticalArrangement = Arrangement.Top) {
             item{
                 TopAppBar(
+
                     title = {
                         Box(modifier = Modifier.fillMaxSize()) {
                             Text(
@@ -184,6 +190,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
 
 //          THIS IS THE SEARCH BAR (FIXED, SHOW APPEAR NO MATTER WHAT)
             item {
+                Spacer(modifier = Modifier.height(20.dp))
                 SearchBar(
                     viewModel = viewModel,
                     queryState = query,
@@ -200,6 +207,8 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         keyboardController?.hide()
                     },
                     modifier = modifier)
+                Spacer(modifier = Modifier.height(10.dp))
+
             }
 
 //          IF THE SEARCH STRING DOES NOT HAVE AN USER ASSOCIATED WITH IT
@@ -228,8 +237,9 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                     showReviewPanel = true
                                 },
                                 modifier = Modifier
-                                    .fillMaxWidth(0.5f)
-                                    .padding(vertical = 0.dp)
+//                                    .fillMaxWidth(0.5f)
+                                    .width(170.dp)
+                                    .padding(start = 10.dp)
                                     .height(56.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = themeStrategy.secondaryColor,
@@ -238,14 +248,16 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             ) {
                                 Text("Write a Review")
                             }
+                            Spacer(modifier = Modifier.width(30.dp))
                             Button(
                                 onClick = {
                                     setShowReportConfirmation(true)
                                     viewModel.reportUser(searchedUser)
                                 },
                                 modifier = Modifier
-                                    .fillMaxWidth(1f)
-                                    .padding(vertical = 0.dp)
+//                                    .fillMaxWidth(1f)
+                                    .width(170.dp)
+                                    .padding(end = 10.dp)
                                     .height(56.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = themeStrategy.secondaryColor,
@@ -255,37 +267,45 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 Text("Report")
                             }
                         }
+                        Spacer(modifier = Modifier.height(30.dp))
+                        val username = searchedUser.replace(Regex("@uwaterloo\\.ca"), "")
                         Text(
-                            text = "$searchedUser's Reviews",
+                            text = "${username}'s Reviews",
                             color = themeStrategy.primaryTextColor,
                             fontSize = 20.sp,
+//                            fontWeight = Font,
+                            fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .fillMaxWidth(1f)
-                                .padding(horizontal = 16.dp, vertical =  16.dp)
+                                .padding(start = 110.dp)
                                 .align(alignment = Alignment.CenterHorizontally)
                         )
-                        Text(
-                            text = "Average Rating: ${uiState.searchOverallRating}",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 12.sp,
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(horizontal = 16.dp, vertical =  16.dp)
-                                .align(alignment = Alignment.CenterHorizontally)
-                        )
+                        if (uiState.searchedReviews.isNotEmpty()) {
+                            Text(
+                                text = "Average Rating: ${uiState.searchOverallRating}",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 12.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth(1f)
+                                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                                    .align(alignment = Alignment.CenterHorizontally)
+                            )
+                        }
                     }
                 }
 
 //              Display No Reviews If User Has No Reviews
                 if (uiState.searchedReviews.isEmpty()) {
                     item {
+                        Spacer(modifier = Modifier.height(60.dp))
                         Text(
-                            text = "There are no reviews for $searchedUser",
+                            text = "There are no reviews for this user.",
                             color = themeStrategy.primaryTextColor,
                             fontSize = 20.sp,
+                            fontStyle = FontStyle.Italic,
                             modifier = Modifier
                                 .fillMaxWidth(1f)
-                                .padding(horizontal = 16.dp, vertical =  16.dp)
+                                .padding(start = 40.dp, end = 40.dp)
                         )
                     }
                 } else {
@@ -341,14 +361,16 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 .fillMaxWidth(1f)
                                 .padding(horizontal = 16.dp, vertical = 16.dp)
                         )
-                        Text(
-                            text = "Average Rating: ${uiState.searchOverallRating}",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 12.sp,
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(horizontal = 16.dp, vertical =  16.dp)
-                        )
+                        if (uiState.searchedReviews.isNotEmpty()) {
+                            Text(
+                                text = "Average Rating: ${uiState.searchOverallRating}",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 12.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth(1f)
+                                    .padding(horizontal = 16.dp, vertical = 16.dp)
+                            )
+                        }
                     }
                     items(uiState.ourReviews.size) { i ->
                         Surface(
