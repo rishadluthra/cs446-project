@@ -80,6 +80,30 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                     )
                 }
             }
+            item {
+                if (showDialog){
+                    AlertDialog(
+                        onDismissRequest = { setShowDialog(false) },
+                        title = { Text("Success") },
+                        text = { Text(
+                            text = "Beacon resolved",
+                            fontSize = 16.sp) },
+                        confirmButton = {
+                            Button(
+                                onClick = {
+                                    setShowDialog(false)
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.secondaryColor),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 16.dp)
+                            ) {
+                                Text("Close")
+                            }
+                        }
+                    )
+                }
+            }
             items(uiState.ourBeacons.size) { i ->
                 // Set each item's Surface to white
                 Surface(
@@ -153,30 +177,6 @@ fun DashboardScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel, n
                             }
                         }
                     }
-                }
-            }
-            item {
-                if (showDialog){
-                    AlertDialog(
-                        onDismissRequest = { setShowDialog(false) },
-                        title = { Text("Success") },
-                        text = { Text(
-                            text = "Beacon resolved",
-                            fontSize = 16.sp) },
-                        confirmButton = {
-                            Button(
-                                onClick = {
-                                    setShowDialog(false)
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.secondaryColor),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 16.dp)
-                            ) {
-                                Text("Close")
-                            }
-                        }
-                    )
                 }
             }
         }

@@ -184,14 +184,15 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
-    fun checkUserValidity(reportEmail: String): Boolean {
-        var responseCode = false
+    fun checkUserValidity(
+        reportEmail: String,
+    ): Boolean {
+        var validity = false
         val thread = thread(start = true) {
-            responseCode = isUserValid(reportEmail)
+            validity = isUserValid((reportEmail))
         }
         thread.join()
-        return responseCode
-
+        return validity
     }
 
     fun toggleTheme() {
@@ -274,19 +275,30 @@ class BeaconViewModel : ViewModel() {
         return responseCode
     }
 
-    fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
-        var responseCode = 0
-        thread {
-            val reviewJsonObject = buildJsonObject {
-                put("targetEmail", targetEmail)
-                put("rating", rating)
-                put("review", review)
+    fun reviewUser(
+        targetEmail: String,
+        rating: Int,
+        review: String,
+        onSuccess: (Int) -> Unit,
+        onError: (Int) -> Unit
+    ) {
+        viewModelScope.launch {
+            val responseCode = withContext(Dispatchers.IO) {
+                val reviewJsonObject = buildJsonObject {
+                    put("targetEmail", targetEmail)
+                    put("rating", rating)
+                    put("review", review)
+                }
+                val reviewJsonString =
+                    Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
+                postReview(reviewJsonString)
             }
-            val reviewJsonString =
-                Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
-            responseCode = postReview(reviewJsonString)
+            if (responseCode == 201) {
+                onSuccess(responseCode)
+            } else {
+                onError(responseCode)
+            }
         }
-        return responseCode
     }
     
     fun sendEmailAndVerify(
