@@ -60,7 +60,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val tags = listOf("labour", "tools", "tech", "social")
     var selectedTags by remember { mutableStateOf(listOf<String>()) }
     var sliderValue by remember { mutableStateOf(1) }
-    var maxDistance by remember { mutableStateOf(1) }
+    var maxDistance by remember { mutableStateOf(5) }
     var latitude by remember { mutableStateOf(0.0) }
     var longitude by remember { mutableStateOf(0.0) }
 
@@ -96,8 +96,8 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                     try {
                         val locationResult = fusedLocationClient.lastLocation.await()
                         locationResult?.let {
-                            latitude = it.latitude
-                            longitude = it.longitude
+                            latitude = 43.462696
+                            longitude = -80.542045
                             viewModel.refreshNearby(tagsState, maxDistance, latitude, longitude)
                         }
                     } catch (e: SecurityException) {
@@ -114,12 +114,10 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     }
 
     LaunchedEffect(selectedTags) {
-        locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
     }
 
     LaunchedEffect(maxDistance) {
-        locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         viewModel.refreshNearby(selectedTags, maxDistance, latitude, longitude)
     }
 
@@ -179,7 +177,7 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Slider(
                             value = sliderValue.toFloat(),
                             onValueChange = { sliderValue = it.toInt() },
-                            valueRange = 1f..100f,
+                            valueRange = 5f..100f,
                             onValueChangeFinished = {
                                 maxDistance = sliderValue
                             },

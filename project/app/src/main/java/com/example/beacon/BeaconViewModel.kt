@@ -347,32 +347,17 @@ fun fetchOurBeacons(): Array<MyBeaconsInfo> {
 
 fun fetchNearbyBeacons(tags: List<String>?, maxDistanceKm: Int, latitude:Double, longitude: Double): Array<BeaconInfo> {
     val maxDistance = maxDistanceKm * 1000
-    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=$latitude&longitude=$longitude"
+    val baseUrl = "http://10.0.2.2:4000/beacons?latitude=43.462696&longitude=-80.542045"
     val distUrl = "$baseUrl&maxDistance=$maxDistance"
+    Log.d("BASEURL", "$baseUrl")
+    Log.d("distURL", "$distUrl")
 
-//    val locationPermissionRequest = rememberLauncherForActivityResult(
-//        contract = ActivityResultContracts.RequestPermission(),
-//        onResult = { isGranted: Boolean ->
-//            if (isGranted) {
-//                coroutineScope.launch {
-//                    try {
-//                        val locationResult = fusedLocationClient.lastLocation.await()
-//                        locationResult?.let {
-//                            latitude = it.latitude
-//                            longitude = it.longitude
-//                        }
-//                    } catch (e: SecurityException) {
-//                    }
-//                }
-//            }
-//        }
 
     val url: String = if (!tags.isNullOrEmpty()) {
         val tagsQueryString = tags.joinToString("&") { "tags[]=$it" }
         "$distUrl&$tagsQueryString"
     } else {
-        val allTags = "&tags[]=labour&tags[]=tools&tags[]=tech&tags[]=social"
-        "$distUrl$allTags"
+        "$distUrl"
     }
     Log.d("Url", "$url")
     try {
