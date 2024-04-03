@@ -85,6 +85,7 @@ class BeaconViewModel : ViewModel() {
         }
     }
 
+
     fun refreshOurReviews() {
         thread {
             _uiState.update { currentState ->
@@ -108,6 +109,7 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+
     fun sendBeacon(title: String,
                    tag: String,
                    description: String,
@@ -188,8 +190,6 @@ class BeaconViewModel : ViewModel() {
             responseCode = isUserValid(reportEmail)
         }
         thread.join()
-        Log.d("checkUserValidity", "------------------")
-        Log.d("checkUserValidity", "$reportEmail $responseCode")
         return responseCode
 
     }
@@ -287,7 +287,34 @@ class BeaconViewModel : ViewModel() {
             }
         }
     }
+    fun reportUser(reportEmail: String): Int {
+        var responseCode = 0
+        thread {
+            val reportEmailJsonObject = buildJsonObject {
+                put("reportEmail", reportEmail)
+            }
+            val reportEmailJsonString =
+                Json.encodeToString(JsonObject.serializer(), reportEmailJsonObject)
+            responseCode = postReportUser(reportEmailJsonString)
+        }
+        return responseCode
+    }
 
+    fun reviewUser(targetEmail: String, rating: Int, review: String): Int {
+        var responseCode = 0
+        thread {
+            val reviewJsonObject = buildJsonObject {
+                put("targetEmail", targetEmail)
+                put("rating", rating)
+                put("review", review)
+            }
+            val reviewJsonString =
+                Json.encodeToString(JsonObject.serializer(), reviewJsonObject)
+            responseCode = postReview(reviewJsonString)
+        }
+        return responseCode
+    }
+    
     fun sendEmailAndVerify(
         email: String,
         onSuccess: (String) -> Unit,
@@ -547,8 +574,6 @@ fun getMyAverageRatingByTargetEmail(targetEmail: String): Int {
         val response = client.newCall(request).execute()
         val jsonString = response.body!!.string()
         val jsonObject = JSONObject(jsonString)
-        Log.d("isUserValid", "------------------")
-        Log.d("isUserValid", "$targetEmail ${jsonObject.getString("averageRating")}")
         return jsonObject.getString("averageRating").toFloat().toInt()
     } catch (e: Exception) {
         println(e.message)
@@ -620,8 +645,6 @@ fun isUserValid(targetEmail: String): Boolean {
             .build()
         val response = client.newCall(request).execute()
         val string = response.body!!.string()
-        Log.d("isUserValid", "------------------")
-        Log.d("isUserValid", "$targetEmail $string")
         return string.toBoolean()
     } catch (e: Exception) {
         println(e.message)

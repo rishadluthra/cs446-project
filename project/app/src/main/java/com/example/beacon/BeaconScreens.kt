@@ -56,7 +56,7 @@ fun BeaconApp(navController: NavHostController = rememberNavController(),
         backStackEntry?.destination?.route ?: BeaconScreens.Dashboard.name
     )
     val coroutineScope = rememberCoroutineScope()
-    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon)
+    val sidebarButtons = listOf(BeaconScreens.Dashboard, BeaconScreens.Beacons, BeaconScreens.DropBeacon, BeaconScreens.Reviews)
     val drawerEnabled = currentScreen !in listOf(BeaconScreens.SignIn, BeaconScreens.CreateAccount)
     LaunchedEffect(currentScreen) {
         if (!drawerEnabled) {
