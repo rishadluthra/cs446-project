@@ -135,9 +135,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                         onClick = {
                                             showReviewPanel = false
                                             viewModel.reviewUser(searchedUser, rating, reviewText)
-//                                            Log.d("AAAA", "Before")
                                             viewModel.refreshSearchedReviews(searchedUser)
-//                                            Log.d("AAAA", "After")
                                         }
                                     ) {
                                         Text("Submit")

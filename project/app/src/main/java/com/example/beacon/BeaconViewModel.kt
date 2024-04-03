@@ -40,7 +40,7 @@ data class UiState(
     var searchOverallRating: Int = -1
 )
 @Serializable
-data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String, val creatorEmail: String)
+data class BeaconInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String, val creatorEmail: String, val distance: Double)
 
 @Serializable
 data class MyBeaconsInfo(val id: String, val creatorId: String, val title: String, val description: String, val location: Location, val tag: String, val createdAt: String, val updatedAt: String)

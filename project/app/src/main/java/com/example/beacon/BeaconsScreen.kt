@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,6 +39,7 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,25 +160,56 @@ fun BeaconsScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                             style = MaterialTheme.typography.bodyLarge,
                             color = themeStrategy.secondaryTextColor
                         )
-                        Button(
-                            onClick = { val intent = Intent(Intent.ACTION_SENDTO).apply {
-                                data = android.net.Uri.parse("mailto:${uiState.nearbyBeacons[i].creatorEmail}")
-                                putExtra(Intent.EXTRA_SUBJECT, "Responding to Beacon: ${uiState.nearbyBeacons[i].title}")
-                            }
-                                if (intent.resolveActivity(context.packageManager) != null) {
-                                    context.startActivity(Intent.createChooser(intent, "Send Email..."))
-                                } else {
-                                    Toast.makeText(context, "No email applications found.", Toast.LENGTH_LONG).show()
-                                } },
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .padding(top = 8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = themeStrategy.primaryColor
-                            ),
+                        Row(
+
                         ) {
-                            Text(text = "Contact",
-                                color = themeStrategy.primaryTextColor)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = (round((uiState.nearbyBeacons[i].distance / 1000) * 10.0) / 10.0).toString() + " km away",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = themeStrategy.secondaryTextColor,
+                                )
+                                Button(
+                                    onClick = {
+                                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                            data =
+                                                android.net.Uri.parse("mailto:${uiState.nearbyBeacons[i].creatorEmail}")
+                                            putExtra(
+                                                Intent.EXTRA_SUBJECT,
+                                                "Responding to Beacon: ${uiState.nearbyBeacons[i].title}"
+                                            )
+                                        }
+                                        if (intent.resolveActivity(context.packageManager) != null) {
+                                            context.startActivity(
+                                                Intent.createChooser(
+                                                    intent,
+                                                    "Send Email..."
+                                                )
+                                            )
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "No email applications found.",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .padding(top = 8.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = themeStrategy.primaryColor
+                                    ),
+                                ) {
+                                    Text(
+                                        text = "Contact",
+                                        color = themeStrategy.primaryTextColor
+                                    )
+                                }
+                            }
                         }
                     }
                 }
