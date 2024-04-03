@@ -188,11 +188,17 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                 item {
                     AlertDialog(
                         onDismissRequest = { setShowReportConfirmation(false) },
-                        title = { Text("Success") },
+                        title = {
+                            Text(
+                                text = "Success",
+                                color = themeStrategy.secondaryTextColor
+                            ) },
+                        containerColor = themeStrategy.primaryTextColor,
                         text = {
                             Text(
                                 text = "Report Submitted",
-                                fontSize = 16.sp
+                                fontSize = 16.sp,
+                                color = themeStrategy.secondaryTextColor
                             )
                         },
                         confirmButton = {
@@ -202,7 +208,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = themeStrategy.primaryColor,
-                                    contentColor = themeStrategy.secondaryColor
+                                    contentColor = themeStrategy.primaryTextColor
                                 ),
                                 modifier = Modifier
                                     .fillMaxWidth()
