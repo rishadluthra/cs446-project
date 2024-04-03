@@ -529,7 +529,7 @@ fun getMyAverageRating(): Int {
         val response = client.newCall(request).execute()
         val jsonString = response.body!!.string()
         val jsonObject = JSONObject(jsonString)
-        return jsonObject.getString("averageRating").toInt()
+        return jsonObject.getString("averageRating").toFloat().toInt()
     } catch (e: Exception) {
         println(e.message)
     }
@@ -547,7 +547,9 @@ fun getMyAverageRatingByTargetEmail(targetEmail: String): Int {
         val response = client.newCall(request).execute()
         val jsonString = response.body!!.string()
         val jsonObject = JSONObject(jsonString)
-        return jsonObject.getString("averageRating").toInt()
+        Log.d("isUserValid", "------------------")
+        Log.d("isUserValid", "$targetEmail ${jsonObject.getString("averageRating")}")
+        return jsonObject.getString("averageRating").toFloat().toInt()
     } catch (e: Exception) {
         println(e.message)
     }
