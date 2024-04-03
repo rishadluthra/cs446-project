@@ -45,12 +45,12 @@ import kotlinx.coroutines.launch
 enum class BeaconScreens(val title: String) {
     //define your screens in here as an enum
     Dashboard(title = "Dashboard"),
-    Beacons(title = "Beacons"),
+    Beacons(title = "Explore"),
     SignIn(title = "Sign In"),
     DropBeacon(title = "Drop Beacon"),
     UpdateBeacon(title = "Update Beacon"),
     CreateAccount(title = "Create Account"),
-    Reviews(title = "My Reviews")
+    Reviews(title = "Reviews")
 }
 
 

@@ -22,9 +22,11 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -41,6 +43,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,6 +59,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val uiState by viewModel.uiState.collectAsState()
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val (displayResults, setDisplayResults) = remember { mutableStateOf(false) }
     LaunchedEffect(true) {
         viewModel.refreshOurReviews()
         viewModel.refreshOurEmail()
@@ -67,7 +71,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
     val (searchedUser, setSearchedUser) = remember { mutableStateOf("") }
 
     // Search Bar Results
-    val (displayResults, setDisplayResults) = remember { mutableStateOf(false) }
+
 
     // Review
     var showReviewPanel by remember { mutableStateOf(false) }
@@ -76,7 +80,7 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
 
     // Report
     val (showReportConfirmation, setShowReportConfirmation) = remember { mutableStateOf(false) }
-
+    var sliderValue by remember { mutableStateOf(5) }
     Box(modifier = Modifier
         .fillMaxSize()
         .background(themeStrategy.primaryColor)
@@ -109,45 +113,68 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         Surface(
                             modifier = Modifier.width(300.dp),
                             shape = MaterialTheme.shapes.medium,
+                            color = themeStrategy.secondaryColor
                         ) {
                             Column(
                                 modifier = Modifier.padding(16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 TextField(
+                                    textStyle = TextStyle(color = themeStrategy.primaryTextColor),
                                     value = reviewText,
                                     onValueChange = { setReviewText(it) },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 8.dp),
-                                    label = { Text("Enter Review") }
+                                    label = { Text("Enter Review",
+                                            color = themeStrategy.primaryTextColor) },
+                                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                                        containerColor = themeStrategy.primaryColor, // Set the background color here
+//                                        focusedBorderColor = Color.Gray, // Color of the border when the TextField is focused
+//                                        unfocusedBorderColor = Color.Gray // Color of the border when the TextField is not focused
+                                    )
                                 )
 
                                 Slider(
                                     value = rating.toFloat(),
-                                    onValueChange = { setRating(it.toInt()) },
+                                    onValueChange = { setRating(it.toInt())
+                                                    sliderValue = it.toInt()},
                                     valueRange = 1f..5f,
                                     steps = 4,
+                                    colors = SliderDefaults.colors(
+                                        thumbColor = themeStrategy.primaryColor, // Color of the slider thumb
+                                        activeTrackColor = themeStrategy.primaryColor, // Color of the track to the left of the thumb
+                                        inactiveTrackColor = Color.Gray // Color of the track to the right of the thumb
+                                    ),
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(bottom = 16.dp)
+//                                        .padding(bottom = 5.dp)
                                 )
-
+                                Text("Selected rating: ${sliderValue}", modifier = Modifier.padding(8.dp), color = themeStrategy.secondaryTextColor)
+                                Spacer(modifier = Modifier.height(20.dp))
                                 Row(
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Button(
                                         onClick = {
-                                            showReviewPanel = false
-                                            viewModel.reviewUser(searchedUser, rating, reviewText)
                                             viewModel.refreshSearchedReviews(searchedUser)
-                                        }
+                                            viewModel.reviewUser(searchedUser, rating, reviewText)
+                                            showReviewPanel = false
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 0.dp)
                                     ) {
                                         Text("Submit")
                                     }
                                     Button(
-                                        onClick = { showReviewPanel = false }
+                                        onClick = { showReviewPanel = false },
+                                        colors = ButtonDefaults.buttonColors(containerColor = themeStrategy.primaryColor, contentColor = themeStrategy.primaryTextColor),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 0.dp)
                                     ) {
                                         Text("Cancel")
                                     }
@@ -269,17 +296,16 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                         }
                         Spacer(modifier = Modifier.height(30.dp))
                         val username = searchedUser.replace(Regex("@uwaterloo\\.ca"), "")
-                        Text(
-                            text = "${username}'s Reviews",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 20.sp,
-//                            fontWeight = Font,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(start = 110.dp)
-                                .align(alignment = Alignment.CenterHorizontally)
-                        )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "${username}'s Reviews",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .align(alignment = Alignment.Center)
+                            )
+                        }
                         if (uiState.searchedReviews.isNotEmpty()) {
                             Text(
                                 text = "Average Rating: ${uiState.searchOverallRating}",
@@ -298,15 +324,17 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
                 if (uiState.searchedReviews.isEmpty()) {
                     item {
                         Spacer(modifier = Modifier.height(60.dp))
-                        Text(
-                            text = "There are no reviews for this user.",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 20.sp,
-                            fontStyle = FontStyle.Italic,
-                            modifier = Modifier
-                                .fillMaxWidth(1f)
-                                .padding(start = 40.dp, end = 40.dp)
-                        )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "There are no reviews for this user.",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 20.sp,
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+
+                            )
+                        }
                     }
                 } else {
 //              Display Reviews If User has Reviews
@@ -344,12 +372,18 @@ fun ReviewScreen(modifier: Modifier = Modifier, viewModel: BeaconViewModel) {
 //              Display No Reviews If You Do Not Have Any
                 if (uiState.ourReviews.isEmpty()) {
                     item {
-                        Text(
-                            text = "You have no reviews.",
-                            color = themeStrategy.primaryTextColor,
-                            fontSize = 20.sp,
-                            modifier = Modifier.align(Alignment.CenterStart)
-                        )
+                        Spacer(modifier = Modifier.height(50.dp))
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "You have no reviews.",
+                                color = themeStrategy.primaryTextColor,
+                                fontSize = 20.sp,
+                                fontStyle = FontStyle.Italic,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+
+                            )
+                        }
                     }
                 } else {
                     item {
