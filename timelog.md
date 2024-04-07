@@ -58,6 +58,8 @@ Note: times are represented in number of hours
 | 2024/03/20 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags for backend |
 | 2024/03/22 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
 | 2024/03/23 |        |       |         |       |  1    |       | Deliverable 6 - Work on tags based upon review |
+| 2024/03/25 |        |   2.5 |         |       |       |       | Worked on getting in-app messaging working |
+| 2024/04/26 |        |   3   |         |       |       |       | Worked on getting in-app messaging working |
 | 2024/03/27 |  0.5   |   0.5 |         |  0.5  |  0.5  | 0.5   | final demo meeting |
 | 2024/03/27 |  4     |       |         |       |       |       | Final demo - light and dark mode |
 | 2024/03/28 |        |       |         |       |  0.5  |       | Deliverable 6 - Setup for reviews |
@@ -67,8 +69,13 @@ Note: times are represented in number of hours
 | 2024/03/30 |  8.5   |       |         |       |       |       | Final demo - frontend auth, finished themes, create account page |
 | 2024/03/31 |        |       |         |       |  1    |       | Deliverable 6 - Adapting reviews to work with email searches and creation |
 | 2024/03/31 |        |       |         |  2.5  |       |       | Deliverable 6 - Create Account Email Verification Frontend |
+| 2024/04/01 |        |   2   |         |       |       |       | implemented contact button on the nearby beacon page |
 | 2024/04/01 |        |       |         |       |  1    |       | Deliverable 6 - Work on reports for backend |
 | 2024/04/01 |        |       |         |       |       |   3   | Add tag to beacon creation |
+| 2024/04/01 |        |   2   |         |       |       |       | Add tag filtering to nearby beacons |
+| 2024/04/01 |        |   2   |         |       |       |       | Add distance filtering to nearby beacons |
+| 2024/04/01 |        |   3   |         |       |       |       | Fixed the UI for tags on the drop beacon page |
+| 2024/04/01 |        |  1.5  |         |       |       |       | Worked on getting user location on nearby beacon page |
 | 2024/04/01 | 2.25   | 1.75  |         | 2.25  | 1.75  |       | Update beacon page bugfixes |
 | 2024/04/02 |  4.5   |       |         |       |       |       | final demo bugfixes|
 | 2024/03/03 |  5     |   5   |  5      |  5    |  5    |   5   | final demo preperation, ui fixes, project wrap up |
