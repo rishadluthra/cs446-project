@@ -79,3 +79,4 @@ Note: times are represented in number of hours
 | 2024/04/01 | 2.25   | 1.75  |         | 2.25  | 1.75  |       | Update beacon page bugfixes |
 | 2024/04/02 |  4.5   |       |         |       |       |       | final demo bugfixes|
 | 2024/03/03 |  5     |   5   |  5      |  5    |  5    |   5   | final demo preperation, ui fixes, project wrap up |
+| 2024/04/08 |  1     |       |         |       |       |       | D7 - final status report|
