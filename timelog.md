@@ -38,6 +38,7 @@ Note: times are represented in number of hours
 | 2024/03/03 | 0.75   | 0.75  | 0.75    | 0.75  | 0.75  | 0.75  | Deliverable 3 - Group dicussion |
 | 2024/03/03 |  1.25  |       |         |       |  1    |       | Deliverable 3 - Bug fixing app crash |
 | 2024/03/04 |  1.5   | 1.5   | 1.5     |  1.5  |1.5    | 1.5   | Deliverable 3 - group meeting |
+| 2024/03/04 |        |       | 2       |       |       |       | Deliverable 3 - Building Nearby Beacons UI |
 | 2024/03/04 |  2     | 2     |         |       | 2     |       | Deliverable 3 - Bug fixing viewmodel |
 | 2024/03/04 |  1     | 1     |         |       |       |       | Deliverable 3 - completing sign in page&drop beacon page without api |
 | 2024/03/04 |  1     | 2     |         |       |       |       | Deliverable 3 - Fixing the UI for the dashboard |
@@ -46,6 +47,7 @@ Note: times are represented in number of hours
 | 2024/03/05 |  0.5   | 0.5   | 0.5     |  0.5  |  0.5  |   0.5 | Deliverable 3 - group meeting |
 | 2024/03/05 |        |       |         |  2.5  |       |   2.5 | Deliverable 3 - Backend work for postal code creation and beacon deletion |
 | 2024/03/06 |   1    |  1    |  1      |  1    |  1    |   1   | Deliverable 3 - final meeting before demo |
+| 2024/03/08 |        |       |  1      |       |       |       | Deliverable 3 - Completed Demo Summary of D3 Document |
 | 2024/03/05 |        |       |         |       |       |   3   | Implement Authentication |
 | 2024/03/13 |   1    |  1    |  1      |  1    |  1    |   1   | final demo meeting |
 | 2024/03/13 |        |       |         |       |       |   2   | Finish Implementing Authentication |
@@ -67,8 +69,10 @@ Note: times are represented in number of hours
 | 2024/03/30 |        |       |         |       |  1    |       | Deliverable 6 - Reviews |
 | 2024/03/30 |  0.5   |   0.5 |  0.5    |  0.5  |  0.5  | 0.5   | final demo meeting |
 | 2024/03/30 |  8.5   |       |         |       |       |       | Final demo - frontend auth, finished themes, create account page |
-| 2024/03/31 |        |       |         |       |  1    |       | Deliverable 6 - Adapting reviews to work with email searches and creation |
-| 2024/03/31 |        |       |         |  2.5  |       |       | Deliverable 6 - Create Account Email Verification Frontend |
+| 2024/03/31 |        |       |         |       |  1    |       | Final Demo - Adapting reviews to work with email searches and creation |
+| 2024/03/31 |        |       |         |  2.5  |       |       | Final Demo - Create Account Email Verification Frontend |
+| 2024/04/01 |        |       |  3      |       |       |       | Final Demo - Created APIs to send Email Verificatin and tested |
+| 2024/04/01 |        |       |  2      |       |       |       | Final Demo - Create new APIs for review using Auth Token |
 | 2024/04/01 |        |   2   |         |       |       |       | implemented contact button on the nearby beacon page |
 | 2024/04/01 |        |       |         |       |  1    |       | Deliverable 6 - Work on reports for backend |
 | 2024/04/01 |        |       |         |       |       |   3   | Add tag to beacon creation |
@@ -77,6 +81,10 @@ Note: times are represented in number of hours
 | 2024/04/01 |        |   3   |         |       |       |       | Fixed the UI for tags on the drop beacon page |
 | 2024/04/01 |        |  1.5  |         |       |       |       | Worked on getting user location on nearby beacon page |
 | 2024/04/01 | 2.25   | 1.75  |         | 2.25  | 1.75  |       | Update beacon page bugfixes |
+| 2024/04/02 |        |       |  5      |       |       |       | Final Demo - Create UI for Reviews and Report Page |
+| 2024/04/02 |        |       |  2      |       |       |       | Final Demo - Create Users Controller and Testing Calls |
+| 2024/04/02 |        |       |  3      |       |       |       | Final Demo - Optimized Review APIs to refresh list after submit |
 | 2024/04/02 |  4.5   |       |         |       |       |       | final demo bugfixes|
 | 2024/03/03 |  5     |   5   |  5      |  5    |  5    |   5   | final demo preperation, ui fixes, project wrap up |
 | 2024/04/08 |  1     |       |         |       |       |       | D7 - final status report|
+| 2024/04/08 |        |       |  0.5    |       |       |       | D7 - Started Harm Mitigation section of report|
